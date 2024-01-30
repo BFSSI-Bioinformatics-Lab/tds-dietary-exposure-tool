@@ -1,0 +1,180 @@
+﻿Composite Code (TDS_FC_Code),Composite Description (TDS_FC_Label),Description of the content included in composite
+Dairy,,
+AA01,Milk_whole,Includes goat milk/Excludes dry milk
+AA02,Milk_2%,Excludes dry milk
+AA03,Milk_1%,Excludes dry milk
+AA04,Milk_skim,Includes 0.5% skim milk/ Excludes dry milk
+AA05,Evaporated milk_canned,Includes all types of evaporated milks
+AA06,Cream,Includes all creams including whipped cream. Excludes sour cream and cream substitutes (whitener)
+AA07,Ice cream,"Includes all ice cream (soft, regular and light), ice cream novelties (sandwiches, cones, bars/sticks) and ice cream cakes.
+Sundae recipes rolled-down to ingredient level"
+AA08,Yogurt,"Includes all types of yogurts (goat, soy, baby, beverage, and Greek type yogurts). Also includes frozen yogurts and yogurt-based dips, ex: tzatziki
+Excludes kefir"
+AA09,Cheese,"Includes all cheeses not included in following composites, including soft cheeses like goat cheese and ricotta. Excludes cream cheese"
+AA10,Cheese_cottage,Includes all cottage cheese
+AA11,Cheese_processed,"Includes all processed cheeses (slices, loafs and spreads)"
+AA12,Butter,"Includes salted and unsalted butter, light and regular"
+AA13,Chocolate milk_1%,Includes all fat content chocolate milk
+AA14,Buttermilk 1%,Includes all fat content buttermilk
+Meats,,
+BB01,Beef_steak,Includes all cuts of beef steaks 
+BB02,Beef_roast,Includes all cuts of beef roasts
+BB03,Beef_ground,"Includes all ground beef (extra lean, lean, medium, and regular)"
+BB04,Pork_fresh,"Includes all cuts of fresh pork (chops, roast, ribs, ground)"
+BB05,Pork_cured,"Includes cured ham, bacon, and breakfast strips"
+BB06,Veal_cutlets,"
+Includes all cuts of veal"
+BB07,Lamb,Includes all cuts of lamb
+BB08,Luncheon meats_cold cuts,Includes all types of pork and beef luncheon meats. Excludes poultry based luncheon meats.
+BB09,Luncheon meats_canned,Includes canned ham and corned beef
+BB10,Organ meats,"Includes all types of beef, veal, lamb and pork organs (heart, kidney, liver). Excludes poultry organs"
+BB11,Wieners & sausages,Includes all types of pork and beef wieners and sausages. Excludes poultry wieners and sausages
+Eggs & Poultry,,
+CC01,Eggs,"Includes all poultry eggs (chicken, duck, goose, turkey), egg white and egg yolk. Omelets, quiches and other egg bases dishes are rolled down to ingredient level"
+CC02,Poultry_chicken & turkey,"Includes all cuts of chicken and turkey. Excludes all other poultry (i.e. goose, quail, pheasant, duck)"
+CC03,Poultry_liver pate,Includes all types of pate
+Seafood,,
+DD01,Fish_marine,"Includes all marine fish, including coated, smoked fish, salted and pickled fish"
+DD02,Fish_fresh water,"Includes all fresh water fish, including coated fish"
+DD03,Fish_canned,"Includes all types of canned fish (tuna, salmon, sardines) Excludes canned shellfish."
+DD04,Shellfish,"Includes all shellfish, including canned, coated, dried and pickled. Stuffed shellfish are rolled down to ingredient level"
+Soups,,
+EE01,Soups_meat_canned,"Includes all types of meat based soups, including cream based"
+EE02,Soups_creamed_canned,Includes all canned cream based soup except meat based. Also includes cheese soups and condensed soups prepared with milk. 
+EE03,Soups_broth_canned,Includes all types of canned broth and consommé
+EE04,Soups_dehydrated,"Includes all type of dehydrated broths and soups, including dehydrated cream based soup"
+Breads & Grains,,
+FF01,Bread_white,"Includes all white breads, including raisin bread, garlic bread and with added fibre"
+FF02,Bread_whole wheat,Includes 60% whole wheat and whole grain breads. Excludes multigrain bread
+FF03,Bread_rye,Includes rye and pumpernickel bread
+FF04,Cake,Includes all types of cake with or without icing. Also includes brownies. 
+FF05,Cereal_cooked wheat,"Includes instant, quick, and regular cream of wheat"
+FF06,Cereal_corn,"Includes corn puffs, corn squares, and corn flakes"
+FF07,Cereals_oatmeal,"Includes instant, quick, and regular oatmeal, flavoured and unflavoured"
+FF08,Cereals_rice & bran,"Includes all types of rice and bran cereal, such as wheat bran flakes with or without raisins and puffed rice cereal"
+FF09,Cookies,Includes all types of cookies and bars
+FF10,Crackers,"All types of crackers, crispbreads, rusks and bread sticks"
+FF11,Danish_donuts & croissants,"Includes donuts, Danishes, fruit fritters, strudels, turnovers, sweet rolls with or without fillings and icing"
+FF12,Flour_white (wheat),Includes cake and bread flour. Excludes whole wheat flour
+FF13,Muffins,"Includes all types of muffins, also includes quick breads such as banana bread. "
+FF14,Pancakes & waffles,"Includes all types of pancakes and waffles, including frozen and prepared from a mix. "
+FF15,Pasta_mixed dishes,"Includes pasta based dishes with or without meat such as stuffed pasta with meat or tomato sauce, lasagna, macaroni and cheese. Includes prepared dry mixes. "
+FF16,Pasta_plain,"Includes all types of plain pasta (whole wheat, soy, rice, egg, vegetable)"
+FF17,Pie_apple,Includes one and two crust pie and fried apple pie
+FF18,Pie_other,"Includes all other types of pie  such as fruit pies, sugar pie and pecan pie"
+FF19,Rice,"Includes all types of rice such as white, brown, instant, parboiled and flavoured rice. Excludes wild rice"
+FF20,Buns & rolls,Includes all types of buns and rolls including hot dog and hamburger buns
+FF21,Breads_other,"Includes pitas, tortillas, naans, English muffins bagel and biscuits"
+Vegetables,,
+GG01,Baked beans_canned,Includes all types of baked beans with or without meat. Includes refried beans
+GG02,Beans_string,"Includes green/yellow snap beans, fresh, canned, frozen"
+GG03,Beets,"Includes fresh, canned and pickled"
+GG04,Broccoli,"Includes frozen, raw and cooked. Also includes Chinese broccoli"
+GG05,Cabbage,"Includes all types of cabbages (bok choy, napa, red cabbage, Chinese cabbage). Also includes sauerkraut, kimchi/ kim chee. Excludes Kale"
+GG06,Carrots,"Includes canned, frozen, raw and cooked"
+GG07,Cauliflowers,"Includes frozen, raw and cooked"
+GG08,Celery,
+GG09,Corn,"Includes fresh, frozen and canned"
+GG10,Cucumbers,Includes pickles
+GG11,Lettuce,"Includes all types of lettuce (Boston, romaine, iceberg, red leaf, mesclun/spring mix). Excludes all other types of leafy greens"
+GG12,Mushrooms,"Includes all types of mushrooms, canned, dried, raw and cooked"
+GG13,Onions,"Includes all types of onion, raw and cooked"
+GG14,Peas,"Includes green peas and snow peas, fresh, frozen and canned"
+GG15,Peppers,"Includes sweet and hot peppers, fresh and pickled"
+GG16,Potatoes_boiled,Includes boiled potatoes with or without peel and mashed potato prepared from dry mix
+GG17,Potatoes_chips,Includes all varieties of potato chips
+GG18,Rutabaga,"Includes rutabaga and turnip, fresh, frozen and pickled"
+GG19,Vegetable juice_canned,"Includes tomato juice, vegetable juice and carrot juice"
+GG20,Tomatoes,Includes fresh tomatoes
+GG21,Tomatoes and tomato sauce_canned,"Includes canned tomatoes and tomato sauce. Also includes tomato paste, pizza sauce, tomato based pasta sauce and marinara sauce"
+GG22,Spinach,"Includes canned, frozen, raw and cooked"
+GG23,Asparagus,Includes frozen and canned
+GG24,Brussel sprouts,
+GG26,Potatoes_baked,Includes baked potatoes with or without skin and roasted potatoes. 
+GG27,Corn chips,"Includes extruded corn-based chips, tortilla chips and hard taco shells"
+Fruits,,
+HH01,Apple juice_canned,"Includes 100% apple juice, canned, bottled or frozen concentrate"
+HH02,Applesauce_canned,Includes sweetened and unsweetened applesauce and applesauce with other fruits
+HH03,Apples,"Includes raw, cooked and canned. Excludes dried apples"
+HH04,Bananas,Excludes dried
+HH05,Blueberries,"Includes raw, cooked, canned and frozen"
+HH06,Cherries,"Includes fresh, frozen and canned"
+HH07,Citrus fruit_raw,"Includes clementine, mandarin, oranges, grapefruit, lime, lemon; raw and canned. Includes orange, lemon and lime juice made from fresh fruit"
+HH08,Citrus juice_frozen,Includes frozen orange and grapefruit juice
+HH09,Citrus juice_canned,"Includes orange, lemon, lime, and grapefruit juice"
+HH10,Grape juice_bottled,Includes canned and bottled
+HH11,Grapes,Excludes raisins
+HH12,Melons,Includes all types of melons
+HH13,Peaches,"Includes fresh, frozen and canned"
+HH14,Pears,Includes fresh and canned
+HH15,Pineapple_canned,"Includes fresh, frozen and canned. Excludes candied"
+HH16,Plums and prunes,"Includes fresh, canned and dried"
+HH17,Raisins,
+HH18,Raspberries,"Includes fresh, frozen and canned"
+HH19,Strawberries,"Includes fresh, frozen and canned"
+HH20,Kiwi fruit,
+HH21,Apricot,"Includes fresh, frozen, canned and dried"
+HH22,Fruit drinks (cocktails),"Includes canned/bottled, frozen concentrate and powder fruit drinks, lemonade and nectars"
+Fats and dressings,,
+II01,Cooking fats & salad oils,"Includes vegetable oils, lard, shortening, and ghee"
+II02,Margarine,Includes all types of margarines
+II04,Mayonnaise,Includes mayonnaise and mayonnaise-type dressings
+II07,Salad dressing,Includes all types of salad dressings
+Snack foods and spreads,,
+JJ01,Chocolate bars,"Includes all types of chocolate bars and chocolate covered nuts, raisins, and candies"
+JJ03,Gelatin dessert,Includes ready-to-eat and prepared from a mix
+JJ04,Honey_bottled,
+JJ05,Jams,"Includes jam, jelly, and marmalade"
+JJ07,Peanut butter,Includes all types of peanut butter. Excludes other nut butters
+JJ08,Puddings,"Includes all types of puddings, ready-to-eat and prepared from a mix"
+JJ09, Sugar_white,"Includes white sugar, brown sugar and icing sugar"
+JJ10,Syrup,"Includes pancake table blend syrups, corn and  maple syrups. Excludes chocolate syrups"
+JJ11,Seeds_shelled,"Includes all seeds. Also includes tahini, halva and sesame snaps"
+JJ12,Nuts,"Includes all type of nuts, including glazed or sugar-coated and trail mix"
+JJ13,Chewing gum,
+JJ15,Candy (licorice and gummies),"Includes all types of candies such as hard and soft candies, toffee, butterscotch chips, marshmallow and fruit leather"
+Beverages,,
+KK01,Alcoholic drinks_beer,"Includes regular, light and non-alcoholic beer"
+KK02,Alcoholic drinks_wine,"Includes red and white wine, dessert wine, non-alcoholic wine and sangria"
+KK04,Coffee,"Includes brewed and instant coffee, regular and decaffeinated"
+KK05,Soft drinks_canned,Includes all regular and diet soft drinks
+KK06,Tea,"Includes brewed, instant and iced tea. Excludes herbal tea"
+KK07,Soy beverage_fortified,"Includes all types of plant-based beverages (rice, soy, almond, cashew, and coconut beverages)"
+Infant foods,,
+LL01,Cereals_mixed,"Includes wheat, barley, oat, rice, soya, and mixed grain cereals
+Including cereal mixes with fruit"
+LL02,Desserts,Includes dessert type fruit purées. Excludes pure fruit
+LL03,Dinners_cereal + vegetable + meat,"Includes dinners made with grains, vegetables, and meat (beef, chicken, or turkey)"
+LL04,Dinners_meat or poultry + vegetable,"Includes dinners made with meat (beef, chicken, or turkey) and vegetables"
+LL05,Formulae_milk base,All types of milk based infant formulas
+LL06,Formulae_soya base,All types of soy based infant formulas
+LL07,Fruit_apple or peach,Includes all types of fruits
+LL08,Meat_poultry or eggs,Includes all types of meats and poultry
+LL09,Vegetables,Includes all types of vegetables
+Microwavable foods,,
+MM01,Popcorn_microwave,"Includes ready to eat, microwavable, plain and flavoured popcorn"
+MM02,Frozen entrees,Includes all types of frozen entrees
+Fast food,,
+NN01,Pizza,Includes all types of pizzas. Also includes pizza rolls/bites and calzones. 
+NN02,French fries,"Includes all type of French fries, from frozen, fresh or from restaurant. 
+Excludes sweet potato fries"
+NN03,Hamburger,Includes hamburgers and cheeseburgers with all types of toppings 
+NN04,Chicken burger,Includes chicken burgers with or without cheese with all types of toppings
+NN05,Hot dogs,"Includes hot dogs on bun, with or without cheese and condiments"
+NN06,Chicken nuggets,Includes chicken nuggets and tenders
+NN07,Beef chow mein_carry-out,"Includes all types of chow meins (shrimp, pork, chicken, or beef), with and without noodles."
+NN08,Fried rice (Chicken and veg),"Includes all types of fried rice (pork, chicken, shrimp, meatless)"
+NN09,Prepared Breakfast sandwiches,"Includes all types of breakfast sandwiches on English muffins, biscuits, buns or croissants. Also includes breakfast burritos."
+NN10,Fast food sandwiches,"Includes all types of sandwiches, submarines, and wraps"
+Ingredients and waters,,
+PP01,Condiments,"Includes all types of condiments such as ketchup, mustard, BBQ sauce, peanut sauce, teriyaki sauce,  cocktail sauce and plum sauce"
+PP02,Salt,
+PP03,Baking powder,
+PP04,Yeast,
+PP05,Vanilla extract,
+PP06,Herbs and spices,Includes all types of spices and dried herbs
+PP07,Soya sauce,
+PP09,Tap water_sample area (where samples purchased),
+PP10,Water_natural spring,Includes mineral and spring  carbonated and non-carbonated water. Including flavoured water. 
+PP11,Water_natural mineral,This consumption is captured in PP10 and is not shown separately.
+PP13,Water_tap Ottawa Food Prep Lab,"This consumption is captured in the individual food composites (e.g., soup) and not shown separately."
