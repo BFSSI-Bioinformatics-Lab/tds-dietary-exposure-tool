@@ -52,7 +52,7 @@ export async function getContaminentOcurrenceData() {
           unitsOfMeasurement: "ng/g",
           // Level of detection - when the result value is 0, the user can filter based on certain LODs.
           lod: resultValueToNanoGramsPerGram(
-            Number(row["LOD"]),
+            Number(row["LOD"] || row["MDL"]),
             row["unitsOfMeasurement"],
           ),
         };

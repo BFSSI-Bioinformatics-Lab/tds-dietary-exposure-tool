@@ -61,7 +61,8 @@ export function addEventListenersToGraphSelects(
     graphIds.resultsByFoodGroupGraphSelectId,
     graphIds.resultsByFoodGraphSelectId,
   ].forEach((graphId) => {
-    document.getElementById(graphId).addEventListener("click", () => {
+    document.getElementById(graphId).addEventListener("click", (e) => {
+      e.preventDefault;
       const graphTitleElement = document.getElementById(graphIds.graphTitleId);
       graphTitleElement.innerHTML = "";
       const graphElement = document.getElementById(graphIds.graphId);
@@ -335,7 +336,9 @@ export function displayDietaryExposureByFoodGraph(
             return d.data.compositeLabel + " - " + d.data.compositeCode;
           })
           .reverse()
-          .join("")}\n${format(d.data.percentDietaryExposure)}%`,
+          .join("")} \nDE: ${d.data.dietaryExposure.toFixed(
+            1,
+          )} ng/day\nPDE: ${d.data.percentDietaryExposure.toFixed(1)}%`,
     );
 
   svg
