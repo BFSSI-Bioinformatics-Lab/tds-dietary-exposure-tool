@@ -1,4 +1,4 @@
-import { graphIds, inputContainerIds, inputIds } from "./const.js";
+import { headerIds, graphIds, inputContainerIds, inputIds } from "./const.js";
 import {
   filterContaminentOccurenceData,
   filterFoodConsumptionData,
@@ -10,6 +10,18 @@ import {
 /*
  * Event Listeners
  */
+
+export function addEventListenersToButtons() {
+  document
+    .getElementById(headerIds.howToUseButtonId)
+    .addEventListener("click", () => {
+      const howToUseTextElement = document.getElementById(
+        headerIds.howToUseTextId,
+      );
+      howToUseTextElement.style.display =
+        howToUseTextElement.style.display == "none" ? "" : "none";
+    });
+}
 
 export function addEventListenersToInputs(
   foodCompositeData,
@@ -330,8 +342,6 @@ export function displayDietaryExposureByFoodGraph(
     .append("g")
     .attr("pointer-events", "none")
     .attr("text-anchor", "middle")
-    .attr("font-size", 12)
-    .attr("font-family", "sans-serif")
     .selectAll("text")
     .data(
       root
@@ -350,8 +360,7 @@ export function displayDietaryExposureByFoodGraph(
   svg
     .append("text")
     .attr("text-anchor", "middle")
-    .style("font-size", "20px")
-    .style("text-decoration", "bold")
+    .style("font-size", "1.8rem")
     .text(chemicalName);
 
   const graphHeaderElement = document.getElementById(graphIds.graphTitleId);

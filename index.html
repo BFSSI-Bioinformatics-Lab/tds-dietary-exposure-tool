@@ -14,7 +14,47 @@
     <!-- link custom js -->
     <script src="./src/index.js" type="module" defer></script>
 
-    <div id="title">Dietary Consumption Tool</div>
+    <div id="title">
+      <span class="bold">Dietary Exposure to Chemicals</span> from Health Canada
+    </div>
+
+    <div id="how-to-use">
+      <button id="how-to-use-button">? How to use</button>
+      <div id="how-to-use-text" style="display: none">
+        The graph at the top of the page compares how 12 broad food groups
+        contribute to intake among children, youth & adolescents, adult females
+        and adult males and the whole population.
+        <br />
+        <br />
+        1) Choose a Nutrient by selecting from the dropdown menu at the top left
+        hand side of the screen To display a detailed description of what is
+        included in each food group, hover over or tab to any specific food
+        group in the graph or the legend. Click to isolate a food group, click
+        again to restore the complete graph. Use the “Switch to” button to
+        toggle between number and percentage of contribution. Download the raw
+        data in csv format by clicking on the download button.
+        <br />
+        <br />
+        2) Select an age-sex group to take a deeper look at how more specific
+        food sub-groups contribute to intakes in the graph at the bottom of the
+        page.
+        <br />
+        <br />
+        Each broad food group is represented in a different color and sub-group
+        contribution is shown in the outside layers. Hover over a food group for
+        more information. Click on the label to take a closer look into a food
+        group. Click again to restore the complete graph.
+        <br />
+        To see the level 2 sub-groups results in ascending order, click on the
+        grey circle. Click again on the grey circle to restore the complete
+        graph.
+      </div>
+    </div>
+
+    <div id="preamble">
+      How much of various chemicals are people living in Canada being exposed to
+      through their diet? And which foods and food groups contribute the most?
+    </div>
 
     <div id="main-inputs-container">
       <div class="filter">
@@ -40,7 +80,7 @@
 
       <div class="filter">
         <label for="lod-input"
-          >Occurence below the level of detection are equal to:</label
+          >Occurence values below the level of detection are equal to</label
         >
         <select id="lod-input"></select>
       </div>
@@ -48,10 +88,25 @@
 
     <br />
 
-    <div id="graph-selects-container">
-      <img id="results-by-age-sex-group-graph-select" src="./img/rbasg.png" />
-      <img id="results-by-food-group-graph-select" src="./img/rbfg.png" />
-      <img id="results-by-food-graph-select" src="./img/rbf.png" />
+    <div id="graph-select-container">
+      <div>Select your graph</div>
+      <div id="graph-select-images-container">
+        <img
+          id="results-by-age-sex-group-graph-select"
+          src="./img/rbasg.png"
+          alt="results by age sex group graph preview"
+        />
+        <img
+          id="results-by-food-group-graph-select"
+          src="./img/rbfg.png"
+          alt="results by food group graph preview"
+        />
+        <img
+          id="results-by-food-graph-select"
+          src="./img/rbf.png"
+          alt="results by food graph preview"
+        />
+      </div>
     </div>
 
     <br />

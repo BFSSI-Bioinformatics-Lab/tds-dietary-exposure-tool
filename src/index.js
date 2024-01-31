@@ -5,6 +5,7 @@ import {
 } from "./data.js";
 
 import {
+  addEventListenersToButtons,
   addEventListenersToGraphSelects,
   addEventListenersToInputs,
   updateInputsWithAvailableFilters,
@@ -15,6 +16,7 @@ async function main() {
   const foodConsumptionData = await getFoodConsumptionData();
   const foodCompositeData = await getFoodCompositeData();
 
+  addEventListenersToButtons();
   addEventListenersToGraphSelects(
     foodCompositeData,
     foodConsumptionData,

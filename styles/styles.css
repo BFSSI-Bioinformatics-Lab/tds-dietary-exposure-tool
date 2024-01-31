@@ -134,13 +134,46 @@ table {
 /* Custom CSS */
 
 body {
-  margin: 2rem 8rem;
+  margin: 0 8rem;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  max-width: 12rem;
+  > select {
+    width: 8rem;
+  }
+}
+
+.bold {
+  font-weight: bold;
 }
 
 #title {
   font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
+  margin: 2rem 0 0.5rem 0;
+}
+
+#how-to-use {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-top: 0.1rem solid #c67b7f;
+
+  text-align: right;
+  #how-to-use-button {
+  }
+
+  #how-to-use-text {
+    text-align: left;
+    margin: 1rem 0;
+  }
+}
+
+#preamble {
+  font-size: 1.3rem;
+  margin: 1rem 0;
 }
 
 #graph-title {
@@ -149,16 +182,17 @@ body {
 }
 
 #main-inputs-container {
-  margin: 1rem 0;
+  margin: 2rem 0 1rem 0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
   > * {
-    margin: 0 0.5rem;
+    margin-right: 1rem;
   }
 }
 
-#graph-selects-container {
+#graph-select-image-container {
   margin: 1rem 0;
 }
 
@@ -170,7 +204,7 @@ body {
 }
 
 #graph-container {
-  margin: 0 4rem;
+  margin: 1rem 4rem;
   width: 100%;
   max-width: 600px;
   text-align: center;
@@ -179,13 +213,5 @@ body {
 #additional-filters-container {
   > * {
     margin-bottom: 1rem;
-  }
-}
-
-.filter {
-  display: flex;
-  flex-direction: column;
-  > select {
-    width: 8rem;
   }
 }

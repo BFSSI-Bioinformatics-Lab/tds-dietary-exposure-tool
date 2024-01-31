@@ -42,6 +42,11 @@ export const contaminentOccurenceFileNames = [
 HTML
 */
 
+export const headerIds = {
+  howToUseButtonId: "how-to-use-button",
+  howToUseTextId: "how-to-use-text",
+};
+
 // Inputs
 export const inputIds = {
   chemicalGroupInputId: "chemical-group-input",
