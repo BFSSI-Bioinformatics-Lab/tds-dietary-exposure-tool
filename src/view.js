@@ -160,6 +160,20 @@ function updateGraphs(
     contaminentOccurenceData,
   );
 
+  let maxContaminentLod = 0;
+  let minContaminentLod = Infinity;
+  filteredContaminentOccurenceData.forEach((contaminentOccurence) => {
+    if (contaminentOccurence.lod > maxContaminentLod) {
+      maxContaminentLod = contaminentOccurence.lod;
+    }
+    if (contaminentOccurence.lod < minContaminentLod) {
+      minContaminentLod = contaminentOccurence.lod;
+    }
+  });
+
+  const lodRangeElement = document.getElementById(inputIds.lodRangeId);
+  lodRangeElement.innerHTML = `LOD range: ${minContaminentLod}-${maxContaminentLod} ng/g`;
+
   const activeGraph = document.querySelector(".active-graph")
     ? document.querySelector(".active-graph").id
     : "";
@@ -208,6 +222,9 @@ export function displayDietaryExposureByAgeSexGroupGraph() {
 
   const graphElement = document.getElementById(graphIds.graphId);
   graphElement.innerHTML = "";
+
+  const graphLegendElement = document.getElementById(graphIds.graphLegendId);
+  graphLegendElement.innerHTML = "";
 }
 
 export function displayDietaryExposureByFoodGroupGraph() {
@@ -216,6 +233,9 @@ export function displayDietaryExposureByFoodGroupGraph() {
 
   const graphElement = document.getElementById(graphIds.graphId);
   graphElement.innerHTML = "";
+
+  const graphLegendElement = document.getElementById(graphIds.graphLegendId);
+  graphLegendElement.innerHTML = "";
 }
 
 export function displayDietaryExposureByFoodGraph(
@@ -290,6 +310,10 @@ export function displayDietaryExposureByFoodGraph(
       Array.from(uniqueFoodCompositeGroupings).length + 1,
     ),
   );
+  uniqueFoodCompositeGroupings.forEach((uniqueFoodCompositeGrouping) => {
+    color(uniqueFoodCompositeGrouping);
+  });
+
   const radius = 928 / 2;
 
   const partition = (data) =>
@@ -374,6 +398,9 @@ export function displayDietaryExposureByFoodGraph(
   const graphElement = document.getElementById(graphIds.graphId);
   graphElement.innerHTML = "";
 
+  const graphLegendElement = document.getElementById(graphIds.graphLegendId);
+  graphLegendElement.innerHTML = "";
+
   if (svg._groups[0][0].children[1].childElementCount) {
     graphElement.append(
       svg
@@ -385,6 +412,24 @@ export function displayDietaryExposureByFoodGraph(
         })
         .node(),
     );
+
+    uniqueFoodCompositeGroupings.forEach((foodCompositeGrouping) => {
+      const legendItemElement = document.createElement("div");
+      legendItemElement.setAttribute("id", "graph-legend-item");
+      const legendItemColorElement = document.createElement("div");
+      legendItemColorElement.setAttribute("id", "graph-legend-item-color");
+      const legendItemTextElement = document.createElement("div");
+      legendItemTextElement.setAttribute("id", "graph-legend-item-text");
+
+      legendItemColorElement.style.backgroundColor = color(
+        foodCompositeGrouping,
+      );
+      legendItemTextElement.innerHTML = foodCompositeGrouping;
+
+      legendItemElement.append(legendItemColorElement);
+      legendItemElement.append(legendItemTextElement);
+      graphLegendElement.appendChild(legendItemElement);
+    });
   } else {
     graphElement.innerHTML = "No data available";
   }

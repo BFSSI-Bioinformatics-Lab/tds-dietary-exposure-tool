@@ -83,6 +83,7 @@
           >Occurence values below the level of detection are equal to</label
         >
         <select id="lod-input"></select>
+        <div id="lod-range"></div>
       </div>
     </div>
 
@@ -112,6 +113,11 @@
     <br />
 
     <div id="main-container">
+      <div id="graph-container">
+        <div id="graph-title"></div>
+        <div id="graph"></div>
+      </div>
+
       <div id="additional-filters-container">
         <div id="units-container-input" class="filter" style="display: none">
           <label for="units-input">Units</label>
@@ -144,11 +150,8 @@
           <label for="category-format-input">Category Format</label>
           <select id="category-format-input"></select>
         </div>
-      </div>
 
-      <div id="graph-container">
-        <div id="graph-title"></div>
-        <div id="graph"></div>
+        <div id="graph-legend"></div>
       </div>
     </div>
   </body>

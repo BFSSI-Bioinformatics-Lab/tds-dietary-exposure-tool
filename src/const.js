@@ -53,6 +53,7 @@ export const inputIds = {
   chemicalInputId: "chemical-input",
   yearInputId: "year-input",
   lodInputId: "lod-input",
+  lodRangeId: "lod-range",
   ageSexGroupInputId: "age-sex-group-input",
   dataFormatInputId: "data-format-input",
   unitsInputId: "units-input",
@@ -71,6 +72,7 @@ export const graphIds = {
   graphTitleId: "graph-title",
 
   graphId: "graph",
+  graphLegendId: "graph-legend",
 
   resultsByAgeSexGroupGraphSelectId: "results-by-age-sex-group-graph-select",
   resultsByFoodGroupGraphSelectId: "results-by-food-group-graph-select",
