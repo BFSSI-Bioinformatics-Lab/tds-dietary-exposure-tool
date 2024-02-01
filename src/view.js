@@ -392,7 +392,15 @@ export function displayDietaryExposureByFoodGraph(
       return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
     })
     .attr("dy", "0.35em")
-    .text((d) => d.data.compositeLabel + " - " + d.data.compositeCode);
+    .attr("width", 100)
+    .text((d) => {
+      const maxLength = 30;
+      const str = d.data.compositeLabel + " - " + d.data.compositeCode;
+      if (str.length > maxLength) {
+        return str.slice(0, maxLength) + "...";
+      }
+      return str;
+    });
 
   svg
     .append("text")
