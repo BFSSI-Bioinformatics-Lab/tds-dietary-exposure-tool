@@ -21,6 +21,16 @@ export function addEventListenersToButtons() {
       howToUseTextElement.style.display =
         howToUseTextElement.style.display == "none" ? "" : "none";
     });
+
+  document
+    .getElementById(headerIds.dataInfoButtonId)
+    .addEventListener("click", () => {
+      const dataInfoTextElement = document.getElementById(
+        headerIds.dataInfoTextId,
+      );
+      dataInfoTextElement.style.display =
+        dataInfoTextElement.style.display == "none" ? "" : "none";
+    });
 }
 
 export function addEventListenersToInputs(
@@ -270,7 +280,7 @@ export function displayDietaryExposureByFoodGraph(
 
     const resultValueMean =
       sumOfContaminentOccurenceResultsForCompositeCode /
-      numberOfContaminentOccurencesForCompositeCode || 0;
+        numberOfContaminentOccurencesForCompositeCode || 0;
 
     const meanConsumptionOfComposite =
       foodConsumptionData.find(
@@ -361,8 +371,8 @@ export function displayDietaryExposureByFoodGraph(
           })
           .reverse()
           .join("")} \nDE: ${d.data.dietaryExposure.toFixed(
-            1,
-          )} ng/day\nPDE: ${d.data.percentDietaryExposure.toFixed(1)}%`,
+          1,
+        )} ng/day\nPDE: ${d.data.percentDietaryExposure.toFixed(1)}%`,
     );
 
   svg
@@ -376,7 +386,7 @@ export function displayDietaryExposureByFoodGraph(
         .filter((d) => d.depth && ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 10),
     )
     .join("text")
-    .attr("transform", function(d) {
+    .attr("transform", function (d) {
       const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
       const y = (d.y0 + d.y1) / 2;
       return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
