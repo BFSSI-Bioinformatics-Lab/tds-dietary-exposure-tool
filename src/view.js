@@ -61,8 +61,7 @@ export function addEventListenersToGraphSelects(
     graphIds.resultsByFoodGroupGraphSelectId,
     graphIds.resultsByFoodGraphSelectId,
   ].forEach((graphId) => {
-    document.getElementById(graphId).addEventListener("click", (e) => {
-      e.preventDefault;
+    document.getElementById(graphId).addEventListener("click", () => {
       const graphTitleElement = document.getElementById(graphIds.graphTitleId);
       graphTitleElement.innerHTML = "";
       const graphElement = document.getElementById(graphIds.graphId);
@@ -82,7 +81,8 @@ export function addEventListenersToGraphSelects(
       ].forEach((graphId) => {
         document.getElementById(graphId).style.display = "none";
       });
-      document.getElementById(graphId).classList.add("active-graph");
+      const graphSelect = document.getElementById(graphId);
+      graphSelect.classList.add("active-graph");
       updateGraphs(
         foodCompositeData,
         foodConsumptionData,
@@ -401,6 +401,11 @@ export function displayDietaryExposureByFoodGraph(
   const graphLegendElement = document.getElementById(graphIds.graphLegendId);
   graphLegendElement.innerHTML = "";
 
+  const legendTitle = document.createElement("div");
+  graphLegendElement.append(legendTitle);
+  legendTitle.setAttribute("id", "graph-legend-title");
+  legendTitle.innerHTML = "";
+
   if (svg._groups[0][0].children[1].childElementCount) {
     graphElement.append(
       svg
@@ -429,6 +434,7 @@ export function displayDietaryExposureByFoodGraph(
       legendItemElement.append(legendItemColorElement);
       legendItemElement.append(legendItemTextElement);
       graphLegendElement.appendChild(legendItemElement);
+      legendTitle.innerHTML = "Food Groups";
     });
   } else {
     graphElement.innerHTML = "No data available";

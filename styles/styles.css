@@ -194,8 +194,15 @@ body {
   }
 }
 
-#graph-select-image-container {
-  margin: 1rem 0;
+#graph-select-images-container {
+  .graph-select {
+    border: 0.1rem solid rgba(0, 0, 0, 0);
+    margin: 0.5rem 0.5rem 0.5rem 0;
+  }
+  .active-graph {
+    border: 0.1rem solid #c67b7f;
+    border-radius: 0.3rem;
+  }
 }
 
 #main-container {
@@ -209,18 +216,24 @@ body {
     margin: 0 2rem;
     text-align: center;
     width: 45rem;
+
     #graph-title {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+      font-size: 1.7rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
     }
   }
 
-  #additional-filters-container {
-    > * {
-      margin-bottom: 1rem;
+  #graph-add-ons {
+    #additional-filters-container {
+      > * {
+        margin-bottom: 1rem;
+      }
     }
-
     #graph-legend {
+      #graph-legend-title {
+        font-weight: bold;
+      }
       #graph-legend-item {
         display: flex;
         flex-direction: row;

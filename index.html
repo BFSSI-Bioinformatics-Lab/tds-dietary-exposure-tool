@@ -90,19 +90,22 @@
     <br />
 
     <div id="graph-select-container">
-      <div>Select your graph</div>
+      <div>Select Graph Type:</div>
       <div id="graph-select-images-container">
         <img
+          class="graph-select"
           id="results-by-age-sex-group-graph-select"
           src="./img/rbasg.png"
           alt="results by age sex group graph preview"
         />
         <img
+          class="graph-select"
           id="results-by-food-group-graph-select"
           src="./img/rbfg.png"
           alt="results by food group graph preview"
         />
         <img
+          class="graph-select"
           id="results-by-food-graph-select"
           src="./img/rbf.png"
           alt="results by food graph preview"
@@ -118,39 +121,40 @@
         <div id="graph"></div>
       </div>
 
-      <div id="additional-filters-container">
-        <div id="units-container-input" class="filter" style="display: none">
-          <label for="units-input">Units</label>
-          <select id="units-input"></select>
-        </div>
+      <div id="graph-add-ons">
+        <div id="additional-filters-container">
+          <div id="units-container-input" class="filter" style="display: none">
+            <label for="units-input">Units</label>
+            <select id="units-input"></select>
+          </div>
 
-        <div
-          id="data-format-container-input"
-          class="filter"
-          style="display: none"
-        >
-          <label for="data-format-input">Data Format</label>
-          <select id="data-format-input"></select>
-        </div>
+          <div
+            id="data-format-container-input"
+            class="filter"
+            style="display: none"
+          >
+            <label for="data-format-input">Data Format</label>
+            <select id="data-format-input"></select>
+          </div>
 
-        <div
-          id="age-sex-group-container-input"
-          class="filter"
-          style="display: none"
-        >
-          <label for="age-sex-group-input">Age-Sex Group</label>
-          <select id="age-sex-group-input"></select>
-        </div>
+          <div
+            id="age-sex-group-container-input"
+            class="filter"
+            style="display: none"
+          >
+            <label for="age-sex-group-input">Age-Sex Group</label>
+            <select id="age-sex-group-input"></select>
+          </div>
 
-        <div
-          id="category-format-container-input"
-          class="filter"
-          style="display: none"
-        >
-          <label for="category-format-input">Category Format</label>
-          <select id="category-format-input"></select>
+          <div
+            id="category-format-container-input"
+            class="filter"
+            style="display: none"
+          >
+            <label for="category-format-input">Category Format</label>
+            <select id="category-format-input"></select>
+          </div>
         </div>
-
         <div id="graph-legend"></div>
       </div>
     </div>
