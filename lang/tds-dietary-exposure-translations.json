@@ -1,0 +1,125 @@
+{
+  "title": "TDS Dietary Exposure Translations",
+  "data": {
+    "title-primary": {
+      "static": true,
+      "en": "Dietary Exposure to Chemicals",
+      "fr": ""
+    },
+    "title-secondary": {
+      "static": true,
+      "en": "from Health Canada",
+      "fr": ""
+    },
+    "how-to-use-button": {
+      "static": true,
+      "en": "? How to use",
+      "fr": ""
+    },
+    "how-to-use-text": {
+      "static": true,
+      "en": "The graph at the top of the page compares how 12 broad food groups contribute to intake among children, youth & adolescents, adult females and adult males and the whole population.\n\n 1) Choose a Nutrient by selecting from the dropdown menu at the top left hand side of the screen To display a detailed description of what is included in each food group, hover over or tab to any specific food group in the graph or the legend. Click to isolate a food group, click again to restore the complete graph. Use the “Switch to” button to toggle between number and percentage of contribution. Download the raw data in csv format by clicking on the download button.\n\n 2) Select an age-sex group to take a deeper look at how more specific food sub-groups contribute to intakes in the graph at the bottom of the page.\n\n Each broad food group is represented in a different color and sub-group contribution is shown in the outside layers. Hover over a food group for more information. Click on the label to take a closer look into a food group. Click again to restore the complete graph. To see the level 2 sub-groups results in ascending order, click on the grey circle. Click again on the grey circle to restore the complete graph.",
+      "fr": ""
+    },
+    "data-info-button": {
+      "static": true,
+      "en": "* Data",
+      "fr": ""
+    },
+    "data-info-text-top": {
+      "static": true,
+      "en": "The data used to create this interactive tool are from the following sources:",
+      "fr": ""
+    },
+    "data-info-text-list-item-1": {
+      "static": true,
+      "en": "The Canadian Total Diet Study results from the 2008-2022 collection years. Available on the ",
+      "fr": ""
+    },
+    "data-info-text-list-item-1-link-1": {
+      "static": true,
+      "en": "Canadian Laboratory Information Network.",
+      "fr": ""
+    },
+    "data-info-text-list-item-2-link-1": {
+      "static": true,
+      "en": "The 2008-2022 Total Diet Study Food Consumption Tables (2015 CCHS-Nutrition).",
+      "fr": ""
+    },
+    "preamble": {
+      "static": true,
+      "en": " How much of various chemicals are people living in Canada being exposed to through their diet? And which foods and food groups contribute the most?",
+      "fr": ""
+    },
+    "chemical-group-input-label": {
+      "static": true,
+      "en": "Chemical Group",
+      "fr": ""
+    },
+    "chemical-input-label": {
+      "static": true,
+      "en": "Chemical",
+      "fr": ""
+    },
+    "year-input-label": {
+      "static": true,
+      "en": "Year(s)",
+      "fr": ""
+    },
+    "lod-input-label": {
+      "static": true,
+      "en": "Occurence values below the level of detection are equal to",
+      "fr": ""
+    },
+    "lod-range": {
+      "en": "LOD Range: ",
+      "fr": ""
+    },
+    "graph-select-text": {
+      "static": true,
+      "en": "Select Graph Type:",
+      "fr": ""
+    },
+    "units-input-label": {
+      "static": true,
+      "en": "Units",
+      "fr": ""
+    },
+    "data-format-input-label": {
+      "static": true,
+      "en": "Data Format",
+      "fr": ""
+    },
+    "age-sex-group-input-label": {
+      "static": true,
+      "en": "Age-Sex Group",
+      "fr": ""
+    },
+    "category-format-input-label": {
+      "static": true,
+      "en": "Category Format",
+      "fr": ""
+    },
+    "graph-legend-title": {
+      "static": true,
+      "en": "Food Groups",
+      "fr": ""
+    },
+    "no-data-available": {
+      "en": "No data available",
+      "fr": ""
+    },
+    "rbasg-graph-title": {
+      "en": "Dietary exposure estimate by age sex group",
+      "fr": ""
+    },
+    "rbfg-graph-title": {
+      "en": "Dietary exposure estimate by food group",
+      "fr": ""
+    },
+    "rbf-graph-title": {
+      "en": "Dietary exposure estimate by food for",
+      "fr": ""
+    }
+  }
+}

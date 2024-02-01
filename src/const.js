@@ -23,19 +23,19 @@ export const foodConsumptionFileNames = {
 
 export const contaminentOccurenceFileNames = [
   contaminentOccurenceDataDirectory +
-  "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
+    "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
   contaminentOccurenceDataDirectory +
-  "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
+    "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
   contaminentOccurenceDataDirectory +
-  "Total Diet Study Mycotoxin results 2008-2009.csv",
+    "Total Diet Study Mycotoxin results 2008-2009.csv",
   contaminentOccurenceDataDirectory +
-  "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
+    "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
   contaminentOccurenceDataDirectory +
-  "Total Diet Study Radionuclides results 2000-2020.csv",
+    "Total Diet Study Radionuclides results 2000-2020.csv",
   contaminentOccurenceDataDirectory +
-  "Total Diet Study Trace Elements results 1993-2018.csv",
+    "Total Diet Study Trace Elements results 1993-2018.csv",
   contaminentOccurenceDataDirectory +
-  "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
+    "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
 ];
 
 /*
@@ -46,7 +46,7 @@ export const headerIds = {
   howToUseButtonId: "how-to-use-button",
   howToUseTextId: "how-to-use-text",
   dataInfoButtonId: "data-info-button",
-  dataInfoTextId: "data-info-text",
+  dataInfoTextContainerId: "data-info-text-container",
 };
 
 // Inputs
@@ -71,10 +71,15 @@ export const inputContainerIds = {
 
 // Graphs
 export const graphIds = {
+  mainContainerId: "main-container",
+  additionalFiltersContainerId: "additional-filters-container",
   graphTitleId: "graph-title",
 
   graphId: "graph",
-  graphLegendId: "graph-legend",
+  graphLegendContentId: "graph-legend-content",
+  graphLegendContainerId: "graph-legend-container",
+  graphLegendTitleId: "graph-legend-title",
+  graphAddOnsId: "graph-add-ons",
 
   resultsByAgeSexGroupGraphSelectId: "results-by-age-sex-group-graph-select",
   resultsByFoodGroupGraphSelectId: "results-by-food-group-graph-select",

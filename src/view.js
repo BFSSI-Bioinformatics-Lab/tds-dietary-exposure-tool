@@ -5,6 +5,7 @@ import {
   getAvailableFilters,
   getCurrentAppliedFilters,
 } from "./data.js";
+import { getTranslation } from "./translation.js";
 
 /*
 /*
@@ -25,11 +26,11 @@ export function addEventListenersToButtons() {
   document
     .getElementById(headerIds.dataInfoButtonId)
     .addEventListener("click", () => {
-      const dataInfoTextElement = document.getElementById(
-        headerIds.dataInfoTextId,
+      const dataInfoTextContainerElement = document.getElementById(
+        headerIds.dataInfoTextContainerId,
       );
-      dataInfoTextElement.style.display =
-        dataInfoTextElement.style.display == "none" ? "" : "none";
+      dataInfoTextContainerElement.style.display =
+        dataInfoTextContainerElement.style.display == "none" ? "" : "none";
     });
 }
 
@@ -155,7 +156,7 @@ export function updateInputsWithAvailableFilters(
  * Graphs
  */
 
-function updateGraphs(
+async function updateGraphs(
   foodCompositeData,
   foodConsumptionData,
   contaminentOccurenceData,
@@ -180,13 +181,18 @@ function updateGraphs(
       minContaminentLod = contaminentOccurence.lod;
     }
   });
-
-  const lodRangeElement = document.getElementById(inputIds.lodRangeId);
-  lodRangeElement.innerHTML = `LOD range: ${minContaminentLod}-${maxContaminentLod} ng/g`;
+  document.getElementById("lod-range").innerHTML = `${await getTranslation(
+    inputIds.lodRangeId,
+  )} ${minContaminentLod}-${maxContaminentLod} ng/g`;
 
   const activeGraph = document.querySelector(".active-graph")
     ? document.querySelector(".active-graph").id
     : "";
+
+  document.getElementById(graphIds.additionalFiltersContainerId).style.display =
+    "none";
+  document.getElementById(graphIds.graphLegendContainerId).style.display =
+    "none";
 
   if (activeGraph == graphIds.resultsByAgeSexGroupGraphSelectId) {
     [
@@ -226,29 +232,21 @@ function updateGraphs(
   }
 }
 
-export function displayDietaryExposureByAgeSexGroupGraph() {
+export async function displayDietaryExposureByAgeSexGroupGraph() {
   const graphHeaderElement = document.getElementById(graphIds.graphTitleId);
-  graphHeaderElement.innerHTML = `Dietary exposure estimate by age sex group`;
-
+  graphHeaderElement.innerHTML = await getTranslation("rbasg-graph-title");
   const graphElement = document.getElementById(graphIds.graphId);
-  graphElement.innerHTML = "";
-
-  const graphLegendElement = document.getElementById(graphIds.graphLegendId);
-  graphLegendElement.innerHTML = "";
+  graphElement.innerHTML = "Graph under construction";
 }
 
-export function displayDietaryExposureByFoodGroupGraph() {
+export async function displayDietaryExposureByFoodGroupGraph() {
   const graphHeaderElement = document.getElementById(graphIds.graphTitleId);
-  graphHeaderElement.innerHTML = `Dietary exposure estimate by food group`;
-
+  graphHeaderElement.innerHTML = await getTranslation("rbfg-graph-title");
   const graphElement = document.getElementById(graphIds.graphId);
-  graphElement.innerHTML = "";
-
-  const graphLegendElement = document.getElementById(graphIds.graphLegendId);
-  graphLegendElement.innerHTML = "";
+  graphElement.innerHTML = "Graph under construction";
 }
 
-export function displayDietaryExposureByFoodGraph(
+export async function displayDietaryExposureByFoodGraph(
   chemicalName,
   ageSexGroup,
   years,
@@ -408,23 +406,29 @@ export function displayDietaryExposureByFoodGraph(
     .style("font-size", "1.8rem")
     .text(chemicalName);
 
-  const graphHeaderElement = document.getElementById(graphIds.graphTitleId);
-  graphHeaderElement.innerHTML = `Dietary exposure estimate by food for ${chemicalName} for ${ageSexGroup} (${years.join(
-    ", ",
-  )})`;
-
+  const graphTitleElement = document.getElementById(graphIds.graphTitleId);
   const graphElement = document.getElementById(graphIds.graphId);
-  graphElement.innerHTML = "";
+  const graphAdditionalFiltersContainer = document.getElementById(
+    graphIds.additionalFiltersContainerId,
+  );
+  const graphLegendContainer = document.getElementById(
+    graphIds.graphLegendContainerId,
+  );
+  const graphLegendContent = document.getElementById(
+    graphIds.graphLegendContentId,
+  );
 
-  const graphLegendElement = document.getElementById(graphIds.graphLegendId);
-  graphLegendElement.innerHTML = "";
-
-  const legendTitle = document.createElement("div");
-  graphLegendElement.append(legendTitle);
-  legendTitle.setAttribute("id", "graph-legend-title");
-  legendTitle.innerHTML = "";
+  graphTitleElement.innerHTML = `${await getTranslation(
+    "rbf-graph-title",
+  )} ${chemicalName}, ${ageSexGroup}, (${years.join(", ")})`;
+  graphElement.innerHTML = await getTranslation("no-data-available");
 
   if (svg._groups[0][0].children[1].childElementCount) {
+    graphElement.innerHTML = "";
+    graphAdditionalFiltersContainer.style.display = "";
+    graphLegendContainer.style.display = "";
+    graphLegendContent.innerHTML = "";
+
     graphElement.append(
       svg
         .attr("viewBox", function autoBox() {
@@ -436,7 +440,7 @@ export function displayDietaryExposureByFoodGraph(
         .node(),
     );
 
-    uniqueFoodCompositeGroupings.forEach((foodCompositeGrouping) => {
+    uniqueFoodCompositeGroupings.forEach(async (foodCompositeGrouping) => {
       const legendItemElement = document.createElement("div");
       legendItemElement.setAttribute("id", "graph-legend-item");
       const legendItemColorElement = document.createElement("div");
@@ -451,10 +455,8 @@ export function displayDietaryExposureByFoodGraph(
 
       legendItemElement.append(legendItemColorElement);
       legendItemElement.append(legendItemTextElement);
-      graphLegendElement.appendChild(legendItemElement);
-      legendTitle.innerHTML = "Food Groups";
+
+      graphLegendContent.appendChild(legendItemElement);
     });
-  } else {
-    graphElement.innerHTML = "No data available";
   }
 }

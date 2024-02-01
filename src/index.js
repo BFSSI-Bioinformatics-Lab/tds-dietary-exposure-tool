@@ -4,6 +4,8 @@ import {
   getFoodConsumptionData,
 } from "./data.js";
 
+import { initPage } from "./translation.js";
+
 import {
   addEventListenersToButtons,
   addEventListenersToGraphSelects,
@@ -12,6 +14,8 @@ import {
 } from "./view.js";
 
 async function main() {
+  initPage();
+
   const contaminentOccurenceData = await getContaminentOcurrenceData();
   const foodConsumptionData = await getFoodConsumptionData();
   const foodCompositeData = await getFoodCompositeData();
