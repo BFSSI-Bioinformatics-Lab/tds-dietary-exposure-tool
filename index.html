@@ -34,7 +34,7 @@
               id="data-info-text-list-item-1-link-1"
               href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c"
               target="”_blank”"
-            >
+            ></a>
           </li>
           <li id="data-info-text-list-item-2">
             <a
@@ -51,60 +51,61 @@
     <div id="preamble"></div>
 
     <div id="main-inputs-container">
-      <div class="filter">
-        <label id="chemical-group-input-label" for="chemical-group-input"></label>
-        <select type="radio" id="chemical-group-input"></select>
-      </div>
+      <div id="main-inputs-text"></div>
+      <div id="main-inputs-content">
+        <div class="filter">
+          <label
+            id="chemical-group-input-label"
+            for="chemical-group-input"
+          ></label>
+          <select type="radio" id="chemical-group-input"></select>
+        </div>
 
-      <br />
+        <br />
 
-      <div class="filter">
-        <label id="chemical-input-label"for="chemical-input"></label>
-        <select id="chemical-input"></select>
-      </div>
+        <div class="filter">
+          <label id="chemical-input-label" for="chemical-input"></label>
+          <select id="chemical-input"></select>
+        </div>
 
-      <br />
+        <br />
 
-      <div class="filter">
-        <label id="year-input-label" for="year-input"></label>
-        <select id="year-input" multiple></select>
-      </div>
+        <div class="filter">
+          <label id="year-input-label" for="year-input"></label>
+          <select id="year-input" multiple></select>
+        </div>
 
-      <br />
+        <br />
 
-      <div class="filter">
-        <label id="lod-input-label" for="lod-input"
-          ></label
-        >
-        <select id="lod-input"></select>
-        <div id="lod-range"></div>
+        <div class="filter">
+          <label id="lod-input-label" for="lod-input"></label>
+          <select id="lod-input"></select>
+          <div id="lod-range"></div>
+        </div>
       </div>
     </div>
 
     <br />
 
     <div id="graph-select-container">
-      <div id="graph-select-text"></div>
-      <div id="graph-select-images-container">
-        <img
-          class="graph-select"
-          id="results-by-age-sex-group-graph-select"
-          src="./img/rbasg.png"
-          alt="results by age sex group graph preview"
-        />
-        <img
-          class="graph-select"
-          id="results-by-food-group-graph-select"
-          src="./img/rbfg.png"
-          alt="results by food group graph preview"
-        />
-        <img
-          class="graph-select"
-          id="results-by-food-graph-select"
-          src="./img/rbf.png"
-          alt="results by food graph preview"
-        />
-      </div>
+      <img
+        class="graph-select"
+        id="results-by-age-sex-group-graph-select"
+        src="./img/rbasg.png"
+        alt="results by age sex group graph preview"
+      />
+      <img
+        class="graph-select"
+        id="results-by-food-group-graph-select"
+        src="./img/rbfg.png"
+        alt="results by food group graph preview"
+      />
+      <img
+        class="graph-select"
+        id="results-by-food-graph-select"
+        src="./img/rbf.png"
+        alt="results by food graph preview"
+      />
     </div>
 
     <br />
@@ -116,7 +117,7 @@
       </div>
 
       <div id="graph-add-ons">
-        <div id="additional-filters-container" style="display:none">
+        <div id="additional-filters-container" style="display: none">
           <div id="units-container-input" class="filter" style="display: none">
             <label id="units-input-label" for="units-input"></label>
             <select id="units-input"></select>
@@ -136,7 +137,10 @@
             class="filter"
             style="display: none"
           >
-            <label id="age-sex-group-input-label" for="age-sex-group-input"></label>
+            <label
+              id="age-sex-group-input-label"
+              for="age-sex-group-input"
+            ></label>
             <select id="age-sex-group-input"></select>
           </div>
 
@@ -145,12 +149,15 @@
             class="filter"
             style="display: none"
           >
-            <label id="category-format-input-label" for="category-format-input"></label>
+            <label
+              id="category-format-input-label"
+              for="category-format-input"
+            ></label>
             <select id="category-format-input"></select>
           </div>
         </div>
 
-        <div id="graph-legend-container" style="display:none">
+        <div id="graph-legend-container" style="display: none">
           <div id="graph-legend-title"></div>
           <div id="graph-legend-content"></div>
         </div>

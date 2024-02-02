@@ -48,7 +48,7 @@
     },
     "preamble": {
       "static": true,
-      "en": " How much of various chemicals are people living in Canada being exposed to through their diet? And which foods and food groups contribute the most?",
+      "en": "How much of various chemicals is the Canadian population exposed to through their diet? And which foods and food groups contribute the most?",
       "fr": ""
     },
     "chemical-group-input-label": {
@@ -68,16 +68,16 @@
     },
     "lod-input-label": {
       "static": true,
-      "en": "Occurence values below the level of detection are equal to",
+      "en": "Occurence <LOD =",
       "fr": ""
     },
     "lod-range": {
       "en": "LOD Range: ",
       "fr": ""
     },
-    "graph-select-text": {
+    "main-inputs-text": {
       "static": true,
-      "en": "Select Graph Type:",
+      "en": "Select Chemical, Year(s) and Graph Type:",
       "fr": ""
     },
     "units-input-label": {
