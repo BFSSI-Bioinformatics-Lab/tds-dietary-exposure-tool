@@ -40,15 +40,16 @@ export function addEventListenersToInputs(
   contaminentOccurenceData,
 ) {
   // Update inputs with available filters when a user changes the chemical group input.
-  document
-    .getElementById(inputIds.chemicalGroupInputId)
-    .addEventListener("change", () => {
+  [inputIds.chemicalGroupInputId, inputIds.chemicalInputId].forEach((id) => {
+    document.getElementById(id).addEventListener("change", () => {
       updateInputsWithAvailableFilters(
         foodConsumptionData,
         contaminentOccurenceData,
         false,
+        id == inputIds.chemicalGroupInputId,
       );
     });
+  });
 
   for (const inputId of Object.values(inputIds)) {
     // Update graphs whenever a user changes an input.
@@ -123,15 +124,21 @@ export function updateInputsWithAvailableFilters(
   foodConsumptionData,
   contaminentOccurenceData,
   isInitialization = false, // Filters for certain inputs should only be fetched and updated once (at initialization).
+  chemicalGroupChanged = false,
 ) {
   const chemicalGroup = document.getElementById(
     inputIds.chemicalGroupInputId,
   ).value;
 
+  const chemical = chemicalGroupChanged
+    ? null
+    : document.getElementById(inputIds.chemicalInputId).value;
+
   const availableFilters = getAvailableFilters(
     foodConsumptionData,
     contaminentOccurenceData,
     chemicalGroup,
+    chemical,
   );
 
   if (isInitialization) {
@@ -148,7 +155,9 @@ export function updateInputsWithAvailableFilters(
       availableFilters.categoryFormat,
     );
   }
-  populateInput(inputIds.chemicalInputId, availableFilters.chemicalNames);
+  if (chemicalGroupChanged) {
+    populateInput(inputIds.chemicalInputId, availableFilters.chemicalNames);
+  }
   populateInput(inputIds.yearInputId, availableFilters.years);
 }
 
@@ -181,9 +190,13 @@ async function updateGraphs(
       minContaminentLod = contaminentOccurence.lod;
     }
   });
-  document.getElementById("lod-range").innerHTML = `${await getTranslation(
-    inputIds.lodRangeId,
-  )} ${minContaminentLod}-${maxContaminentLod} ng/g`;
+  if (minContaminentLod != Infinity) {
+    document.getElementById("lod-range").innerHTML = `${await getTranslation(
+      inputIds.lodRangeId,
+    )} ${minContaminentLod} - ${maxContaminentLod} ng/g`;
+  } else {
+    document.getElementById("lod-range").innerHTML = "";
+  }
 
   const activeGraph = document.querySelector(".active-graph")
     ? document.querySelector(".active-graph").id
@@ -236,14 +249,14 @@ export async function displayDietaryExposureByAgeSexGroupGraph() {
   const graphHeaderElement = document.getElementById(graphIds.graphTitleId);
   graphHeaderElement.innerHTML = await getTranslation("rbasg-graph-title");
   const graphElement = document.getElementById(graphIds.graphId);
-  graphElement.innerHTML = "Graph under construction";
+  graphElement.innerHTML = "Graph in development";
 }
 
 export async function displayDietaryExposureByFoodGroupGraph() {
   const graphHeaderElement = document.getElementById(graphIds.graphTitleId);
   graphHeaderElement.innerHTML = await getTranslation("rbfg-graph-title");
   const graphElement = document.getElementById(graphIds.graphId);
-  graphElement.innerHTML = "Graph under construction";
+  graphElement.innerHTML = "Graph in development";
 }
 
 export async function displayDietaryExposureByFoodGraph(

@@ -17,14 +17,15 @@ async function readJsonFile(fileName) {
   }
 }
 export async function initPage() {
-  data = (await readJsonFile("../lang/tds-dietary-exposure-translations.json"))
+  data = (await readJsonFile("./lang/tds-dietary-exposure-translations.json"))
     .data;
 
   Object.keys(data).forEach((key) => {
     if (data[key].static) {
       document.getElementById(key).innerHTML =
-        data[key][userLanguage].replaceAll("\n", "<br/>") +
-        document.getElementById(key).innerHTML;
+        data[key][userLanguage]
+          .replaceAll("<", "&lt")
+          .replaceAll("\n", "<br/>") + document.getElementById(key).innerHTML;
     }
   });
 }

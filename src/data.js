@@ -122,6 +122,7 @@ export function getAvailableFilters(
   foodConsumptionData,
   contaminentOccurenceData,
   chemicalGroup,
+  chemical,
 ) {
   // Get the available filters for the user based on the inputted chemical group.
 
@@ -137,7 +138,15 @@ export function getAvailableFilters(
 
   contaminentOccurenceData[chemicalGroup].forEach((row) => {
     uniqueChemicals.add(row.chemicalName);
-    uniqueYears.add(row.year);
+  });
+
+  const chemicalNames = Array.from(uniqueChemicals).sort();
+  if (!chemical) chemical = chemicalNames[0];
+
+  contaminentOccurenceData[chemicalGroup].forEach((row) => {
+    if (row.chemicalName == chemical) {
+      uniqueYears.add(row.year);
+    }
   });
 
   foodConsumptionData.forEach((row) => {
@@ -146,7 +155,7 @@ export function getAvailableFilters(
 
   return {
     chemicalGroups: chemicalGroups,
-    chemicalNames: Array.from(uniqueChemicals).sort(),
+    chemicalNames: chemicalNames,
     years: Array.from(uniqueYears).sort(),
     // Level of detection - when the result value is 0, the user can filter based on certain LODs.
     lods: ["0", "1/2 LOD", "LOD", "Exclude"],
@@ -192,10 +201,10 @@ export function filterContaminentOccurenceData(
           row.resultValue > 0
             ? row.resultValue
             : currentFilters.lod == "1/2 LOD"
-              ? row.lod / 2
-              : currentFilters.lod == "LOD"
-                ? row.lod
-                : row.resultValue,
+            ? row.lod / 2
+            : currentFilters.lod == "LOD"
+            ? row.lod
+            : row.resultValue,
       };
     });
 }

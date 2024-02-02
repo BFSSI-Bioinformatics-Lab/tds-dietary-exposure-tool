@@ -35,6 +35,7 @@ async function main() {
     foodConsumptionData,
     contaminentOccurenceData,
     true,
+    true,
   );
 }
 
