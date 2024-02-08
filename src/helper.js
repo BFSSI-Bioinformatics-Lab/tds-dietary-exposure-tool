@@ -1,12 +1,23 @@
-export function normalizeAgeSexGroup(ageSexGroup) {
-  let age = "";
+export function getSex(ageSexGroup) {
   let sex = "";
   for (let i = 0; i < ageSexGroup.length; i++) {
     if (ageSexGroup[i] == "F") {
       sex = "Female";
     } else if (ageSexGroup[i] == "M") {
       sex = "Male";
-    } else if (!isNaN(ageSexGroup[i])) {
+    }
+    if (sex) break;
+  }
+  if (!sex) {
+    sex = "Both";
+  }
+  return sex;
+}
+
+export function getAge(ageSexGroup) {
+  let age = "";
+  for (let i = 0; i < ageSexGroup.length; i++) {
+    if (!isNaN(ageSexGroup[i])) {
       while (
         i < ageSexGroup.length &&
         ageSexGroup[i] != " " &&
@@ -18,18 +29,15 @@ export function normalizeAgeSexGroup(ageSexGroup) {
         i++;
       }
     }
-
-    if (age != "" && sex != "") break;
+    if (age) break;
   }
-  sex = sex == "" ? "Both" : sex;
-  if (age == "1+") age = "All ages (1+)";
-  return "Age " + age + ", " + sex;
+  return age;
 }
 
 export function sortAgeSexGroup(a, b) {
   // Special case
-  if (a.includes("(1+)")) {
-    if (b.includes("(1+)")) {
+  if (a.includes("1+")) {
+    if (b.includes("1+")) {
       return a.localeCompare(b);
     }
     return -1;
@@ -67,8 +75,4 @@ export function resultValueToNanoGramsPerGram(value, unitOfMeasurement) {
       // "µg/g"
       return value * 1e3;
   }
-}
-
-export function formatFoodCompositeLabel(foodCopmositeLabel) {
-  return foodCopmositeLabel.replace(/_/g, ", ");
 }

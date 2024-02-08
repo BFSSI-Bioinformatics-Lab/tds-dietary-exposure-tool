@@ -1,42 +1,14 @@
-import {
-  getContaminentOcurrenceData,
-  getFoodCompositeData,
-  getFoodConsumptionData,
-} from "./data.js";
-
-import { initPage } from "./translation.js";
-
-import {
-  addEventListenersToButtons,
-  addEventListenersToGraphSelects,
-  addEventListenersToInputs,
-  updateInputsWithAvailableFilters,
-} from "./view.js";
+import { filterTdsDataAndUpdateGraph, initializeFilters } from "./filter.js";
+import { initializePage } from "./page.js";
+import { loadTdsData } from "./tds.js";
 
 async function main() {
-  initPage();
+  initializePage();
 
-  const contaminentOccurenceData = await getContaminentOcurrenceData();
-  const foodConsumptionData = await getFoodConsumptionData();
-  const foodCompositeData = await getFoodCompositeData();
+  const tdsData = await loadTdsData();
 
-  addEventListenersToButtons();
-  addEventListenersToGraphSelects(
-    foodCompositeData,
-    foodConsumptionData,
-    contaminentOccurenceData,
-  );
-  addEventListenersToInputs(
-    foodCompositeData,
-    foodConsumptionData,
-    contaminentOccurenceData,
-  );
-  updateInputsWithAvailableFilters(
-    foodConsumptionData,
-    contaminentOccurenceData,
-    true,
-    true,
-  );
+  initializeFilters(tdsData);
+  filterTdsDataAndUpdateGraph(tdsData);
 }
 
 main();

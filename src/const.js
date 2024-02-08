@@ -1,12 +1,6 @@
-/*
-Data
-*/
-// Directories
-export const consumptionDataDirectory = "./data/food-consumption/";
-export const contaminentOccurenceDataDirectory =
-  "./data/contaminant-occurence/";
+const consumptionDataDirectory = "./data/food-consumption/";
+const contaminentOccurenceDataDirectory = "./data/contaminant-occurence/";
 
-// Consumption data
 export const foodConsumptionFileNames = {
   compositeDescriptionFileName:
     consumptionDataDirectory +
@@ -18,8 +12,6 @@ export const foodConsumptionFileNames = {
     consumptionDataDirectory +
     "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_en.csv",
 };
-
-// Contaminent occurence data
 
 export const contaminentOccurenceFileNames = [
   contaminentOccurenceDataDirectory +
@@ -38,50 +30,47 @@ export const contaminentOccurenceFileNames = [
     "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
 ];
 
-/*
-HTML
-*/
+export const el = {
+  howToUse: {
+    container: document.getElementById("how-to-use-container"),
+    content: document.getElementById("how-to-use-content"),
+  },
+  dataInfo: {
+    container: document.getElementById("data-info-container"),
+    content: document.getElementById("data-info-content"),
+  },
+  chemicalGroupFilter: document.getElementById("chemical-group-filter-input"),
+  chemicalFilter: document.getElementById("chemical-filter-input"),
+  yearFilter: document.getElementById("year-filter-input"),
+  lodFilter: document.getElementById("lod-filter-input"),
+  lodFilterDescription: document.getElementById("lod-filter-description"),
+  rbasgSelect: document.getElementById("rbasg-graph-select"),
+  rbfgSelect: document.getElementById("rbfg-graph-select"),
+  rbfSelect: document.getElementById("rbf-graph-select"),
+  rbasgUnitsFilter: document.getElementById("rbasg-units-filter-input"),
+  rbasgAgeSexGroupFilter: document.getElementById(
+    "rbasg-age-sex-group-filter-input",
+  ),
+  rbasgDomainFilter: document.getElementById("rbasg-domain-filter-input"),
+  rbfgRangeFilter: document.getElementById("rbfg-range-format-filter-input"),
+  rbfgAgeSexGroupFilter: document.getElementById(
+    "rbfg-age-sex-group-filter-input",
+  ),
+  rbfAgeSexGroupFilter: document.getElementById(
+    "rbf-age-sex-group-filter-input",
+  ),
 
-export const headerIds = {
-  howToUseButtonId: "how-to-use-button",
-  howToUseTextId: "how-to-use-text",
-  dataInfoButtonId: "data-info-button",
-  dataInfoTextContainerId: "data-info-text-container",
-};
+  rbasgGraphContainer: document.getElementById("rbasg-graph-container"),
+  rbfgGraphContainer: document.getElementById("rbfg-graph-container"),
+  rbfGraphContainer: document.getElementById("rbf-graph-container"),
+  rbasgGraphTitle: document.getElementById("rbasg-graph-title"),
+  rbfgGraphTitle: document.getElementById("rbfg-graph-title"),
+  rbfGraphTitle: document.getElementById("rbf-graph-title"),
+  rbasgGraph: document.getElementById("rbasg-graph"),
+  rbfgGraph: document.getElementById("rbfg-graph"),
+  rbfGraph: document.getElementById("rbf-graph"),
 
-// Inputs
-export const inputIds = {
-  chemicalGroupInputId: "chemical-group-input",
-  chemicalInputId: "chemical-input",
-  yearInputId: "year-input",
-  lodInputId: "lod-input",
-  lodRangeId: "lod-range",
-  ageSexGroupInputId: "age-sex-group-input",
-  dataFormatInputId: "data-format-input",
-  unitsInputId: "units-input",
-  categoryFormatInputId: "category-format-input",
-};
-
-export const inputContainerIds = {
-  ageSexGroupInputContainerId: "age-sex-group-container-input",
-  dataFormatInputContainerId: "data-format-container-input",
-  unitsInputContainerId: "units-container-input",
-  categoryFormatInputContainerId: "category-format-container-input",
-};
-
-// Graphs
-export const graphIds = {
-  mainContainerId: "main-container",
-  additionalFiltersContainerId: "additional-filters-container",
-  graphTitleId: "graph-title",
-
-  graphId: "graph",
-  graphLegendContentId: "graph-legend-content",
-  graphLegendContainerId: "graph-legend-container",
-  graphLegendTitleId: "graph-legend-title",
-  graphAddOnsId: "graph-add-ons",
-
-  resultsByAgeSexGroupGraphSelectId: "results-by-age-sex-group-graph-select",
-  resultsByFoodGroupGraphSelectId: "results-by-food-group-graph-select",
-  resultsByFoodGraphSelectId: "results-by-food-graph-select",
+  rbasgLegendContent: document.getElementById("rbasg-legend-content"),
+  rbfgLegendContent: document.getElementById("rbfg-legend-content"),
+  rbfLegendContent: document.getElementById("rbf-legend-content"),
 };

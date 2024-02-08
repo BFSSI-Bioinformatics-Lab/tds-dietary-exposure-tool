@@ -10,156 +10,195 @@
 
   <body>
     <!-- link libraries -->
-    <script src="./src/d3.v7.min.js" defer></script>
+    <script src="./lib/d3.v7.min.js" defer></script>
     <!-- link custom js -->
     <script src="./src/index.js" type="module" defer></script>
 
-    <div id="title">
+    <div id="title-container">
       <span id="title-primary" class="bold"></span>
       <span id="title-secondary"></span>
     </div>
 
-    <div id="how-to-use">
-      <button id="how-to-use-button"></button>
-      <div id="how-to-use-text" style="display: none"></div>
-    </div>
+    <div id="info-container">
+      <div id="how-to-use-container">
+        <button id="how-to-use-button" class="info-button"></button>
+        <div id="how-to-use-content" class="info-content" style="display: none">
+          <div id="how-to-use-text"></div>
+        </div>
+      </div>
 
-    <div id="data-info">
-      <button id="data-info-button"></button>
-      <div id="data-info-text-container" style="display: none">
-        <div id="data-info-text-top"></div>
-        <ul>
-          <li id="data-info-text-list-item-1">
-            <a
-              id="data-info-text-list-item-1-link-1"
-              href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c"
-              target="”_blank”"
-            ></a>
-          </li>
-          <li id="data-info-text-list-item-2">
-            <a
-              id="data-info-text-list-item-2-link-1"
-              href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130"
-              target="”_blank”"
-            >
-            </a>
-          </li>
-        </ul>
+      <div id="data-info-container">
+        <button id="data-info-button" class="info-button"></button>
+        <div id="data-info-content" class="info-content" style="display: none">
+          <div id="data-info-text-top"></div>
+          <ul id="data-info-text-list">
+            <li id="data-info-text-list-item-1">
+              <a
+                id="data-info-text-list-item-1-link-1"
+                href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c"
+                target="”_blank”"
+              ></a>
+            </li>
+            <li id="data-info-text-list-item-2">
+              <a
+                id="data-info-text-list-item-2-link-1"
+                href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130"
+                target="”_blank”"
+              >
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <div id="preamble"></div>
 
-    <div id="main-inputs-container">
-      <div id="main-inputs-text"></div>
-      <div id="main-inputs-content">
-        <div class="filter">
+    <div id="filters-container">
+      <div id="filters-title"></div>
+
+      <div id="filters-content">
+        <div id="chemical-group-filter-container" class="filter">
           <label
-            id="chemical-group-input-label"
-            for="chemical-group-input"
+            id="chemical-group-filter-title"
+            for="chemical-group-filter-input"
           ></label>
-          <select type="radio" id="chemical-group-input"></select>
+          <select id="chemical-group-filter-input"></select>
         </div>
 
-        <br />
+        <div id="chemical-filter-container" class="filter">
+          <label id="chemical-filter-title" for="chemical-filter-input"></label>
 
-        <div class="filter">
-          <label id="chemical-input-label" for="chemical-input"></label>
-          <select id="chemical-input"></select>
+          <select id="chemical-filter-input"></select>
         </div>
 
-        <br />
-
-        <div class="filter">
-          <label id="year-input-label" for="year-input"></label>
-          <select id="year-input" multiple></select>
+        <div id="year-filter-container" class="filter">
+          <label id="year-filter-title" for="year-filter-input"></label>
+          <select id="year-filter-input" multiple></select>
         </div>
 
-        <br />
-
-        <div class="filter">
-          <label id="lod-input-label" for="lod-input"></label>
-          <select id="lod-input"></select>
-          <div id="lod-range"></div>
+        <div id="lod-filter-container" class="filter">
+          <label id="lod-filter-title" for="lod-filter-input"></label>
+          <select id="lod-filter-input"></select>
+          <div id="lod-filter-description" class="small-text"></div>
         </div>
       </div>
     </div>
 
-    <br />
-
-    <div id="graph-select-container">
+    <div id="graphs-selection-container">
       <img
         class="graph-select"
-        id="results-by-age-sex-group-graph-select"
+        id="rbasg-graph-select"
         src="./img/rbasg.png"
         alt="results by age sex group graph preview"
       />
       <img
         class="graph-select"
-        id="results-by-food-group-graph-select"
+        id="rbfg-graph-select"
         src="./img/rbfg.png"
         alt="results by food group graph preview"
       />
       <img
-        class="graph-select"
-        id="results-by-food-graph-select"
+        class="graph-select active-graph-select"
+        id="rbf-graph-select"
         src="./img/rbf.png"
         alt="results by food graph preview"
       />
     </div>
 
-    <br />
-
-    <div id="main-container">
-      <div id="graph-container">
-        <div id="graph-title"></div>
-        <div id="graph"></div>
-      </div>
-
-      <div id="graph-add-ons">
-        <div id="additional-filters-container" style="display: none">
-          <div id="units-container-input" class="filter" style="display: none">
-            <label id="units-input-label" for="units-input"></label>
-            <select id="units-input"></select>
-          </div>
-
+    <div id="graphs-container">
+      <div id="rbasg-graph-container" class="graph-container">
+        <div id="rbasg-graph-content" class="graph-content">
+          <div id="rbasg-graph-title" class="graph-title"></div>
+          <div id="rbasg-graph"></div>
+        </div>
+        <div id="rbasg-graph-add-ons" class="graph-add-ons">
           <div
-            id="data-format-container-input"
-            class="filter"
-            style="display: none"
+            id="rbasg-filters-container"
+            class="graph-additional-filters-container"
           >
-            <label id="data-format-input-label" for="data-format-input"></label>
-            <select id="data-format-input"></select>
-          </div>
+            <div id="rbasg-age-sex-group-filter-container" class="filter">
+              <label
+                id="rbasg-age-sex-group-filter-title"
+                for="rbasg-age-sex-group-filter-input"
+              ></label>
+              <select id="rbasg-age-sex-group-filter-input" multiple></select>
+            </div>
 
-          <div
-            id="age-sex-group-container-input"
-            class="filter"
-            style="display: none"
-          >
-            <label
-              id="age-sex-group-input-label"
-              for="age-sex-group-input"
-            ></label>
-            <select id="age-sex-group-input"></select>
-          </div>
+            <div id="rbasg-units-filter-container" class="filter">
+              <label
+                id="rbasg-units-filter-title"
+                for="rbasg-units-filter-input"
+              ></label>
+              <select id="rbasg-units-filter-input"></select>
+            </div>
 
-          <div
-            id="category-format-container-input"
-            class="filter"
-            style="display: none"
-          >
-            <label
-              id="category-format-input-label"
-              for="category-format-input"
-            ></label>
-            <select id="category-format-input"></select>
+            <div id="rbasg-domain-filter-container" class="filter">
+              <label
+                id="rbasg-domain-filter-title"
+                for="rbasg-domain-filter-input"
+              ></label>
+              <select id="rbasg-domain-filter-input"></select>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div id="graph-legend-container" style="display: none">
-          <div id="graph-legend-title"></div>
-          <div id="graph-legend-content"></div>
+      <div id="rbfg-graph-container" class="graph-container">
+        <div id="rbfg-graph-content" class="graph-content">
+          <div id="rbfg-graph-title" class="graph-title"></div>
+          <div id="rbfg-graph"></div>
+        </div>
+        <div id="rbfg-graph-add-ons" class="graph-add-ons">
+          <div
+            id="rbfg-filters-container"
+            class="graph-additional-filters-container"
+          >
+            <div id="rbfg-age-sex-group-filter-container" class="filter">
+              <label
+                id="rbfg-age-sex-group-filter-title"
+                for="rbfg-age-sex-group-filter-input"
+              ></label>
+              <select id="rbfg-age-sex-group-filter-input"></select>
+            </div>
+
+            <div id="rbfg-range-format-filter-container" class="filter">
+              <label
+                id="rbfg-range-format-filter-title"
+                for="rbfg-range-format-filter-input"
+              ></label>
+              <select id="rbfg-range-format-filter-input"></select>
+            </div>
+          </div>
+          <div id="rbfg-legend-container" class="graph-legend-container">
+            <div id="rbfg-legend-title" class="graph-legend-title"></div>
+            <div id="rbfg-legend-content" class="graph-legend-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="rbf-graph-container" class="graph-container">
+        <div id="rbf-graph-content" class="graph-content">
+          <div id="rbf-graph-title" class="graph-title"></div>
+          <div id="rbf-graph"></div>
+        </div>
+        <div id="rbf-graph-add-ons" class="graph-add-ons">
+          <div
+            id="rbf-filters-container"
+            class="graph-additional-filters-container"
+          >
+            <div id="rbf-age-sex-group-filter-container" class="filter">
+              <label
+                id="rbf-age-sex-group-filter-title"
+                for="rbf-age-sex-group-filter-input"
+              ></label>
+              <select id="rbf-age-sex-group-filter-input"></select>
+            </div>
+          </div>
+          <div id="rbf-legend-container" class="graph-legend-container">
+            <div id="rbf-legend-title" class="graph-legend-title"></div>
+            <div id="rbf-legend-content" class="graph-legend-content"></div>
+          </div>
         </div>
       </div>
     </div>
