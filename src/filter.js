@@ -129,6 +129,7 @@ function displayRbasgAdditionalFilters(tdsData) {
     const oe = document.createElement("option");
     oe.value = asg;
     oe.text = asg;
+    oe.selected = true;
     el.rbasgAgeSexGroupFilter.appendChild(oe);
   });
 }
@@ -146,6 +147,7 @@ function displayRbfgAdditionalFilters(tdsData) {
     const oe = document.createElement("option");
     oe.value = asg;
     oe.text = asg;
+    oe.selected = true;
     el.rbfgAgeSexGroupFilter.appendChild(oe);
   });
 }

@@ -35,26 +35,29 @@ export function getAge(ageSexGroup) {
 }
 
 export function sortAgeSexGroup(a, b) {
-  // Special case
-  if (a.includes("1+")) {
-    if (b.includes("1+")) {
-      return a.localeCompare(b);
+  const getRange = (age) => {
+    let s = age.split("+");
+    if (s.length == 2) {
+      return [s[0], -1];
+    } else {
+      s = age.split("-");
+      return [s[0], s[1]];
     }
-    return -1;
-  } else if (b.includes("(1+)")) {
-    return 1;
-  }
+  };
 
-  // General case
-  const regex = /\d+/g;
-  const aNumbers = a.match(regex).map(Number);
-  const bNumbers = b.match(regex).map(Number);
-  for (let i = 0; i < Math.min(aNumbers.length, bNumbers.length); i++) {
-    if (aNumbers[i] !== bNumbers[i]) {
-      return aNumbers[i] - bNumbers[i];
-    }
+  const [aAge, aSex] = a.split(" ");
+  const [bAge, bSex] = b.split(" ");
+
+  const aAgeRange = getRange(aAge).map((s) => Number(s));
+  const bAgeRange = getRange(bAge).map((s) => Number(s));
+
+  if (aAge == bAge) {
+    return aSex - bSex;
+  } else if (aAgeRange[0] == bAgeRange[0]) {
+    return aAgeRange[1] - bAgeRange[1];
+  } else {
+    return aAgeRange[0] - bAgeRange[0];
   }
-  return a.localeCompare(b);
 }
 
 export function resultValueToNanoGramsPerGram(value, unitOfMeasurement) {

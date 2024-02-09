@@ -135,7 +135,7 @@ table {
 
 body {
   margin: 0 auto;
-  width: min(70rem, 80%);
+  width: min(90rem, 90%);
   min-height: 100rem;
 }
 
@@ -237,13 +237,25 @@ body {
     .graph-content {
       width: 50rem;
       margin: 0 auto;
+      display: flex;
+      flex-direction: column;
       .graph-title {
+        width: 80%;
+        text-align: center;
+        margin: 0 auto;
         font-size: 1.7rem;
         font-weight: bold;
         margin-bottom: 2rem;
-        text-align: center;
+      }
+      .graph-axis-title {
+        font-size: 1rem;
       }
     }
+
+    #rbfg-graph-content {
+      width: 70rem;
+    }
+
     .graph-add-ons {
       .graph-additional-filters-container {
         > * {

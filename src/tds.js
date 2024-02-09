@@ -91,7 +91,7 @@ export async function loadTdsData() {
     }
     const foodCompositeCode = row["TDS_FC_Code"];
     const ageSexGroup =
-      getAge(row["population"]) + ", " + getSex(row["population"]);
+      getAge(row["population"]) + " " + getSex(row["population"]);
     uniqeAgeSexGroups.add(ageSexGroup);
     for (const foodGroup of Object.keys(consumptionData)) {
       if (consumptionData[foodGroup][foodCompositeCode]) {

@@ -2,7 +2,7 @@ import { el } from "./const.js";
 import { resultValueToNanoGramsPerGram } from "./helper.js";
 import { getTranslation } from "./translation.js";
 
-export function displayGraph(data) {
+export function displayGraph(tdsData) {
   const id = document.querySelector(".active-graph-select")?.id.split("-")[0];
   if (!id) return;
 
@@ -12,14 +12,27 @@ export function displayGraph(data) {
     graphContainerElement.classList.add("active-graph-container");
   }
 
-  console.log(data);
+  console.log(tdsData);
+
+  const color = d3.scaleOrdinal(
+    d3.quantize(
+      d3.interpolateRainbow,
+      Array.from(Object.keys(tdsData.consumptionData)).length + 1,
+    ),
+  );
+  Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
+    color(foodGroup);
+  });
 
   if (id == "rbasg") {
-    displayAbsg(data);
-  } else if (id == "rbfg") {
-    displayRbfg(data);
-  } else if (id == "rbf") {
-    displayRbf(data);
+    displayAbsg(tdsData);
+  } else if (id == "rbfg" || id == "rbf") {
+    displayColorLegend(tdsData, id, color);
+    if (id == "rbfg") {
+      displayRbfg(tdsData, color);
+    } else if (id == "rbf") {
+      displayRbf(tdsData, color);
+    }
   }
 }
 
@@ -28,12 +41,101 @@ async function displayAbsg(tdsData) {
   el.rbasgGraph.innerHTML = "Graph in development";
 }
 
-async function displayRbfg(tdsData) {
-  el.rbfgGraphTitle.innerHTML = await getTranslation("rbfg-graph-title");
-  el.rbfgGraph.innerHTML = "Graph in development";
+async function displayRbfg(tdsData, color) {
+  const years = Object.keys(tdsData.contaminentOccurenceData);
+  const lod = el.lodFilter.value;
+  const ageSexGroups = Array.from(el.rbfgAgeSexGroupFilter.selectedOptions).map(
+    (option) => option.value,
+  );
+  const isPercent = el.rbfgRangeFilter.value == "Percentages";
+
+  el.rbfgGraphTitle.innerHTML = `${await getTranslation("rbfg-graph-title")} ${
+    el.chemicalFilter.value
+  } (${years.join(", ")})`;
+
+  const rbfgData = {};
+  ageSexGroups.forEach((ageSexGroup) => (rbfgData[ageSexGroup] = {}));
+
+  Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
+    ageSexGroups.forEach(
+      (ageSexGroup) => (rbfgData[ageSexGroup][foodGroup] = 0),
+    );
+    Object.keys(tdsData.consumptionData[foodGroup]).forEach((foodComposite) => {
+      const consumptionRows = tdsData.consumptionData[foodGroup][
+        foodComposite
+      ].filter((row) => ageSexGroups.includes(row.ageSexGroup));
+      if (consumptionRows.length == 0) return;
+
+      consumptionRows.forEach((consumptionRow) => {
+        let numContaminentRows = 0;
+        let sumOfContaminentRows = 0;
+
+        years.forEach((year) => {
+          tdsData.contaminentOccurenceData[year].forEach((contaminentRow) => {
+            if (
+              contaminentRow.sampleCode.includes(foodComposite) ||
+              contaminentRow.productDescription.includes(foodComposite)
+            ) {
+              let resultValue = contaminentRow.resultValue;
+
+              if (contaminentRow.resultValue == 0) {
+                if (lod == "Exclude") {
+                  return;
+                } else if (lod == 0) {
+                  resultValue = 0;
+                } else if (lod == "1/2 LOD") {
+                  resultValue = contaminentRow.lod / 2;
+                } else if (lod == "LOD") {
+                  resultValue = contaminentRow.lod;
+                }
+              }
+              numContaminentRows++;
+              sumOfContaminentRows += resultValueToNanoGramsPerGram(
+                resultValue,
+                contaminentRow.unitsOfMeasurement,
+              );
+            }
+          });
+        });
+        const occurence = sumOfContaminentRows / numContaminentRows || 0;
+        const dietaryExposure =
+          consumptionRow.meanGramsPerPersonPerDay * occurence;
+
+        rbfgData[consumptionRow.ageSexGroup][foodGroup] += dietaryExposure;
+      });
+    });
+  });
+
+  const stackedBarData = {
+    entries: [],
+    rangeTitle: isPercent ? "% of Total Exposure" : "Dietary Exposure (ng/g)",
+    domainTitle: "Age-Sex Groups",
+  };
+
+  Object.keys(rbfgData).forEach((ageSexGroup) => {
+    const sum = Object.values(rbfgData[ageSexGroup]).reduce((a, b) => a + b, 0);
+    Object.keys(rbfgData[ageSexGroup]).forEach((foodGroup) => {
+      const [age, sexGroup] = ageSexGroup.split(" ");
+      const contribution = isPercent
+        ? (rbfgData[ageSexGroup][foodGroup] / sum) * 100
+        : rbfgData[ageSexGroup][foodGroup];
+      const contributionInfo = isPercent
+        ? contribution.toFixed(2) + "%"
+        : contribution.toFixed(4) + " ng/g";
+      stackedBarData.entries.push({
+        entry: age + sexGroup[0],
+        stack: foodGroup,
+        contribution,
+        info: foodGroup + "\n" + contributionInfo + "\n" + ageSexGroup,
+      });
+    });
+  });
+
+  el.rbfgGraph.innerHTML = "";
+  el.rbfgGraph.append(getStackedBar(stackedBarData, color));
 }
 
-async function displayRbf(tdsData) {
+async function displayRbf(tdsData, color) {
   const chemicalName = el.chemicalFilter.value;
   const ageSexGroup = el.rbfAgeSexGroupFilter.value;
   const lod = el.lodFilter.value;
@@ -44,29 +146,7 @@ async function displayRbf(tdsData) {
   )} ${chemicalName}, ${ageSexGroup}, (${years.join(", ")})`;
   el.rbfGraph.innerHTML = await getTranslation("no-data-available");
 
-  const color = d3.scaleOrdinal(
-    d3.quantize(
-      d3.interpolateRainbow,
-      Array.from(Object.keys(tdsData.consumptionData)).length + 1,
-    ),
-  );
-
   const rbfData = {};
-
-  el.rbfLegendContent.innerHTML = "";
-  Object.keys(tdsData.consumptionData).forEach((grouping) => {
-    const legendItemElement = document.createElement("div");
-    legendItemElement.classList.add("graph-legend-item");
-    const legendItemColorElement = document.createElement("div");
-    legendItemColorElement.classList.add("graph-legend-item-color");
-    const legendItemTextElement = document.createElement("div");
-    legendItemTextElement.classList.add("graph-legend-item-text");
-    legendItemColorElement.style.backgroundColor = color(grouping);
-    legendItemTextElement.innerHTML = grouping;
-    legendItemElement.append(legendItemColorElement);
-    legendItemElement.append(legendItemTextElement);
-    el.rbfLegendContent.appendChild(legendItemElement);
-  });
 
   let sumOfDietaryExposures = 0;
   Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
@@ -174,6 +254,23 @@ async function displayRbf(tdsData) {
  *
  */
 
+function displayColorLegend(tdsData, id, color) {
+  el[id + "LegendContent"].innerHTML = "";
+  Object.keys(tdsData.consumptionData).forEach((grouping) => {
+    const legendItemElement = document.createElement("div");
+    legendItemElement.classList.add("graph-legend-item");
+    const legendItemColorElement = document.createElement("div");
+    legendItemColorElement.classList.add("graph-legend-item-color");
+    const legendItemTextElement = document.createElement("div");
+    legendItemTextElement.classList.add("graph-legend-item-text");
+    legendItemColorElement.style.backgroundColor = color(grouping);
+    legendItemTextElement.innerHTML = grouping;
+    legendItemElement.append(legendItemColorElement);
+    legendItemElement.append(legendItemTextElement);
+    el[id + "LegendContent"].appendChild(legendItemElement);
+  });
+}
+
 async function getSunburst(data) {
   const radius = 928 / 2;
 
@@ -260,4 +357,101 @@ async function getSunburst(data) {
       })
       .node();
   }
+}
+
+function getStackedBar(stackedBarData, color) {
+  const width = 1300;
+  const height = 800;
+  const marginTop = 10;
+  const marginRight = 10;
+  const marginBottom = 50;
+  const marginLeft = 60;
+
+  const series = d3
+    .stack()
+    .keys(d3.union(stackedBarData.entries.map((d) => d.stack)))
+    .value(([, D], key) => D.get(key).contribution)(
+    d3.index(
+      stackedBarData.entries,
+      (d) => d.entry,
+      (d) => d.stack,
+    ),
+  );
+
+  const x = d3
+    .scaleBand()
+    .domain(
+      d3.groupSort(
+        stackedBarData.entries,
+        (D) => -d3.sum(D, (d) => d.contribution),
+        (d) => d.entry,
+      ),
+    )
+    .range([marginLeft, width - marginRight])
+    .padding(0.1);
+
+  const y = d3
+    .scaleLinear()
+    .domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))])
+    .rangeRound([height - marginBottom, marginTop]);
+
+  const svg = d3
+    .create("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("viewBox", [0, 0, width, height])
+    .attr("style", "max-width: 100%; height: auto;");
+
+  svg
+    .append("g")
+    .selectAll()
+    .data(series)
+    .join("g")
+    .attr("fill", (d) => color(d.key))
+    .selectAll("rect")
+    .data((D) => D.map((d) => ((d.key = D.key), d)))
+    .join("rect")
+    .attr("x", (d) => x(d.data[0]))
+    .attr("y", (d) => y(d[1]))
+    .attr("height", (d) => y(d[0]) - y(d[1]))
+    .attr("width", x.bandwidth())
+    .append("title")
+    .text(
+      (d) =>
+        stackedBarData.entries.filter(
+          (entry) => entry.stack == d.key && entry.entry == d.data[0],
+        )[0].info,
+    );
+
+  svg
+    .append("g")
+    .attr("transform", `translate(0,${height - marginBottom})`)
+    .call(d3.axisBottom(x).tickSizeOuter(0))
+    .style("font-size", "0.6rem")
+    .call((g) => g.selectAll(".domain").remove());
+
+  svg
+    .append("g")
+    .attr("transform", `translate(${marginLeft},0)`)
+    .call(d3.axisLeft(y).ticks(null, "s"))
+    .style("font-size", "0.6rem")
+    .call((g) => g.selectAll(".domain").remove());
+
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - 5)
+    .attr("class", "graph-axis-title")
+    .style("text-anchor", "middle")
+    .text(stackedBarData.domainTitle);
+  svg
+    .append("text")
+    .attr("x", 15)
+    .attr("y", height / 2)
+    .attr("class", "graph-axis-title")
+    .attr("transform", `rotate(-90, 15, ${height / 2})`)
+    .style("text-anchor", "middle")
+    .text(stackedBarData.rangeTitle);
+
+  return svg.node();
 }
