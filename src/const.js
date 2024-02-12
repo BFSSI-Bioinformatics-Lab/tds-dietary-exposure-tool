@@ -15,19 +15,19 @@ export const foodConsumptionFileNames = {
 
 export const contaminentOccurenceFileNames = [
   contaminentOccurenceDataDirectory +
-    "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
+  "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
   contaminentOccurenceDataDirectory +
-    "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
+  "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
   contaminentOccurenceDataDirectory +
-    "Total Diet Study Mycotoxin results 2008-2009.csv",
+  "Total Diet Study Mycotoxin results 2008-2009.csv",
   contaminentOccurenceDataDirectory +
-    "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
+  "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
   contaminentOccurenceDataDirectory +
-    "Total Diet Study Radionuclides results 2000-2020.csv",
+  "Total Diet Study Radionuclides results 2000-2020.csv",
   contaminentOccurenceDataDirectory +
-    "Total Diet Study Trace Elements results 1993-2018.csv",
+  "Total Diet Study Trace Elements results 1993-2018.csv",
   contaminentOccurenceDataDirectory +
-    "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
+  "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
 ];
 
 export const el = {
@@ -44,10 +44,12 @@ export const el = {
   yearFilter: document.getElementById("year-filter-input"),
   lodFilter: document.getElementById("lod-filter-input"),
   lodFilterDescription: document.getElementById("lod-filter-description"),
+  consumptionUnitsFilter: document.getElementById(
+    "consumption-units-filter-input",
+  ),
   rbasgSelect: document.getElementById("rbasg-graph-select"),
   rbfgSelect: document.getElementById("rbfg-graph-select"),
   rbfSelect: document.getElementById("rbf-graph-select"),
-  rbasgUnitsFilter: document.getElementById("rbasg-units-filter-input"),
   rbasgAgeSexGroupFilter: document.getElementById(
     "rbasg-age-sex-group-filter-input",
   ),

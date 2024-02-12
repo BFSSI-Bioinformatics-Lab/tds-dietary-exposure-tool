@@ -32,7 +32,7 @@ function addEventListenersToFilters(tdsData) {
     el.chemicalFilter,
     el.yearFilter,
     el.lodFilter,
-    el.rbasgUnitsFilter,
+    el.consumptionUnitsFilter,
     el.rbasgAgeSexGroupFilter,
     el.rbasgDomainFilter,
     el.rbfgRangeFilter,
@@ -52,6 +52,7 @@ export function initializeFilters(tdsData) {
   displayChemicals(tdsData);
   displayYears(tdsData);
   displayLods(tdsData);
+  displayConsumptionUnits();
 
   displayRbasgAdditionalFilters(tdsData);
   displayRbfgAdditionalFilters(tdsData);
@@ -87,7 +88,7 @@ function displayYears(tdsData) {
   el.yearFilter.innerHTML = "";
   const years = Object.keys(
     tdsData.contaminentOccurenceData[el.chemicalGroupFilter.value][
-      el.chemicalFilter.value
+    el.chemicalFilter.value
     ],
   ).sort();
   years.forEach((year) => {
@@ -109,17 +110,19 @@ function displayLods(tdsData) {
   });
 }
 
-function displayRbasgAdditionalFilters(tdsData) {
-  el.rbasgUnitsFilter.innerHTML = "";
+async function displayConsumptionUnits() {
+  (await getTranslation("consumption-units-filter-options")).forEach((unit) => {
+    const oe = document.createElement("option");
+    oe.value = unit;
+    oe.text = unit;
+    el.consumptionUnitsFilter.appendChild(oe);
+  });
+}
+
+async function displayRbasgAdditionalFilters(tdsData) {
   el.rbasgDomainFilter.innerHTML = "";
   el.rbasgAgeSexGroupFilter.innerHTML = "";
-  ["ng per kg bodyweight", "ng per person"].forEach((year) => {
-    const oe = document.createElement("option");
-    oe.value = year;
-    oe.text = year;
-    el.rbasgUnitsFilter.appendChild(oe);
-  });
-  ["Show by Age-Sex", "Show by Year"].forEach((year) => {
+  (await getTranslation("rbasg-domain-filter-options")).forEach((year) => {
     const oe = document.createElement("option");
     oe.value = year;
     oe.text = year;
@@ -134,13 +137,13 @@ function displayRbasgAdditionalFilters(tdsData) {
   });
 }
 
-function displayRbfgAdditionalFilters(tdsData) {
+async function displayRbfgAdditionalFilters(tdsData) {
   el.rbfgRangeFilter.innerHTML = "";
   el.rbfgAgeSexGroupFilter.innerHTML = "";
-  ["Percentages", "Numbers"].forEach((year) => {
+  (await getTranslation("rbfg-range-format-filter-options")).forEach((rf) => {
     const oe = document.createElement("option");
-    oe.value = year;
-    oe.text = year;
+    oe.value = rf;
+    oe.text = rf;
     el.rbfgRangeFilter.appendChild(oe);
   });
   tdsData.sets.ageSexGroups.forEach((asg) => {
@@ -174,13 +177,13 @@ export function filterTdsDataAndUpdateGraph(tdsData) {
 
   Object.keys(
     tdsData.contaminentOccurenceData[el.chemicalGroupFilter.value][
-      el.chemicalFilter.value
+    el.chemicalFilter.value
     ],
   ).forEach((year) => {
     if (selectedYears.includes(year)) {
       filteredTdsData.contaminentOccurenceData[year] =
         tdsData.contaminentOccurenceData[el.chemicalGroupFilter.value][
-          el.chemicalFilter.value
+        el.chemicalFilter.value
         ][year];
     }
   });

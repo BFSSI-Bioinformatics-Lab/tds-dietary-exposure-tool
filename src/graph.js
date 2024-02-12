@@ -1,8 +1,7 @@
 import { el } from "./const.js";
-import { resultValueToNanoGramsPerGram } from "./helper.js";
 import { getTranslation } from "./translation.js";
 
-export function displayGraph(tdsData) {
+export async function displayGraph(tdsData) {
   const id = document.querySelector(".active-graph-select")?.id.split("-")[0];
   if (!id) return;
 
@@ -24,91 +23,112 @@ export function displayGraph(tdsData) {
     color(foodGroup);
   });
 
+  const consumptionUnitsFilterOptions = await getTranslation(
+    "consumption-units-filter-options",
+  );
+  const sel = {
+    chemicalName: el.chemicalFilter.value,
+    years: Object.keys(tdsData.contaminentOccurenceData),
+    lod: el.lodFilter.value,
+    ageSexGroups: Array.from(el[id + "AgeSexGroupFilter"].selectedOptions).map(
+      (option) => option.value,
+    ),
+    usePercent: el.rbfgRangeFilter.value == "Percentages",
+    usePerPersonPerDay:
+      el.consumptionUnitsFilter.value == consumptionUnitsFilterOptions[0],
+  };
+
+  let graph = null;
   if (id == "rbasg") {
-    displayAbsg(tdsData);
+    graph = await getAbsg(tdsData, sel);
   } else if (id == "rbfg" || id == "rbf") {
-    displayColorLegend(tdsData, id, color);
+    graph = displayColorLegend(tdsData, id, color);
     if (id == "rbfg") {
-      displayRbfg(tdsData, color);
+      graph = await getRbfg(tdsData, sel, color);
     } else if (id == "rbf") {
-      displayRbf(tdsData, color);
+      graph = await getRbf(tdsData, sel, color);
     }
   }
+  el[id + "Graph"].innerHTML = "";
+  el[id + "Graph"].append(graph || (await getTranslation("no-data-available")));
 }
 
-async function displayAbsg(tdsData) {
+async function getAbsg(tdsData, sel) {
   el.rbasgGraphTitle.innerHTML = await getTranslation("rbasg-graph-title");
-  el.rbasgGraph.innerHTML = "Graph in development";
 }
 
-async function displayRbfg(tdsData, color) {
-  const years = Object.keys(tdsData.contaminentOccurenceData);
-  const lod = el.lodFilter.value;
-  const ageSexGroups = Array.from(el.rbfgAgeSexGroupFilter.selectedOptions).map(
-    (option) => option.value,
-  );
-  const isPercent = el.rbfgRangeFilter.value == "Percentages";
-
+async function getRbfg(tdsData, sel, color) {
   el.rbfgGraphTitle.innerHTML = `${await getTranslation("rbfg-graph-title")} ${
     el.chemicalFilter.value
-  } (${years.join(", ")})`;
+  } \(${sel.years.join(", ")}\)`;
 
   const rbfgData = {};
-  ageSexGroups.forEach((ageSexGroup) => (rbfgData[ageSexGroup] = {}));
+  sel.ageSexGroups.forEach((ageSexGroup) => (rbfgData[ageSexGroup] = {}));
 
   Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
-    ageSexGroups.forEach(
+    sel.ageSexGroups.forEach(
       (ageSexGroup) => (rbfgData[ageSexGroup][foodGroup] = 0),
     );
+
     Object.keys(tdsData.consumptionData[foodGroup]).forEach((foodComposite) => {
       const consumptionRows = tdsData.consumptionData[foodGroup][
         foodComposite
-      ].filter((row) => ageSexGroups.includes(row.ageSexGroup));
+      ].filter((row) => sel.ageSexGroups.includes(row.ageSexGroup));
       if (consumptionRows.length == 0) return;
 
       consumptionRows.forEach((consumptionRow) => {
-        let numContaminentRows = 0;
-        let sumOfContaminentRows = 0;
+        let numContaminentRowsForFoodComposite = 0;
+        let sumOfContaminentRowsResultsForFoodComposite = 0;
 
-        years.forEach((year) => {
+        sel.years.forEach((year) => {
           tdsData.contaminentOccurenceData[year].forEach((contaminentRow) => {
             if (
               contaminentRow.sampleCode.includes(foodComposite) ||
               contaminentRow.productDescription.includes(foodComposite)
             ) {
-              let resultValue = contaminentRow.resultValue;
+              let result = contaminentRow.resultValue;
 
               if (contaminentRow.resultValue == 0) {
-                if (lod == "Exclude") {
+                if (sel.lod == "Exclude") {
                   return;
-                } else if (lod == 0) {
-                  resultValue = 0;
-                } else if (lod == "1/2 LOD") {
-                  resultValue = contaminentRow.lod / 2;
-                } else if (lod == "LOD") {
-                  resultValue = contaminentRow.lod;
+                } else if (sel.lod == 0) {
+                  result = 0;
+                } else if (sel.lod == "1/2 LOD") {
+                  result = contaminentRow.lod / 2;
+                } else if (sel.lod == "LOD") {
+                  result = contaminentRow.lod;
                 }
               }
-              numContaminentRows++;
-              sumOfContaminentRows += resultValueToNanoGramsPerGram(
-                resultValue,
-                contaminentRow.unitsOfMeasurement,
-              );
+              numContaminentRowsForFoodComposite++;
+              sumOfContaminentRowsResultsForFoodComposite += result;
             }
           });
         });
-        const occurence = sumOfContaminentRows / numContaminentRows || 0;
-        const dietaryExposure =
-          consumptionRow.meanGramsPerPersonPerDay * occurence;
+        const meanContaminentOccurence =
+          sumOfContaminentRowsResultsForFoodComposite /
+            numContaminentRowsForFoodComposite || 0;
+        const dietaryExposureToContaminent =
+          (sel.usePerPersonPerDay
+            ? consumptionRow.meanGramsPerPersonPerDay
+            : consumptionRow.meanGramsPerKgBWPerDay) * meanContaminentOccurence;
 
-        rbfgData[consumptionRow.ageSexGroup][foodGroup] += dietaryExposure;
+        rbfgData[consumptionRow.ageSexGroup][foodGroup] +=
+          dietaryExposureToContaminent;
       });
     });
   });
 
+  const unitsOfMeasurement = Object.values(
+    tdsData.contaminentOccurenceData,
+  )[0][0].unitsOfMeasurement;
+
   const stackedBarData = {
     entries: [],
-    rangeTitle: isPercent ? "% of Total Exposure" : "Dietary Exposure (ng/g)",
+    rangeTitle: sel.usePercent
+      ? "% of Total Exposure"
+      : `Dietary Exposure (${unitsOfMeasurement.split("/")[0]}${
+          sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"
+        })`,
     domainTitle: "Age-Sex Groups",
   };
 
@@ -116,134 +136,128 @@ async function displayRbfg(tdsData, color) {
     const sum = Object.values(rbfgData[ageSexGroup]).reduce((a, b) => a + b, 0);
     Object.keys(rbfgData[ageSexGroup]).forEach((foodGroup) => {
       const [age, sexGroup] = ageSexGroup.split(" ");
-      const contribution = isPercent
-        ? (rbfgData[ageSexGroup][foodGroup] / sum) * 100
-        : rbfgData[ageSexGroup][foodGroup];
-      const contributionInfo = isPercent
-        ? contribution.toFixed(2) + "%"
-        : contribution.toFixed(4) + " ng/g";
+      const dietaryExposureToContaminent =
+        (sel.usePercent
+          ? (rbfgData[ageSexGroup][foodGroup] / sum) * 100
+          : rbfgData[ageSexGroup][foodGroup]) || 0;
+      const contributionInfo = sel.usePercent
+        ? `${dietaryExposureToContaminent.toFixed(2)}%`
+        : `${dietaryExposureToContaminent.toFixed(4)} ${
+            unitsOfMeasurement.split("/")[0] +
+            (sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day")
+          }`;
       stackedBarData.entries.push({
         entry: age + sexGroup[0],
         stack: foodGroup,
-        contribution,
-        info: foodGroup + "\n" + contributionInfo + "\n" + ageSexGroup,
+        contribution: dietaryExposureToContaminent,
+        info: `${foodGroup} (${ageSexGroup})
+${
+  sel.usePercent ? "Percent Dietary Exposure" : "Dietary Exposure"
+}: ${contributionInfo}`,
       });
     });
   });
 
-  el.rbfgGraph.innerHTML = "";
-  el.rbfgGraph.append(getStackedBar(stackedBarData, color));
+  return getStackedBar(stackedBarData, color);
 }
 
-async function displayRbf(tdsData, color) {
-  const chemicalName = el.chemicalFilter.value;
-  const ageSexGroup = el.rbfAgeSexGroupFilter.value;
-  const lod = el.lodFilter.value;
-  const years = Object.keys(tdsData.contaminentOccurenceData);
-
-  el.rbfGraphTitle.innerHTML = `${await getTranslation(
-    "rbf-graph-title",
-  )} ${chemicalName}, ${ageSexGroup}, (${years.join(", ")})`;
-  el.rbfGraph.innerHTML = await getTranslation("no-data-available");
+async function getRbf(tdsData, sel, color) {
+  el.rbfGraphTitle.innerHTML = `${await getTranslation("rbf-graph-title")} ${
+    sel.chemicalName
+  }\, ${sel.ageSexGroups}\, \(${sel.years.join(", ")}\)`;
 
   const rbfData = {};
 
-  let sumOfDietaryExposures = 0;
+  let sumOfDietaryExposuresToContaminents = 0;
   Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
     Object.keys(tdsData.consumptionData[foodGroup]).forEach((foodComposite) => {
       const consumptionRow = tdsData.consumptionData[foodGroup][
         foodComposite
-      ].find((row) => row.ageSexGroup == ageSexGroup);
+      ].find((row) => sel.ageSexGroups.includes(row.ageSexGroup));
       if (!consumptionRow) return;
 
       rbfData[foodComposite] = {
         foodGroup,
         foodComposite,
         foodCompositeDescription: consumptionRow.foodCompositeDescription,
+        unitsOfContaminentMeasurement: "",
       };
 
-      let numContaminentRows = 0;
-      let sumOfContaminentRows = 0;
+      let numContaminentRowsForFoodComposite = 0;
+      let sumOfContaminentRowsResultsForFoodComposite = 0;
 
-      years.forEach((year) => {
+      sel.years.forEach((year) => {
         tdsData.contaminentOccurenceData[year].forEach((contaminentRow) => {
           if (
             contaminentRow.sampleCode.includes(foodComposite) ||
             contaminentRow.productDescription.includes(foodComposite)
           ) {
-            rbfData[foodComposite].unitsOfMeasurement =
+            rbfData[foodComposite].unitsOfContaminentMeasurement =
               contaminentRow.unitsOfMeasurement;
 
-            let resultValue = contaminentRow.resultValue;
+            let result = contaminentRow.resultValue;
 
             if (contaminentRow.resultValue == 0) {
-              if (lod == "Exclude") {
+              if (sel.lod == "Exclude") {
                 return;
-              } else if (lod == 0) {
-                resultValue = 0;
-              } else if (lod == "1/2 LOD") {
-                resultValue = contaminentRow.lod / 2;
-              } else if (lod == "LOD") {
-                resultValue = contaminentRow.lod;
+              } else if (sel.lod == 0) {
+                result = 0;
+              } else if (sel.lod == "1/2 LOD") {
+                result = contaminentRow.lod / 2;
+              } else if (sel.lod == "LOD") {
+                result = contaminentRow.lod;
               }
             }
-            numContaminentRows++;
-            sumOfContaminentRows += resultValue;
+            numContaminentRowsForFoodComposite++;
+            sumOfContaminentRowsResultsForFoodComposite += result;
           }
         });
       });
-      const occurence =
-        resultValueToNanoGramsPerGram(
-          sumOfContaminentRows,
-          rbfData[foodComposite].unitsOfMeasurement,
-        ) / numContaminentRows || 0;
-      const dietaryExposure =
-        consumptionRow.meanGramsPerPersonPerDay * occurence;
-      sumOfDietaryExposures += dietaryExposure;
+      const meanConsumptionOfFoodComposite = sel.usePerPersonPerDay
+        ? consumptionRow.meanGramsPerPersonPerDay
+        : consumptionRow.meanGramsPerKgBWPerDay;
+      const meanContaminentOccurence =
+        sumOfContaminentRowsResultsForFoodComposite /
+          numContaminentRowsForFoodComposite || 0;
+      const dietaryExposureToContaminent =
+        meanConsumptionOfFoodComposite * meanContaminentOccurence;
+      sumOfDietaryExposuresToContaminents += dietaryExposureToContaminent;
 
-      rbfData[foodComposite].occurence = occurence;
-      rbfData[foodComposite].dietaryExposure = dietaryExposure;
-      rbfData[foodComposite].consumption =
-        consumptionRow.meanGramsPerPersonPerDay;
+      rbfData[foodComposite] = {
+        ...rbfData[foodComposite],
+        meanContaminentOccurence,
+        dietaryExposureToContaminent,
+        meanConsumptionOfFoodComposite,
+      };
     });
   });
 
-  const sunburstData = { children: [] };
+  const sunburstData = { title: sel.chemicalName, children: [] };
 
-  sunburstData.title = chemicalName;
   Object.values(rbfData).forEach((row) => {
-    row.percentDietaryExposure =
-      (row.dietaryExposure / sumOfDietaryExposures) * 100;
+    row.percentDietaryExposureToContaminent =
+      (row.dietaryExposureToContaminent / sumOfDietaryExposuresToContaminents) *
+      100;
 
     sunburstData.children.push({
       color: color(row.foodGroup),
-      value: row.percentDietaryExposure,
-      title: row.foodCompositeDescription + " - " + row.foodComposite,
-      info:
-        row.foodCompositeDescription +
-        " - " +
-        row.foodComposite +
-        "\n" +
-        "DE: " +
-        row.dietaryExposure.toFixed(1) +
-        " ng/day" +
-        "\n" +
-        "PDE: " +
-        row.percentDietaryExposure.toFixed(1) +
-        "%" +
-        "\n" +
-        "Occurence: " +
-        row.occurence.toFixed(1) +
-        " ng/g" +
-        "\n" +
-        "Consumption: " +
-        row.consumption.toFixed(1) +
-        " g/person/day",
+      value: row.percentDietaryExposureToContaminent,
+      title: row.foodCompositeDescription + " (" + row.foodComposite + ")",
+      info: `${row.foodCompositeDescription} (${row.foodComposite})
+Dietary Exposure: ${row.dietaryExposureToContaminent.toFixed(1)} ${
+        row.unitsOfContaminentMeasurement.split("/")[0]
+      }${sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"}
+% Dietary Exposure: ${row.percentDietaryExposureToContaminent.toFixed(1)}%
+Contaminent Occurence (mean): ${row.meanContaminentOccurence.toFixed(1)} ${
+        row.unitsOfContaminentMeasurement
+      }
+Mean Food Composite Consumption: ${row.meanConsumptionOfFoodComposite.toFixed(
+        1,
+      )} ${sel.usePerPersonPerDay ? " g/person/day" : " g/kg bw/day"} `,
     });
   });
 
-  el.rbfGraph.innerHTML = "";
-  el.rbfGraph.append(await getSunburst(sunburstData));
+  return getSunburst(sunburstData);
 }
 
 /*
@@ -271,7 +285,7 @@ function displayColorLegend(tdsData, id, color) {
   });
 }
 
-async function getSunburst(data) {
+function getSunburst(data) {
   const radius = 928 / 2;
 
   const partition = (data) =>
@@ -367,9 +381,19 @@ function getStackedBar(stackedBarData, color) {
   const marginBottom = 50;
   const marginLeft = 60;
 
+  let dataExists = false;
   const series = d3
     .stack()
-    .keys(d3.union(stackedBarData.entries.map((d) => d.stack)))
+    .keys(
+      d3.union(
+        stackedBarData.entries.map((d) => {
+          if (d.contribution) {
+            dataExists = true;
+          }
+          return d.stack;
+        }),
+      ),
+    )
     .value(([, D], key) => D.get(key).contribution)(
     d3.index(
       stackedBarData.entries,
@@ -377,6 +401,10 @@ function getStackedBar(stackedBarData, color) {
       (d) => d.stack,
     ),
   );
+
+  if (!dataExists) {
+    return;
+  }
 
   const x = d3
     .scaleBand()

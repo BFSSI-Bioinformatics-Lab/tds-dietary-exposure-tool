@@ -80,10 +80,18 @@
       "en": "LOD Range: ",
       "fr": ""
     },
-    "rbasg-units-filter-title": {
+    "consumption-units-filter-title": {
       "isStatic": true,
       "en": "Units",
       "fr": ""
+    },
+    "consumption-units-filter-options": {
+      "isStatic": false,
+      "en": [
+        "Per Person Per Day",
+        "Per kg Bodyweight Per Day"
+      ],
+      "fr": []
     },
     "rbasg-age-sex-group-filter-title": {
       "isStatic": true,
@@ -95,10 +103,26 @@
       "en": "Domain Filter",
       "fr": ""
     },
+    "rbasg-domain-filter-options": {
+      "isStatic": false,
+      "en": [
+        "Show by Age-Sex",
+        "Show by Year"
+      ],
+      "fr": []
+    },
     "rbfg-range-format-filter-title": {
       "isStatic": true,
       "en": "Range Format",
       "fr": ""
+    },
+    "rbfg-range-format-filter-options": {
+      "isStatic": false,
+      "en": [
+        "Percentages",
+        "Numbers"
+      ],
+      "fr": []
     },
     "rbfg-age-sex-group-filter-title": {
       "isStatic": true,

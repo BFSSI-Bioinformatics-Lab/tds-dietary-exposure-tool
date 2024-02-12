@@ -119,7 +119,8 @@ export async function loadTdsData() {
     if (row["Population_group"] != "All people") {
       break;
     }
-    const ageSexGroup = getAge(row["population"]) + getSex(row["population"]);
+    const ageSexGroup =
+      getAge(row["population"]) + " " + getSex(row["population"]);
     const foodCompositeCode = row["TDS_FC_Code"];
     for (const foodGroup of Object.keys(consumptionData)) {
       if (consumptionData[foodGroup][foodCompositeCode]) {
