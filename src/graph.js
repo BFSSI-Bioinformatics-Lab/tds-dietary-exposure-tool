@@ -58,9 +58,8 @@ async function getAbsg(tdsData, sel) {
 }
 
 async function getRbfg(tdsData, sel, color) {
-  el.rbfgGraphTitle.innerHTML = `${await getTranslation("rbfg-graph-title")} ${
-    el.chemicalFilter.value
-  } \(${sel.years.join(", ")}\)`;
+  el.rbfgGraphTitle.innerHTML = `${await getTranslation("rbfg-graph-title")} ${el.chemicalFilter.value
+    } \(${sel.years.join(", ")}\)`;
 
   const rbfgData = {};
   sel.ageSexGroups.forEach((ageSexGroup) => (rbfgData[ageSexGroup] = {}));
@@ -106,7 +105,7 @@ async function getRbfg(tdsData, sel, color) {
         });
         const meanContaminentOccurence =
           sumOfContaminentRowsResultsForFoodComposite /
-            numContaminentRowsForFoodComposite || 0;
+          numContaminentRowsForFoodComposite || 0;
         const dietaryExposureToContaminent =
           (sel.usePerPersonPerDay
             ? consumptionRow.meanGramsPerPersonPerDay
@@ -126,9 +125,8 @@ async function getRbfg(tdsData, sel, color) {
     entries: [],
     rangeTitle: sel.usePercent
       ? "% of Total Exposure"
-      : `Dietary Exposure (${unitsOfMeasurement.split("/")[0]}${
-          sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"
-        })`,
+      : `Dietary Exposure (${unitsOfMeasurement.split("/")[0]}${sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"
+      })`,
     domainTitle: "Age-Sex Groups",
   };
 
@@ -142,18 +140,17 @@ async function getRbfg(tdsData, sel, color) {
           : rbfgData[ageSexGroup][foodGroup]) || 0;
       const contributionInfo = sel.usePercent
         ? `${dietaryExposureToContaminent.toFixed(2)}%`
-        : `${dietaryExposureToContaminent.toFixed(4)} ${
-            unitsOfMeasurement.split("/")[0] +
-            (sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day")
-          }`;
+        : `${dietaryExposureToContaminent.toFixed(4)} ${unitsOfMeasurement.split("/")[0] +
+        (sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day")
+        }`;
       stackedBarData.entries.push({
         entry: age + sexGroup[0],
+        sortBy: sexGroup,
         stack: foodGroup,
         contribution: dietaryExposureToContaminent,
         info: `${foodGroup} (${ageSexGroup})
-${
-  sel.usePercent ? "Percent Dietary Exposure" : "Dietary Exposure"
-}: ${contributionInfo}`,
+${sel.usePercent ? "Percent Dietary Exposure" : "Dietary Exposure"
+          }: ${contributionInfo}`,
       });
     });
   });
@@ -162,9 +159,8 @@ ${
 }
 
 async function getRbf(tdsData, sel, color) {
-  el.rbfGraphTitle.innerHTML = `${await getTranslation("rbf-graph-title")} ${
-    sel.chemicalName
-  }\, ${sel.ageSexGroups}\, \(${sel.years.join(", ")}\)`;
+  el.rbfGraphTitle.innerHTML = `${await getTranslation("rbf-graph-title")} ${sel.chemicalName
+    }\, ${sel.ageSexGroups}\, \(${sel.years.join(", ")}\)`;
 
   const rbfData = {};
 
@@ -218,7 +214,7 @@ async function getRbf(tdsData, sel, color) {
         : consumptionRow.meanGramsPerKgBWPerDay;
       const meanContaminentOccurence =
         sumOfContaminentRowsResultsForFoodComposite /
-          numContaminentRowsForFoodComposite || 0;
+        numContaminentRowsForFoodComposite || 0;
       const dietaryExposureToContaminent =
         meanConsumptionOfFoodComposite * meanContaminentOccurence;
       sumOfDietaryExposuresToContaminents += dietaryExposureToContaminent;
@@ -244,16 +240,14 @@ async function getRbf(tdsData, sel, color) {
       value: row.percentDietaryExposureToContaminent,
       title: row.foodCompositeDescription + " (" + row.foodComposite + ")",
       info: `${row.foodCompositeDescription} (${row.foodComposite})
-Dietary Exposure: ${row.dietaryExposureToContaminent.toFixed(1)} ${
-        row.unitsOfContaminentMeasurement.split("/")[0]
-      }${sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"}
+Dietary Exposure: ${row.dietaryExposureToContaminent.toFixed(1)} ${row.unitsOfContaminentMeasurement.split("/")[0]
+        }${sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"}
 % Dietary Exposure: ${row.percentDietaryExposureToContaminent.toFixed(1)}%
-Contaminent Occurence (mean): ${row.meanContaminentOccurence.toFixed(1)} ${
-        row.unitsOfContaminentMeasurement
-      }
+Contaminent Occurence (mean): ${row.meanContaminentOccurence.toFixed(1)} ${row.unitsOfContaminentMeasurement
+        }
 Mean Food Composite Consumption: ${row.meanConsumptionOfFoodComposite.toFixed(
-        1,
-      )} ${sel.usePerPersonPerDay ? " g/person/day" : " g/kg bw/day"} `,
+          1,
+        )} ${sel.usePerPersonPerDay ? " g/person/day" : " g/kg bw/day"} `,
     });
   });
 
@@ -337,12 +331,11 @@ function getSunburst(data) {
         .filter((d) => d.depth && ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 10),
     )
     .join("text")
-    .attr("transform", function (d) {
+    .attr("transform", function(d) {
       const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
       const y = (d.y0 + d.y1) / 2;
-      return `rotate(${x - 90}) translate(${y}, 0) rotate(${
-        x < 180 ? 0 : 180
-      })`;
+      return `rotate(${x - 90}) translate(${y}, 0) rotate(${x < 180 ? 0 : 180
+        })`;
     })
     .attr("dy", "0.35em")
     .attr("width", 100)
@@ -395,12 +388,12 @@ function getStackedBar(stackedBarData, color) {
       ),
     )
     .value(([, D], key) => D.get(key).contribution)(
-    d3.index(
-      stackedBarData.entries,
-      (d) => d.entry,
-      (d) => d.stack,
-    ),
-  );
+      d3.index(
+        stackedBarData.entries,
+        (d) => d.entry,
+        (d) => d.stack,
+      ),
+    );
 
   if (!dataExists) {
     return;
@@ -411,7 +404,7 @@ function getStackedBar(stackedBarData, color) {
     .domain(
       d3.groupSort(
         stackedBarData.entries,
-        (D) => -d3.sum(D, (d) => d.contribution),
+        (D) => -d3.sum(D, (d) => 0),
         (d) => d.entry,
       ),
     )
