@@ -1,7 +1,7 @@
 import { el } from "./const.js";
 import { getTranslation } from "./translation.js";
 
-export async function displayGraph(tdsData) {
+export function displayGraph(tdsData) {
   const id = document.querySelector(".active-graph-select")?.id.split("-")[0];
   if (!id) return;
 
@@ -11,54 +11,240 @@ export async function displayGraph(tdsData) {
     graphContainerElement.classList.add("active-graph-container");
   }
 
-  console.log(tdsData);
-
-  const color = d3.scaleOrdinal(
+  const foodGroupColor = d3.scaleOrdinal(
     d3.quantize(
       d3.interpolateRainbow,
       Array.from(Object.keys(tdsData.consumptionData)).length + 1,
     ),
   );
+  const sexGroupColor = d3.scaleOrdinal(
+    d3.quantize(
+      d3.interpolateRainbow,
+      Array.from(tdsData.sets.sexGroups).length + 1,
+    ),
+  );
+
   Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
-    color(foodGroup);
+    foodGroupColor(foodGroup);
+  });
+  tdsData.sets.sexGroups.forEach((sex) => {
+    sexGroupColor(sex);
   });
 
-  const consumptionUnitsFilterOptions = await getTranslation(
-    "consumption-units-filter-options",
-  );
   const sel = {
     chemicalName: el.chemicalFilter.value,
     years: Object.keys(tdsData.contaminentOccurenceData),
     lod: el.lodFilter.value,
+    availableLods: getTranslation("lod-filter-options"),
     ageSexGroups: Array.from(el[id + "AgeSexGroupFilter"].selectedOptions).map(
       (option) => option.value,
     ),
+    showByAgeSexGroup:
+      el.rbasgDomainFilter.value ==
+      getTranslation("rbasg-domain-filter-options")[0],
     usePercent: el.rbfgRangeFilter.value == "Percentages",
     usePerPersonPerDay:
-      el.consumptionUnitsFilter.value == consumptionUnitsFilterOptions[0],
+      el.consumptionUnitsFilter.value ==
+      getTranslation("consumption-units-filter-options")[0],
   };
 
   let graph = null;
   if (id == "rbasg") {
-    graph = await getAbsg(tdsData, sel);
-  } else if (id == "rbfg" || id == "rbf") {
-    graph = displayColorLegend(tdsData, id, color);
-    if (id == "rbfg") {
-      graph = await getRbfg(tdsData, sel, color);
-    } else if (id == "rbf") {
-      graph = await getRbf(tdsData, sel, color);
-    }
+    displayAsgColorLegend(tdsData, sexGroupColor);
+    graph = getAbsg(tdsData, sel, sexGroupColor);
+  } else if (id == "rbfg") {
+    displayFoodGroupColorLegend(tdsData, id, foodGroupColor);
+    graph = getRbfg(tdsData, sel, foodGroupColor);
+  } else if (id == "rbf") {
+    displayFoodGroupColorLegend(tdsData, id, foodGroupColor);
+    graph = getRbf(tdsData, sel, foodGroupColor);
   }
   el[id + "Graph"].innerHTML = "";
-  el[id + "Graph"].append(graph || (await getTranslation("no-data-available")));
+  el[id + "Graph"].append(graph || getTranslation("no-data-available"));
 }
 
-async function getAbsg(tdsData, sel) {
-  el.rbasgGraphTitle.innerHTML = await getTranslation("rbasg-graph-title");
+function getAbsg(tdsData, sel, color) {
+  el.rbasgGraphTitle.innerHTML = `${getTranslation("rbasg-graph-title")} ${el.chemicalFilter.value
+    } \(${sel.years.join(", ")}\)`;
+
+  const rbasgData = {};
+
+  if (sel.showByAgeSexGroup) {
+    sel.ageSexGroups.forEach((age) => {
+      rbasgData[age] = {};
+      tdsData.sets.sexGroups.forEach((sex) => {
+        rbasgData[age][sex] = { value: 0 };
+        let numOfContaminentRowsForAgeSex = 0;
+        let sumOfContaminentRowsResultsForAgeSex = 0;
+        Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
+          Object.keys(tdsData.consumptionData[foodGroup]).forEach(
+            (foodComposite) => {
+              const consumptionRows = tdsData.consumptionData[foodGroup][
+                foodComposite
+              ]
+                .filter((row) => sel.ageSexGroups.includes(row.age))
+                .filter((row) => age == row.age && sex == row.sex);
+              if (consumptionRows.length == 0) return;
+
+              consumptionRows.forEach((consumptionRow) => {
+                let numContaminentRowsForFoodComposite = 0;
+                let sumOfContaminentRowsResultsForFoodComposite = 0;
+
+                sel.years.forEach((year) => {
+                  tdsData.contaminentOccurenceData[year].forEach(
+                    (contaminentRow) => {
+                      if (
+                        contaminentRow.sampleCode.includes(foodComposite) ||
+                        contaminentRow.productDescription.includes(
+                          foodComposite,
+                        )
+                      ) {
+                        let result = contaminentRow.resultValue;
+
+                        if (contaminentRow.resultValue == 0) {
+                          if (sel.lod == sel.availableLods.exclude) {
+                            return;
+                          } else if (sel.lod == 0) {
+                            result = 0;
+                          } else if (sel.lod == sel.availableLods.half) {
+                            result = contaminentRow.lod / 2;
+                          } else if (sel.lod == sel.availableLods.full) {
+                            result = contaminentRow.lod;
+                          }
+                        }
+                        numContaminentRowsForFoodComposite++;
+                        sumOfContaminentRowsResultsForFoodComposite += result;
+                      }
+                    },
+                  );
+                });
+                const meanContaminentOccurence =
+                  sumOfContaminentRowsResultsForFoodComposite /
+                  numContaminentRowsForFoodComposite || 0;
+                const dietaryExposureToContaminent =
+                  (sel.usePerPersonPerDay
+                    ? consumptionRow.meanGramsPerPersonPerDay
+                    : consumptionRow.meanGramsPerKgBWPerDay) *
+                  meanContaminentOccurence;
+
+                numOfContaminentRowsForAgeSex += 1;
+                sumOfContaminentRowsResultsForAgeSex +=
+                  dietaryExposureToContaminent;
+              });
+            },
+          );
+        });
+        rbasgData[age][sex].value =
+          sumOfContaminentRowsResultsForAgeSex /
+          numOfContaminentRowsForAgeSex || 0;
+      });
+    });
+  } else {
+    sel.years.forEach((year) => {
+      rbasgData[year] = {};
+      tdsData.sets.sexGroups.forEach((sex) => {
+        rbasgData[year][sex] = { value: 0 };
+        let numDietaryExposuresForYear = 0;
+        let sumOfDietaryExposuresForYear = 0;
+        Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
+          Object.keys(tdsData.consumptionData[foodGroup]).forEach(
+            (foodComposite) => {
+              const consumptionRows = tdsData.consumptionData[foodGroup][
+                foodComposite
+              ].filter(
+                (row) => sel.ageSexGroups.includes(row.age) && sex == row.sex,
+              );
+              if (consumptionRows.length == 0) return;
+
+              consumptionRows.forEach((consumptionRow) => {
+                let numContaminentRowsForFoodComposite = 0;
+                let sumOfContaminentRowsResultsForFoodComposite = 0;
+                tdsData.contaminentOccurenceData[year].forEach(
+                  (contaminentRow) => {
+                    if (
+                      contaminentRow.sampleCode.includes(foodComposite) ||
+                      contaminentRow.productDescription.includes(foodComposite)
+                    ) {
+                      let result = contaminentRow.resultValue;
+
+                      if (contaminentRow.resultValue == 0) {
+                        if (sel.lod == sel.availableLods.exclude) {
+                          return;
+                        } else if (sel.lod == 0) {
+                          result = 0;
+                        } else if (sel.lod == sel.availableLods.half) {
+                          result = contaminentRow.lod / 2;
+                        } else if (sel.lod == sel.availableLods.full) {
+                          result = contaminentRow.lod;
+                        }
+                      }
+                      numContaminentRowsForFoodComposite++;
+                      sumOfContaminentRowsResultsForFoodComposite += result;
+                    }
+                  },
+                );
+                const meanContaminentOccurence =
+                  sumOfContaminentRowsResultsForFoodComposite /
+                  numContaminentRowsForFoodComposite || 0;
+                const dietaryExposureToContaminent =
+                  (sel.usePerPersonPerDay
+                    ? consumptionRow.meanGramsPerPersonPerDay
+                    : consumptionRow.meanGramsPerKgBWPerDay) *
+                  meanContaminentOccurence;
+
+                numDietaryExposuresForYear += 1;
+                sumOfDietaryExposuresForYear += dietaryExposureToContaminent;
+              });
+            },
+          );
+        });
+        rbasgData[year][sex].value =
+          sumOfDietaryExposuresForYear / numDietaryExposuresForYear || 0;
+      });
+    });
+  }
+
+  const unitsOfMeasurement = Object.values(
+    tdsData.contaminentOccurenceData,
+  )[0][0].unitsOfMeasurement;
+
+  const consumptionUnits =
+    getTranslation("consumption-units")[
+    sel.usePerPersonPerDay ? "perPersonPerDay" : "perKgBodyweightPerDay"
+    ];
+
+  const groupedBarData = {
+    entries: [],
+    rangeTitle: `${getTranslation("rbasg-graph-text").range} (${unitsOfMeasurement.split("/")[0]
+      }${consumptionUnits})`,
+    domainTitle: sel.showByAgeSexGroup
+      ? getTranslation("rbasg-graph-text").domain.byAgeGroup
+      : getTranslation("rbasg-graph-text").domain.byYear,
+  };
+
+  const infoText = getTranslation("rbasg-graph-text").infoText;
+
+  Object.keys(rbasgData).forEach((entry) => {
+    Object.keys(rbasgData[entry]).forEach((sex) => {
+      const row = rbasgData[entry][sex];
+      groupedBarData.entries.push({
+        entry: entry,
+        group: sex,
+        value: row.value,
+        color: color(sex),
+        info: `${infoText.dietaryExposure}: ${row.value.toFixed(1)} ${unitsOfMeasurement.split("/")[0]
+          }${consumptionUnits})
+${sel.showByAgeSexGroup ? infoText.ageGroup : infoText.year}: ${sel.showByAgeSexGroup ? `${entry} ${sex}` : entry
+          }`,
+      });
+    });
+  });
+
+  return getGroupedBar(groupedBarData);
 }
 
-async function getRbfg(tdsData, sel, color) {
-  el.rbfgGraphTitle.innerHTML = `${await getTranslation("rbfg-graph-title")} ${el.chemicalFilter.value
+function getRbfg(tdsData, sel, color) {
+  el.rbfgGraphTitle.innerHTML = `${getTranslation("rbfg-graph-title")} ${el.chemicalFilter.value
     } \(${sel.years.join(", ")}\)`;
 
   const rbfgData = {};
@@ -88,13 +274,13 @@ async function getRbfg(tdsData, sel, color) {
               let result = contaminentRow.resultValue;
 
               if (contaminentRow.resultValue == 0) {
-                if (sel.lod == "Exclude") {
+                if (sel.lod == sel.availableLods.exclude) {
                   return;
                 } else if (sel.lod == 0) {
                   result = 0;
-                } else if (sel.lod == "1/2 LOD") {
+                } else if (sel.lod == sel.availableLods.half) {
                   result = contaminentRow.lod / 2;
-                } else if (sel.lod == "LOD") {
+                } else if (sel.lod == sel.availableLods.full) {
                   result = contaminentRow.lod;
                 }
               }
@@ -121,13 +307,18 @@ async function getRbfg(tdsData, sel, color) {
     tdsData.contaminentOccurenceData,
   )[0][0].unitsOfMeasurement;
 
+  const consumptionUnits =
+    getTranslation("consumption-units")[
+    sel.usePerPersonPerDay ? "perPersonPerDay" : "perKgBodyweightPerDay"
+    ];
+
   const stackedBarData = {
     entries: [],
     rangeTitle: sel.usePercent
-      ? "% of Total Exposure"
-      : `Dietary Exposure (${unitsOfMeasurement.split("/")[0]}${sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"
-      })`,
-    domainTitle: "Age-Sex Groups",
+      ? getTranslation("rbfg-graph-text").range.percent
+      : `${getTranslation("rbfg-graph-text").range.absolute} (${unitsOfMeasurement.split("/")[0]
+      }${consumptionUnits})`,
+    domainTitle: getTranslation("rbfg-graph-text").domain,
   };
 
   Object.keys(rbfgData).forEach((ageSexGroup) => {
@@ -139,18 +330,19 @@ async function getRbfg(tdsData, sel, color) {
           ? (rbfgData[ageSexGroup][foodGroup] / sum) * 100
           : rbfgData[ageSexGroup][foodGroup]) || 0;
       const contributionInfo = sel.usePercent
-        ? `${dietaryExposureToContaminent.toFixed(2)}%`
-        : `${dietaryExposureToContaminent.toFixed(4)} ${unitsOfMeasurement.split("/")[0] +
-        (sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day")
-        }`;
+        ? `${dietaryExposureToContaminent.toFixed(2)}% `
+        : `${dietaryExposureToContaminent.toFixed(2)} ${unitsOfMeasurement.split("/")[0] + consumptionUnits
+        } `;
       stackedBarData.entries.push({
         entry: age + sexGroup[0],
         sortBy: sexGroup,
         stack: foodGroup,
         contribution: dietaryExposureToContaminent,
         info: `${foodGroup} (${ageSexGroup})
-${sel.usePercent ? "Percent Dietary Exposure" : "Dietary Exposure"
-          }: ${contributionInfo}`,
+${sel.usePercent
+            ? getTranslation("rbfg-graph-text").range.percent
+            : getTranslation("rbfg-graph-text").range.absolute
+          }: ${contributionInfo} `,
       });
     });
   });
@@ -158,9 +350,9 @@ ${sel.usePercent ? "Percent Dietary Exposure" : "Dietary Exposure"
   return getStackedBar(stackedBarData, color);
 }
 
-async function getRbf(tdsData, sel, color) {
-  el.rbfGraphTitle.innerHTML = `${await getTranslation("rbf-graph-title")} ${sel.chemicalName
-    }\, ${sel.ageSexGroups}\, \(${sel.years.join(", ")}\)`;
+function getRbf(tdsData, sel, color) {
+  el.rbfGraphTitle.innerHTML = `${getTranslation("rbf-graph-title")} ${sel.chemicalName
+    } \, ${sel.ageSexGroups} \, \(${sel.years.join(", ")} \)`;
 
   const rbfData = {};
 
@@ -194,13 +386,13 @@ async function getRbf(tdsData, sel, color) {
             let result = contaminentRow.resultValue;
 
             if (contaminentRow.resultValue == 0) {
-              if (sel.lod == "Exclude") {
+              if (sel.lod == sel.availableLods.exclude) {
                 return;
               } else if (sel.lod == 0) {
                 result = 0;
-              } else if (sel.lod == "1/2 LOD") {
+              } else if (sel.lod == sel.availableLods.half) {
                 result = contaminentRow.lod / 2;
-              } else if (sel.lod == "LOD") {
+              } else if (sel.lod == sel.availableLods.full) {
                 result = contaminentRow.lod;
               }
             }
@@ -230,6 +422,8 @@ async function getRbf(tdsData, sel, color) {
 
   const sunburstData = { title: sel.chemicalName, children: [] };
 
+  const infoText = getTranslation("rbf-graph-text").infoText;
+
   Object.values(rbfData).forEach((row) => {
     row.percentDietaryExposureToContaminent =
       (row.dietaryExposureToContaminent / sumOfDietaryExposuresToContaminents) *
@@ -240,14 +434,22 @@ async function getRbf(tdsData, sel, color) {
       value: row.percentDietaryExposureToContaminent,
       title: row.foodCompositeDescription + " (" + row.foodComposite + ")",
       info: `${row.foodCompositeDescription} (${row.foodComposite})
-Dietary Exposure: ${row.dietaryExposureToContaminent.toFixed(1)} ${row.unitsOfContaminentMeasurement.split("/")[0]
-        }${sel.usePerPersonPerDay ? "/person/day" : "/kg bw/day"}
-% Dietary Exposure: ${row.percentDietaryExposureToContaminent.toFixed(1)}%
-Contaminent Occurence (mean): ${row.meanContaminentOccurence.toFixed(1)} ${row.unitsOfContaminentMeasurement
+${infoText.titles.dietaryExposure}: ${row.dietaryExposureToContaminent.toFixed(
+        1,
+      )} ${row.unitsOfContaminentMeasurement.split("/")[0]}${getTranslation("consumption-units")[
+        sel.usePerPersonPerDay ? "perPersonPerDay" : "perKgBodyweightPerDay"
+        ]
         }
-Mean Food Composite Consumption: ${row.meanConsumptionOfFoodComposite.toFixed(
-          1,
-        )} ${sel.usePerPersonPerDay ? " g/person/day" : " g/kg bw/day"} `,
+${infoText.titles.percentDietaryExposure
+        }: ${row.percentDietaryExposureToContaminent.toFixed(1)}%
+    ${infoText.titles.contaminentOccurence
+        }: ${row.meanContaminentOccurence.toFixed(1)} ${row.unitsOfContaminentMeasurement
+        }
+${infoText.titles.foodConsumption
+        }: ${row.meanConsumptionOfFoodComposite.toFixed(1)} ${infoText.consumptionUnits[
+        sel.usePerPersonPerDay ? "perPersonPerDay" : "perKgBodyweightPerDay"
+        ]
+        } `,
     });
   });
 
@@ -262,17 +464,34 @@ Mean Food Composite Consumption: ${row.meanConsumptionOfFoodComposite.toFixed(
  *
  */
 
-function displayColorLegend(tdsData, id, color) {
-  el[id + "LegendContent"].innerHTML = "";
-  Object.keys(tdsData.consumptionData).forEach((grouping) => {
+function displayAsgColorLegend(tdsData, color) {
+  el.rbasgLegendContent.innerHTML = "";
+  tdsData.sets.sexGroups.forEach((g) => {
     const legendItemElement = document.createElement("div");
     legendItemElement.classList.add("graph-legend-item");
     const legendItemColorElement = document.createElement("div");
     legendItemColorElement.classList.add("graph-legend-item-color");
     const legendItemTextElement = document.createElement("div");
     legendItemTextElement.classList.add("graph-legend-item-text");
-    legendItemColorElement.style.backgroundColor = color(grouping);
-    legendItemTextElement.innerHTML = grouping;
+    legendItemColorElement.style.backgroundColor = color(g);
+    legendItemTextElement.innerHTML = g;
+    legendItemElement.append(legendItemColorElement);
+    legendItemElement.append(legendItemTextElement);
+    el.rbasgLegendContent.appendChild(legendItemElement);
+  });
+}
+
+function displayFoodGroupColorLegend(tdsData, id, color) {
+  el[id + "LegendContent"].innerHTML = "";
+  Object.keys(tdsData.consumptionData).forEach((g) => {
+    const legendItemElement = document.createElement("div");
+    legendItemElement.classList.add("graph-legend-item");
+    const legendItemColorElement = document.createElement("div");
+    legendItemColorElement.classList.add("graph-legend-item-color");
+    const legendItemTextElement = document.createElement("div");
+    legendItemTextElement.classList.add("graph-legend-item-text");
+    legendItemColorElement.style.backgroundColor = color(g);
+    legendItemTextElement.innerHTML = g;
     legendItemElement.append(legendItemColorElement);
     legendItemElement.append(legendItemTextElement);
     el[id + "LegendContent"].appendChild(legendItemElement);
@@ -317,7 +536,7 @@ function getSunburst(data) {
         `${d
           .ancestors()
           .filter((d) => d.depth > 0)
-          .map((d) => d.data.info)}`,
+          .map((d) => d.data.info)} `,
     );
 
   svg
@@ -446,14 +665,14 @@ function getStackedBar(stackedBarData, color) {
 
   svg
     .append("g")
-    .attr("transform", `translate(0,${height - marginBottom})`)
+    .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(x).tickSizeOuter(0))
     .style("font-size", "0.6rem")
     .call((g) => g.selectAll(".domain").remove());
 
   svg
     .append("g")
-    .attr("transform", `translate(${marginLeft},0)`)
+    .attr("transform", `translate(${marginLeft}, 0)`)
     .call(d3.axisLeft(y).ticks(null, "s"))
     .style("font-size", "0.6rem")
     .call((g) => g.selectAll(".domain").remove());
@@ -473,6 +692,97 @@ function getStackedBar(stackedBarData, color) {
     .attr("transform", `rotate(-90, 15, ${height / 2})`)
     .style("text-anchor", "middle")
     .text(stackedBarData.rangeTitle);
+
+  return svg.node();
+}
+
+function getGroupedBar(groupedBarData) {
+  const width = 928;
+  const height = 600;
+  const marginTop = 10;
+  const marginRight = 10;
+  const marginBottom = 60;
+  const marginLeft = 60;
+
+  // Prepare the scales for positional and color encodings.
+  // Fx encodes the state.
+  const fx = d3
+    .scaleBand()
+    .domain(new Set(groupedBarData.entries.map((d) => d.entry)))
+    .rangeRound([marginLeft, width - marginRight])
+    .paddingInner(0.1);
+
+  // Both x and color encode the age class.
+  const ages = new Set(groupedBarData.entries.map((d) => d.group));
+
+  const x = d3
+    .scaleBand()
+    .domain(ages)
+    .rangeRound([0, fx.bandwidth()])
+    .padding(0.05);
+
+  // Y encodes the height of the bar.
+  const y = d3
+    .scaleLinear()
+    .domain([0, d3.max(groupedBarData.entries, (d) => d.value)])
+    .nice()
+    .rangeRound([height - marginBottom, marginTop]);
+
+  // Create the SVG container.
+  const svg = d3
+    .create("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("viewBox", [0, 0, width, height])
+    .attr("style", "max-width: 100%; height: auto;");
+
+  // Append a group for each state, and a rect for each age.
+  svg
+    .append("g")
+    .selectAll()
+    .data(d3.group(groupedBarData.entries, (d) => d.entry))
+    .join("g")
+    .attr("transform", ([entry]) => `translate(${fx(entry)}, 0)`)
+    .selectAll()
+    .data(([, d]) => d)
+    .join("rect")
+    .attr("x", (d) => x(d.group))
+    .attr("y", (d) => y(d.value))
+    .attr("width", x.bandwidth())
+    .attr("height", (d) => y(0) - y(d.value))
+    .attr("fill", (d) => d.color)
+    .append("title")
+    .text((d) => d.info);
+
+  // Append the horizontal axis.
+  svg
+    .append("g")
+    .attr("transform", `translate(0, ${height - marginBottom})`)
+    .call(d3.axisBottom(fx).tickSizeOuter(0))
+    .call((g) => g.selectAll(".domain").remove());
+
+  // Append the vertical axis.
+  svg
+    .append("g")
+    .attr("transform", `translate(${marginLeft}, 0)`)
+    .call(d3.axisLeft(y).ticks(null, "s"))
+    .call((g) => g.selectAll(".domain").remove());
+
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - marginTop)
+    .attr("class", "graph-axis-title")
+    .style("text-anchor", "middle")
+    .text(groupedBarData.domainTitle);
+  svg
+    .append("text")
+    .attr("x", 0)
+    .attr("y", height / 2)
+    .attr("class", "graph-axis-title")
+    .attr("transform", `rotate(-90, 15, ${height / 2})`)
+    .style("text-anchor", "middle")
+    .text(groupedBarData.rangeTitle);
 
   return svg.node();
 }

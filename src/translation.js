@@ -17,6 +17,6 @@ export async function getTranslations() {
   return data;
 }
 
-export async function getTranslation(id) {
-  return await data.data[id][getUserLanguage()];
+export function getTranslation(id) {
+  return data.data[id][getUserLanguage()];
 }

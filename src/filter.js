@@ -14,6 +14,10 @@ function addEventListenersToFilters(tdsData) {
     });
   });
 
+  el.rbasgDomainFilter.addEventListener("change", () => {
+    displayRbasgAgeSexGroupFilter(tdsData);
+  });
+
   [el.rbasgSelect, el.rbfgSelect, el.rbfSelect].forEach((element) => {
     element.addEventListener("click", () => {
       [el.rbasgSelect, el.rbfgSelect, el.rbfSelect].forEach((element) => {
@@ -110,8 +114,8 @@ function displayLods(tdsData) {
   });
 }
 
-async function displayConsumptionUnits() {
-  (await getTranslation("consumption-units-filter-options")).forEach((unit) => {
+function displayConsumptionUnits() {
+  getTranslation("consumption-units-filter-options").forEach((unit) => {
     const oe = document.createElement("option");
     oe.value = unit;
     oe.text = unit;
@@ -119,39 +123,57 @@ async function displayConsumptionUnits() {
   });
 }
 
-async function displayRbasgAdditionalFilters(tdsData) {
+function displayRbasgAdditionalFilters(tdsData) {
   el.rbasgDomainFilter.innerHTML = "";
-  el.rbasgAgeSexGroupFilter.innerHTML = "";
-  (await getTranslation("rbasg-domain-filter-options")).forEach((year) => {
+  getTranslation("rbasg-domain-filter-options").forEach((year) => {
     const oe = document.createElement("option");
     oe.value = year;
     oe.text = year;
     el.rbasgDomainFilter.appendChild(oe);
   });
-  tdsData.sets.ageSexGroups.forEach((asg) => {
+  displayRbasgAgeSexGroupFilter(tdsData);
+}
+
+function displayRbasgAgeSexGroupFilter(tdsData) {
+  el.rbasgAgeSexGroupFilter.innerHTML = "";
+
+  const showByAgeSexGroup =
+    el.rbasgDomainFilter.value ==
+    getTranslation("rbasg-domain-filter-options")[0];
+
+  if (showByAgeSexGroup) {
+    if (!el.rbasgAgeSexGroupFilter.getAttribute("multiple"))
+      el.rbasgAgeSexGroupFilter.setAttribute("multiple", "");
+  } else {
+    el.rbasgAgeSexGroupFilter.removeAttribute("multiple");
+  }
+
+  tdsData.sets.ageGroups.forEach((a) => {
     const oe = document.createElement("option");
-    oe.value = asg;
-    oe.text = asg;
-    oe.selected = true;
+    oe.value = a;
+    oe.text = a;
+    oe.selected = showByAgeSexGroup;
     el.rbasgAgeSexGroupFilter.appendChild(oe);
   });
 }
 
-async function displayRbfgAdditionalFilters(tdsData) {
-  el.rbfgRangeFilter.innerHTML = "";
+function displayRbfgAdditionalFilters(tdsData) {
   el.rbfgAgeSexGroupFilter.innerHTML = "";
-  (await getTranslation("rbfg-range-format-filter-options")).forEach((rf) => {
-    const oe = document.createElement("option");
-    oe.value = rf;
-    oe.text = rf;
-    el.rbfgRangeFilter.appendChild(oe);
-  });
+
   tdsData.sets.ageSexGroups.forEach((asg) => {
     const oe = document.createElement("option");
     oe.value = asg;
     oe.text = asg;
     oe.selected = true;
     el.rbfgAgeSexGroupFilter.appendChild(oe);
+  });
+
+  el.rbfgRangeFilter.innerHTML = "";
+  getTranslation("rbfg-range-format-filter-options").forEach((rf) => {
+    const oe = document.createElement("option");
+    oe.value = rf;
+    oe.text = rf;
+    el.rbfgRangeFilter.appendChild(oe);
   });
 }
 
@@ -193,7 +215,7 @@ export function filterTdsDataAndUpdateGraph(tdsData) {
   displayGraph(filteredTdsData);
 }
 
-async function updateLodFilterDescription(filteredTdsData) {
+function updateLodFilterDescription(filteredTdsData) {
   el.lodFilterDescription.innerHTML = "";
   let maxContaminentLod = 0;
   let minContaminentLod = Infinity;
@@ -212,7 +234,7 @@ async function updateLodFilterDescription(filteredTdsData) {
   });
   if (minContaminentLod != Infinity) {
     el.lodFilterDescription.innerHTML =
-      (await getTranslation("lod-filter-description")) +
+      getTranslation("lod-filter-description") +
       " " +
       minContaminentLod +
       " - " +

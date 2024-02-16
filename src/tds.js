@@ -2,14 +2,10 @@ import {
   contaminentOccurenceFileNames,
   foodConsumptionFileNames,
 } from "./const.js";
-import {
-  resultValueToNanoGramsPerGram,
-  getAge,
-  getSex,
-  sortAgeSexGroup,
-} from "./helper.js";
+import { getAge, getSex, sortAgeSexGroup } from "./helper.js";
 
 import { readCSV } from "./data.js";
+import { getTranslation } from "./translation.js";
 
 export async function loadTdsData() {
   const tdsData = {
@@ -17,11 +13,15 @@ export async function loadTdsData() {
     consumptionData: {},
     sets: {
       ageSexGroups: [],
-      lods: ["0", "1/2 LOD", "LOD", "Exclude"],
+      ageGroups: [],
+      sexGroups: [],
+      lods: Object.values(getTranslation("lod-filter-options")),
     },
   };
 
-  const uniqeAgeSexGroups = new Set();
+  const uniqueAgeSexGroups = new Set();
+  const uniqueAgeGroups = new Set();
+  const uniqueSexGroups = new Set();
 
   const contaminentOccurenceData = {};
 
@@ -90,9 +90,12 @@ export async function loadTdsData() {
       break;
     }
     const foodCompositeCode = row["TDS_FC_Code"];
-    const ageSexGroup =
-      getAge(row["population"]) + " " + getSex(row["population"]);
-    uniqeAgeSexGroups.add(ageSexGroup);
+    const age = getAge(row["population"]);
+    const sex = getSex(row["population"]);
+    const ageSexGroup = age + " " + sex;
+    uniqueAgeGroups.add(age);
+    uniqueSexGroups.add(sex);
+    uniqueAgeSexGroups.add(ageSexGroup);
     for (const foodGroup of Object.keys(consumptionData)) {
       if (consumptionData[foodGroup][foodCompositeCode]) {
         consumptionData[foodGroup][foodCompositeCode].push({
@@ -102,10 +105,12 @@ export async function loadTdsData() {
             row["TDS_FC_label"].charAt(0).toUpperCase() +
             row["TDS_FC_label"].slice(1)
           ).replace(/_/g, ", "),
+          age,
+          sex,
           ageSexGroup,
-          meanGramsPerPersonPerDay: Number(
-            row["Mean_grams_per_person_per_day"],
-          ),
+          meanGramsPerPersonPerDay:
+            Number(row["Mean_grams_per_person_per_day"]) || 0,
+          meanGramsPerKgBWPerDay: 0,
           meanFlag: row["Mean_flag"],
         });
         break;
@@ -128,9 +133,8 @@ export async function loadTdsData() {
           foodCompositeCode
         ]) {
           if (consumptionRow.ageSexGroup == ageSexGroup) {
-            consumptionRow.meanGramsPerKgBWPerDay = Number(
-              row["Mean_grams_per_kilogrambodyweight_per_day"],
-            );
+            consumptionRow.meanGramsPerKgBWPerDay =
+              Number(row["Mean_grams_per_kilogrambodyweight_per_day"]) || 0;
             break;
           }
         }
@@ -141,7 +145,9 @@ export async function loadTdsData() {
   tdsData.consumptionData = consumptionData;
 
   tdsData.sets.ageSexGroups =
-    Array.from(uniqeAgeSexGroups).sort(sortAgeSexGroup);
+    Array.from(uniqueAgeSexGroups).sort(sortAgeSexGroup);
+  tdsData.sets.ageGroups = Array.from(uniqueAgeGroups).sort(sortAgeSexGroup);
+  tdsData.sets.sexGroups = Array.from(uniqueSexGroups).sort();
 
   return tdsData;
 }

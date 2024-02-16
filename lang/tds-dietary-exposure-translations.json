@@ -76,6 +76,20 @@
       "en": "Occurence <LOD =",
       "fr": ""
     },
+    "lod-filter-options": {
+      "en": {
+        "zero": "0",
+        "half": "1/2 LOD",
+        "full": "LOD",
+        "exclude": "Exclude"
+      },
+      "fr": {
+        "zero": "",
+        "half": "",
+        "full": "",
+        "exclude": ""
+      }
+    },
     "lod-filter-description": {
       "en": "LOD Range: ",
       "fr": ""
@@ -138,12 +152,89 @@
       "en": "Dietary exposure estimate by age sex group for",
       "fr": ""
     },
+    "rbasg-graph-text": {
+      "en": {
+        "range": "Dietary Exposure",
+        "domain": {
+          "byAgeGroup": "Age Group(s)",
+          "byYear": "Year"
+        },
+        "infoText": {
+          "dietaryExposure": "Dietary Exposure",
+          "ageGroup": "Age-Sex Group",
+          "year": "Year"
+        }
+      },
+      "fr": {
+        "range": "",
+        "domain": {
+          "byAgeGroup": "",
+          "byYear": ""
+        },
+        "infoText": {
+          "dietaryExposure": "",
+          "ageSexGroup": "",
+          "year": ""
+        }
+      }
+    },
     "rbfg-graph-title": {
       "en": "Dietary exposure estimate by food group for",
       "fr": ""
     },
+    "rbfg-graph-text": {
+      "en": {
+        "range": {
+          "percent": "% of Total Exposure",
+          "absolute": "Dietary Exposure"
+        },
+        "domain": "Age-Sex Groups"
+      },
+      "fr": {
+        "range": {
+          "percent": "",
+          "absolute": ""
+        },
+        "domain": ""
+      }
+    },
     "rbf-graph-title": {
       "en": "Dietary exposure estimate by food for",
+      "fr": ""
+    },
+    "rbf-graph-text": {
+      "en": {
+        "infoText": {
+          "titles": {
+            "dietaryExposure": "Dietary Exposure",
+            "percentDietaryExposure": "% Dietary Exposure",
+            "contaminentOccurence": "Contaminent Occurence (mean)",
+            "foodConsumption": "Mean Food Composite Consumption"
+          },
+          "consumptionUnits": {
+            "perPersonPerDay": "g/person/day",
+            "perKgBodyweightPerDay": "g/kg bw/day"
+          }
+        }
+      },
+      "fr": {
+        "infoText": {
+          "titles": {
+            "dietaryExposure": "",
+            "percentDietaryExposure": "",
+            "contaminentOccurence": "",
+            "foodConsumption": ""
+          },
+          "consumptionUnits": {
+            "perPersonPerDay": "",
+            "perKgBodyweightPerDay": ""
+          }
+        }
+      }
+    },
+    "rbasg-legend-title": {
+      "isStatic": true,
+      "en": "Age-Sex Groups",
       "fr": ""
     },
     "rbfg-legend-title": {
@@ -155,6 +246,16 @@
       "isStatic": true,
       "en": "Food Groups",
       "fr": ""
+    },
+    "consumption-units": {
+      "en": {
+        "perKgBodyweightPerDay": "/kg bw/day",
+        "perPersonPerDay": "/person/day"
+      },
+      "fr": {
+        "perKgBodyweightPerDay": "",
+        "perPersonPerDay": ""
+      }
     },
     "no-data-available": {
       "en": "No data available",
