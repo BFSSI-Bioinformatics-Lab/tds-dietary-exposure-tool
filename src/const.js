@@ -61,6 +61,9 @@ export const el = {
   rbfAgeSexGroupFilter: document.getElementById(
     "rbf-age-sex-group-filter-input",
   ),
+  rbfSortByFilter: document.getElementById(
+    "rbf-sort-by-filter-input",
+  ),
 
   rbasgGraphContainer: document.getElementById("rbasg-graph-container"),
   rbfgGraphContainer: document.getElementById("rbfg-graph-container"),

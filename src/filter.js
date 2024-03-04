@@ -42,6 +42,7 @@ function addEventListenersToFilters(tdsData) {
     el.rbfgRangeFilter,
     el.rbfgAgeSexGroupFilter,
     el.rbfAgeSexGroupFilter,
+    el.rbfSortByFilter
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
       filterTdsDataAndUpdateGraph(tdsData);
@@ -184,6 +185,14 @@ function displayRbfAdditionalFilters(tdsData) {
     oe.value = asg;
     oe.text = asg;
     el.rbfAgeSexGroupFilter.appendChild(oe);
+  });
+
+  el.rbfSortByFilter.innerHTML = "";
+  getTranslation("rbf-sort-by-filter-options").forEach((sb) => {
+    const oe = document.createElement("option");
+    oe.value = sb;
+    oe.text = sb;
+    el.rbfSortByFilter.appendChild(oe);
   });
 }
 

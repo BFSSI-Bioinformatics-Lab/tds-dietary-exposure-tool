@@ -100,7 +100,6 @@
       "fr": ""
     },
     "consumption-units-filter-options": {
-      "isStatic": false,
       "en": [
         "Per Person Per Day",
         "Per kg Bodyweight Per Day"
@@ -118,7 +117,6 @@
       "fr": ""
     },
     "rbasg-domain-filter-options": {
-      "isStatic": false,
       "en": [
         "Show by Age-Sex",
         "Show by Year"
@@ -131,7 +129,6 @@
       "fr": ""
     },
     "rbfg-range-format-filter-options": {
-      "isStatic": false,
       "en": [
         "Percentages",
         "Numbers"
@@ -147,6 +144,18 @@
       "isStatic": true,
       "en": "Age-Sex Group",
       "fr": ""
+    },
+    "rbf-sort-by-filter-title": {
+      "isStatic": true,
+      "en": "Sort By",
+      "fr": ""
+    },
+    "rbf-sort-by-filter-options": {
+      "en": [
+        "Food",
+        "Food Group"
+      ],
+      "fr": []
     },
     "rbasg-graph-title": {
       "en": "Dietary exposure estimate by age sex group for",
