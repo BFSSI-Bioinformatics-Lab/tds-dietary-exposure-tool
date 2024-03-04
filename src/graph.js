@@ -54,7 +54,7 @@ export function displayGraph(tdsData) {
   let graph = null;
   if (id == "rbasg") {
     displayAsgColorLegend(tdsData, sexGroupColor);
-    graph = getAbsg(tdsData, sel, sexGroupColor);
+    graph = getRbasg(tdsData, sel, sexGroupColor);
   } else if (id == "rbfg") {
     displayFoodGroupColorLegend(tdsData, id, foodGroupColor);
     graph = getRbfg(tdsData, sel, foodGroupColor);
@@ -66,7 +66,7 @@ export function displayGraph(tdsData) {
   el[id + "Graph"].append(graph || getTranslation("no-data-available"));
 }
 
-function getAbsg(tdsData, sel, color) {
+function getRbasg(tdsData, sel, color) {
   el.rbasgGraphTitle.innerHTML = `${getTranslation("rbasg-graph-title")} ${
     el.chemicalFilter.value
   } \(${sel.years.join(", ")}\)`;
@@ -78,8 +78,6 @@ function getAbsg(tdsData, sel, color) {
       rbasgData[age] = {};
       tdsData.sets.sexGroups.forEach((sex) => {
         rbasgData[age][sex] = { value: 0 };
-        let numOfContaminentRowsForAgeSex = 0;
-        let sumOfContaminentRowsResultsForAgeSex = 0;
         Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
           Object.keys(tdsData.consumptionData[foodGroup]).forEach(
             (foodComposite) => {
@@ -131,16 +129,11 @@ function getAbsg(tdsData, sel, color) {
                     : consumptionRow.meanGramsPerKgBWPerDay) *
                   meanContaminentOccurence;
 
-                numOfContaminentRowsForAgeSex += 1;
-                sumOfContaminentRowsResultsForAgeSex +=
-                  dietaryExposureToContaminent;
+                rbasgData[age][sex].value += dietaryExposureToContaminent;
               });
             },
           );
         });
-        rbasgData[age][sex].value =
-          sumOfContaminentRowsResultsForAgeSex /
-            numOfContaminentRowsForAgeSex || 0;
       });
     });
   } else {
@@ -148,8 +141,6 @@ function getAbsg(tdsData, sel, color) {
       rbasgData[year] = {};
       tdsData.sets.sexGroups.forEach((sex) => {
         rbasgData[year][sex] = { value: 0 };
-        let numDietaryExposuresForYear = 0;
-        let sumOfDietaryExposuresForYear = 0;
         Object.keys(tdsData.consumptionData).forEach((foodGroup) => {
           Object.keys(tdsData.consumptionData[foodGroup]).forEach(
             (foodComposite) => {
@@ -196,14 +187,11 @@ function getAbsg(tdsData, sel, color) {
                     : consumptionRow.meanGramsPerKgBWPerDay) *
                   meanContaminentOccurence;
 
-                numDietaryExposuresForYear += 1;
-                sumOfDietaryExposuresForYear += dietaryExposureToContaminent;
+                rbasgData[year][sex].value += dietaryExposureToContaminent;
               });
             },
           );
         });
-        rbasgData[year][sex].value =
-          sumOfDietaryExposuresForYear / numDietaryExposuresForYear || 0;
       });
     });
   }
@@ -239,7 +227,7 @@ function getAbsg(tdsData, sel, color) {
         color: color(sex),
         info: `${infoText.dietaryExposure}: ${row.value.toFixed(1)} ${
           unitsOfMeasurement.split("/")[0]
-        }${consumptionUnits})
+        }${consumptionUnits}
 ${sel.showByAgeSexGroup ? infoText.ageGroup : infoText.year}: ${
           sel.showByAgeSexGroup ? `${entry} ${sex}` : entry
         }`,
@@ -463,11 +451,9 @@ ${infoText.titles.dietaryExposure}: ${row.dietaryExposureToContaminent.toFixed(
 ${
   infoText.titles.percentDietaryExposure
 }: ${row.percentDietaryExposureToContaminent.toFixed(1)}%
-    ${
-      infoText.titles.contaminentOccurence
-    }: ${row.meanContaminentOccurence.toFixed(1)} ${
-      row.unitsOfContaminentMeasurement
-    }
+${infoText.titles.contaminentOccurence}: ${row.meanContaminentOccurence.toFixed(
+        1,
+      )} ${row.unitsOfContaminentMeasurement}
 ${
   infoText.titles.foodConsumption
 }: ${row.meanConsumptionOfFoodComposite.toFixed(1)} ${
