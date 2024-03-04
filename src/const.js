@@ -25,9 +25,15 @@ export const contaminentOccurenceFileNames = [
   contaminentOccurenceDataDirectory +
   "Total Diet Study Radionuclides results 2000-2020.csv",
   contaminentOccurenceDataDirectory +
+  "Total Diet Study Radionuclides results 2021.csv",
+  contaminentOccurenceDataDirectory +
+  "Total Diet Study Radionuclides results 2022.csv",
+  contaminentOccurenceDataDirectory +
   "Total Diet Study Trace Elements results 1993-2018.csv",
   contaminentOccurenceDataDirectory +
   "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
+  contaminentOccurenceDataDirectory +
+  "Total Diet Study PFAS results 2016-2017.csv",
 ];
 
 export const el = {

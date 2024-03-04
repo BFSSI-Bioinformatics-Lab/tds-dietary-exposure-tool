@@ -28,8 +28,9 @@ export async function loadTdsData() {
   for (const fileName of contaminentOccurenceFileNames) {
     const data = await readCSV(fileName);
     const chemicalGroup = data[0]["Analyte Group"];
-    contaminentOccurenceData[chemicalGroup] = {};
-    data.forEach((row) => {
+    contaminentOccurenceData[chemicalGroup] =
+      contaminentOccurenceData[chemicalGroup] || {};
+    data.forEach((row, i) => {
       const chemicalName = row["Analyte Name"];
       const year = new Date(row["Sample Collection Date"] + "T12:00:00")
         .getFullYear()
