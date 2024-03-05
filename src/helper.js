@@ -79,3 +79,10 @@ export function resultValueToNanoGramsPerGram(value, unitOfMeasurement) {
       return value * 1e3;
   }
 }
+
+export function lodOrMdlIsValid(chemicalGroup) {
+  if (chemicalGroup == "Radionuclide") {
+    return false;
+  }
+  return true;
+}

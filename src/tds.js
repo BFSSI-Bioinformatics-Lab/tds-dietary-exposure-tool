@@ -2,7 +2,7 @@ import {
   contaminentOccurenceFileNames,
   foodConsumptionFileNames,
 } from "./const.js";
-import { getAge, getSex, sortAgeSexGroup } from "./helper.js";
+import { getAge, getSex, lodOrMdlIsValid, sortAgeSexGroup } from "./helper.js";
 
 import { readCSV } from "./data.js";
 import { getTranslation } from "./translation.js";
@@ -59,7 +59,8 @@ export async function loadTdsData() {
         resultValue: Number(row["Result Value"]),
         unitsOfMeasurement: row["Units of measurement"],
         // Level of detection - when the result value is 0, the user can filter based on certain LODs.
-        lod: Number(row["LOD"] || row["MDL"]),
+        lod:
+          lodOrMdlIsValid( chemicalGroup) ? 0 : Number(row["LOD"] || row["MDL"]),
       });
     });
   }
