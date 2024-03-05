@@ -292,3 +292,12 @@ body {
     flex-direction: row-reverse;
   }
 }
+
+#data-tables-container {
+  margin: 1rem 0;
+  #data-table-button-container {
+    .data-table-button {
+      margin: 0.5rem 0;
+    }
+  }
+}

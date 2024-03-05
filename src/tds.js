@@ -2,7 +2,12 @@ import {
   contaminentOccurenceFileNames,
   foodConsumptionFileNames,
 } from "./const.js";
-import { getAge, getSex, lodOrMdlIsValid, sortAgeSexGroup } from "./helper.js";
+import {
+  getAgeSexGroupInfo,
+  getYear,
+  lodOrMdlIsValid,
+  sortAgeSexGroup,
+} from "./helper.js";
 
 import { readCSV } from "./data.js";
 import { getTranslation } from "./translation.js";
@@ -32,10 +37,7 @@ export async function loadTdsData() {
       contaminentOccurenceData[chemicalGroup] || {};
     data.forEach((row, i) => {
       const chemicalName = row["Analyte Name"];
-      const year = new Date(row["Sample Collection Date"] + "T12:00:00")
-        .getFullYear()
-        .toString();
-
+      const year = getYear(row);
       if (year < 2008 || year > 2022) {
         return;
       }
@@ -59,8 +61,9 @@ export async function loadTdsData() {
         resultValue: Number(row["Result Value"]),
         unitsOfMeasurement: row["Units of measurement"],
         // Level of detection - when the result value is 0, the user can filter based on certain LODs.
-        lod:
-          lodOrMdlIsValid( chemicalGroup) ? 0 : Number(row["LOD"] || row["MDL"]),
+        lod: lodOrMdlIsValid(chemicalGroup)
+          ? 0
+          : Number(row["LOD"] || row["MDL"]),
       });
     });
   }
@@ -92,9 +95,7 @@ export async function loadTdsData() {
       break;
     }
     const foodCompositeCode = row["TDS_FC_Code"];
-    const age = getAge(row["population"]);
-    const sex = getSex(row["population"]);
-    const ageSexGroup = age + " " + sex;
+    const [ageSexGroup, age, sex] = getAgeSexGroupInfo(row["population"])
     uniqueAgeGroups.add(age);
     uniqueSexGroups.add(sex);
     uniqueAgeSexGroups.add(ageSexGroup);
@@ -126,8 +127,7 @@ export async function loadTdsData() {
     if (row["Population_group"] != "All people") {
       break;
     }
-    const ageSexGroup =
-      getAge(row["population"]) + " " + getSex(row["population"]);
+    const ageSexGroup = getAgeSexGroupInfo(row["population"]) 
     const foodCompositeCode = row["TDS_FC_Code"];
     for (const foodGroup of Object.keys(consumptionData)) {
       if (consumptionData[foodGroup][foodCompositeCode]) {

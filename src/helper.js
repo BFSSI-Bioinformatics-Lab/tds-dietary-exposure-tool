@@ -1,4 +1,4 @@
-export function getSex(ageSexGroup) {
+function getSex(ageSexGroup) {
   let sex = "";
   for (let i = 0; i < ageSexGroup.length; i++) {
     if (ageSexGroup[i] == "F") {
@@ -14,7 +14,7 @@ export function getSex(ageSexGroup) {
   return sex;
 }
 
-export function getAge(ageSexGroup) {
+function getAge(ageSexGroup) {
   let age = "";
   for (let i = 0; i < ageSexGroup.length; i++) {
     if (!isNaN(ageSexGroup[i])) {
@@ -32,6 +32,13 @@ export function getAge(ageSexGroup) {
     if (age) break;
   }
   return age;
+}
+
+export function getAgeSexGroupInfo(value) {
+  const age = getAge(value);
+  const sex = getSex(value);
+  const ageSex = age + " " + sex;
+  return [ageSex, age, sex];
 }
 
 export function sortAgeSexGroup(a, b) {
@@ -58,6 +65,12 @@ export function sortAgeSexGroup(a, b) {
   } else {
     return aAgeRange[0] - bAgeRange[0];
   }
+}
+
+export function getYear(row) {
+  return new Date(row["Sample Collection Date"] + "T12:00:00")
+    .getFullYear()
+    .toString();
 }
 
 export function resultValueToNanoGramsPerGram(value, unitOfMeasurement) {

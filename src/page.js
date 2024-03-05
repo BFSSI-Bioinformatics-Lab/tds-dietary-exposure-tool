@@ -1,5 +1,6 @@
 import { getTranslations, getUserLanguage } from "./translation.js";
 import { el } from "./const.js";
+import { downloadDataTable } from "./data-table.js";
 
 export async function initializePage() {
   await initializePageText();
@@ -24,6 +25,13 @@ function addEventListenersToPage() {
     ele.container.addEventListener("click", () => {
       ele.content.style.display =
         ele.content.style.display == "none" ? "" : "none";
+    });
+  });
+  [el.downloadConsumptionData, el.downloadContaminentData].forEach((ele) => {
+    ele.addEventListener("click", () => {
+      downloadDataTable(
+        ele.id == el.downloadConsumptionData.id ? "consumption" : "contaminent",
+      );
     });
   });
 }

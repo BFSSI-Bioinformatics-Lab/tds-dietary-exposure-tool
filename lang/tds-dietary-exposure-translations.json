@@ -108,7 +108,7 @@
     },
     "rbasg-age-sex-group-filter-title": {
       "isStatic": true,
-      "en": "Age-Sex Group",
+      "en": "Age Group",
       "fr": ""
     },
     "rbasg-domain-filter-title": {
@@ -268,6 +268,16 @@
     },
     "no-data-available": {
       "en": "No data available",
+      "fr": ""
+    },
+    "download-consumption-data-button": {
+      "isStatic": true,
+      "en": "Download Consumption Data",
+      "fr": ""
+    },
+    "download-contaminent-data-button": {
+      "isStatic": true,
+      "en": "Download Contaminent Data",
       "fr": ""
     }
   }

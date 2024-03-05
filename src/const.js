@@ -84,4 +84,7 @@ export const el = {
   rbasgLegendContent: document.getElementById("rbasg-legend-content"),
   rbfgLegendContent: document.getElementById("rbfg-legend-content"),
   rbfLegendContent: document.getElementById("rbf-legend-content"),
+
+  downloadConsumptionData: document.getElementById("download-consumption-data-button"),
+  downloadContaminentData: document.getElementById("download-contaminent-data-button"),
 };
