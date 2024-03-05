@@ -439,7 +439,9 @@ function getRbf(tdsData, sel, color) {
         ? row.percentDietaryExposureToContaminent
         : dietaryExposureForFoodGroup[row.foodGroup] +
           row.percentDietaryExposureToContaminent,
-      title: row.foodCompositeDescription + " (" + row.foodComposite + ")",
+      title: (row.percentDietaryExposureToContaminent < 1)
+        ? " "
+        : row.foodCompositeDescription + " (" + row.foodComposite + ")",
       info: `${row.foodCompositeDescription} (${row.foodComposite})
 ${infoText.titles.dietaryExposure}: ${row.dietaryExposureToContaminent.toFixed(
         1,
