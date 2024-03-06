@@ -1,4 +1,8 @@
-/* CSS Reset */
+/* 
+ *
+ * CSS Reset 
+ *
+ */
 
 html,
 body,
@@ -131,173 +135,85 @@ table {
   border-spacing: 0;
 }
 
-/* Custom CSS */
+/* 
+ *
+ * Custom CSS 
+ *
+ */
 
-body {
-  margin: 0 auto;
-  width: min(90rem, 90%);
-  min-height: 100rem;
-}
-
+b,
 .bold {
   font-weight: bold;
 }
 
-.small-text {
-  font-size: 0.7rem;
+.dropdown-content {
+  display: none;
 }
 
-#title-container {
-  font-size: 2rem;
-  margin: 2rem 0 0.5rem 0;
-}
-
-#how-to-use-container {
-  padding: 0.5rem;
-  background-color: #f5f5f5;
-  border-top: 0.1rem solid #c67b7f;
-
-  #how-to-use-button {
-  }
-
-  #how-to-use-content {
-    margin: 1rem 0;
-    #how-to-use-text {
-    }
-  }
-}
-
-#data-info-container {
-  padding: 0 0.5rem 0.5rem 0.5rem;
-  background-color: #f5f5f5;
-
-  #data-info-button {
-  }
-
-  #data-info-content {
-    margin: 1rem 0;
-
-    ul {
-      list-style: inside;
-      li {
-        margin-left: 1rem;
-      }
-    }
-  }
-}
-
-#preamble {
-  font-size: 1.3rem;
-  margin: 1rem 0;
-}
-
-.filter {
-  display: flex;
-  flex-direction: column;
-  max-width: 12rem;
-  > select {
-    width: 8rem;
-    max-height: 4rem;
-  }
-}
-
-#filters-container {
-  margin-top: 2rem;
-
-  #filters-title {
-    font-weight: bold;
-    margin: 0.5rem 0;
-  }
-
-  #filters-content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    > * {
-      margin-right: 1rem;
-    }
-  }
-}
-
-#graphs-selection-container {
+#graph-selects-container {
   .graph-select {
     border: 0.1rem solid rgba(0, 0, 0, 0);
-    margin: 0.5rem 0.5rem 0.5rem 0;
   }
   .active-graph-select {
     border: 0.1rem solid #c67b7f;
   }
 }
 
-#graphs-container {
-  .graph-container {
-    display: none;
+#filters-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
-    .graph-content {
-      width: 50rem;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      .graph-title {
-        width: 80%;
-        text-align: center;
-        margin: 0 auto;
-        font-size: 1.7rem;
-        font-weight: bold;
-        margin-bottom: 2rem;
-      }
-      .graph-axis-title {
-        font-size: 1rem;
-      }
-    }
-
-    #rbfg-graph-content {
-      width: 70rem;
-    }
-
-    .graph-add-ons {
-      min-width: 12rem;
-      .graph-additional-filters-container {
-        > * {
-          margin-bottom: 1rem;
-        }
-      }
-      .graph-legend-container {
-        .graph-legend-title {
-          font-weight: bold;
-        }
-        .graph-legend-content {
-          .graph-legend-item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin: 0.25rem 0;
-            .graph-legend-item-color {
-              width: 1rem;
-              height: 1rem;
-              margin-right: 0.25rem;
-            }
-            .graph-legend-item-text {
-            }
-          }
-        }
-      }
-    }
+  .filter {
+    display: flex;
+    flex-direction: column;
+    width: 8rem;
   }
 
-  .active-graph-container {
+  .filter-additional {
+    display: none;
+  }
+
+  .filter-additional-active {
     display: flex;
-    flex-direction: row-reverse;
   }
 }
 
-#data-tables-container {
-  margin: 1rem 0;
-  #data-table-button-container {
-    .data-table-button {
-      margin: 0.5rem 0;
-    }
+.graph-legend-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+
+  .graph-legend-item-color {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+#data-table {
+  max-height: 40rem;
+  width: 100%;
+  overflow: auto;
+
+  table {
+    min-width: 150rem;
+    border-collapse: separate;
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+  }
+
+  th,
+  td {
+    min-width: 10rem;
+    border: 1px solid black;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
   }
 }

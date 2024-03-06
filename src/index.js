@@ -1,11 +1,16 @@
-import { filterTdsDataAndUpdateGraph, initializeFilters } from "./filter.js";
-import { initializePage } from "./page.js";
-import { loadTdsData } from "./tds.js";
+import { getTDSData } from "./data/dataTranslator.js";
+import {
+  addEventListenersToPage,
+  filterTdsDataAndUpdateGraph,
+  initializeFilters,
+} from "./ui/filterComponent.js";
+import { initializePageText } from "./ui/page.js";
 
 async function main() {
-  await initializePage();
+  await initializePageText();
+  addEventListenersToPage();
 
-  const tdsData = await loadTdsData();
+  const tdsData = await getTDSData();
 
   initializeFilters(tdsData);
   filterTdsDataAndUpdateGraph(tdsData);
