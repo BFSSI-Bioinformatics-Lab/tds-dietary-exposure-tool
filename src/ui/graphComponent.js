@@ -45,7 +45,7 @@ export function displayGraph(data) {
   const graphMapping = {
     [GraphTypes.RBASG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${filters.chemical
-        }(${filters.years.join(", ")})`,
+        }, (${filters.years.join(", ")})`,
       colorLegendData: sexGroupColorMapping,
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
@@ -55,7 +55,7 @@ export function displayGraph(data) {
     },
     [GraphTypes.RBF]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title} ${filters.chemical
-        } \, ${filters.ageSexGroups} \, \(${filters.years.join(", ")} \)`,
+        }, ${filters.ageSexGroups}, \(${filters.years.join(", ")}\)`,
       colorLegendMapping: foodGroupColorMapping,
       getDataFn: getRbf,
       getGraphDataFn: formatRbfToSunburst,
@@ -65,7 +65,7 @@ export function displayGraph(data) {
     },
     [GraphTypes.RBFG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${filters.chemical
-        } \(${filters.years.join(", ")}\)`,
+        }, \(${filters.years.join(", ")}\)`,
       colorLegendData: foodGroupColorMapping,
       getDataFn: getRbfg,
       getGraphDataFn: formatRbfgToStackedBar,

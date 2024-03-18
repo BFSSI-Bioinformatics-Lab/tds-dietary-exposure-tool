@@ -14,17 +14,25 @@
   </head>
 
   <body>
+    <!--
+
+
+    Header
+
+
+    -->
+
     <div id="title"></div>
 
     <div id="information-container">
       <div class="dropdown-container">
-        <button id="how-to-use-button"></button>
-        <div id="how-to-use-content" class="dropdown-content"></div>
+        <button id="how-to-use-button" class="dropdown-button"></button>
+        <div id="how-to-use-content" class="dropdown-content hidden"></div>
       </div>
 
       <div class="dropdown-container">
-        <button id="more-info-button"></button>
-        <div id="more-info-content" class="dropdown-content"></div>
+        <button id="more-info-button" class="dropdown-button"></button>
+        <div id="more-info-content" class="dropdown-content hidden"></div>
       </div>
     </div>
 
@@ -40,26 +48,18 @@
 
     -->
 
-    <div>
-      <div id="graph-selects-container">
+    <div id="graph-selects-container">
+      <div id="rbasg-graph-select" class="graph-select active-graph-select">
         <img
-          class="graph-select active-graph-select"
-          id="rbasg-graph-select"
           src="./img/rbasg.png"
           alt="results by age sex group graph preview"
         />
-        <img
-          class="graph-select"
-          id="rbfg-graph-select"
-          src="./img/rbfg.png"
-          alt="results by food group graph preview"
-        />
-        <img
-          class="graph-select"
-          id="rbf-graph-select"
-          src="./img/rbf.png"
-          alt="results by food graph preview"
-        />
+      </div>
+      <div id="rbfg-graph-select" class="graph-select">
+        <img src="./img/rbfg.png" alt="results by food group graph preview" />
+      </div>
+      <div id="rbf-graph-select" class="graph-select">
+        <img src="./img/rbf.png" alt="results by food graph preview" />
       </div>
     </div>
 
@@ -93,10 +93,10 @@
       <div class="filter">
         <label id="filter-lod-title" for="filter-lod-select"></label>
         <select id="filter-lod-select"></select>
-        <div id="filter-lod-subtitle"></div>
+        <div id="filter-lod-subtitle" class="small"></div>
       </div>
 
-      <div class="filter">
+      <div id="filter-consumption-units" class="filter">
         <label
           id="filter-consumption-units-title"
           for="filter-consumption-units-select"
@@ -165,14 +165,16 @@
 
     -->
 
-    <div id="graph-container">
-      <div id="graph-title" class="bold"></div>
-      <div id="graph-content"></div>
-    </div>
+    <div id="graph-content">
+      <div id="legend-container">
+        <div id="legend-title" class="bold"></div>
+        <div id="legend-content"></div>
+      </div>
 
-    <div id="legend-container">
-      <div id="legend-title" class="bold"></div>
-      <div id="legend-content"></div>
+      <div id="graph-container">
+        <div id="graph-title" class="bold big"></div>
+        <div id="graph"></div>
+      </div>
     </div>
 
     <!--
@@ -184,10 +186,9 @@
     -->
 
     <div id="data-container">
-      <div id="data-table-title" class="bold"></div>
+      <div id="data-table-title" class="bold big"></div>
       <div id="data-table-button-container">
         <button id="download-consumption-data-button"></button>
-        <br />
         <button id="download-contaminent-data-button"></button>
       </div>
       <div id="data-table"></div>

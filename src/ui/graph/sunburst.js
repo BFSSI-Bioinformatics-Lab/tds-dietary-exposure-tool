@@ -4,7 +4,7 @@
  *
  * Parameters:
  * - data.title: The title of the sunburst chart (displayed in the center)
- * - data.children: Child nodes with specific properties
+ * - data.children: Array of child nodes with specific properties
  *   - value: Numeric value associated with the node
  *   - color: Color code for the node
  *   - title: Node title that will be displayed
@@ -19,78 +19,81 @@ export function getSunburstSvg(data) {
   if (!data) return;
   let dataExists = false;
 
-  const maxWidth = "800px";
+  const width = 700;
+  const height = width;
+  const arcPadding = 1;
+  const margin = 1;
 
-  const radius = 928 / 2;
+  const root = d3.hierarchy(data, (d) => d.children);
 
-  const partition = (data) =>
-    d3.partition().size([2 * Math.PI, radius])(
-      d3
-        .hierarchy(data)
-        .sum((d) => d.value)
-        .sort((a, b) => b.data.sortBy - a.data.sortBy),
-    );
-
-  const arc = d3
-    .arc()
-    .startAngle((d) => d.x0)
-    .endAngle((d) => d.x1)
-    .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
-    .padRadius(radius / 2)
-    .innerRadius((d) => d.y0)
-    .outerRadius((d) => d.y1 - 1);
-
-  const root = partition(data);
-
-  const svg = d3.create("svg");
-
-  svg
-    .append("g")
-    .attr("fill-opacity", 0.8)
-    .selectAll("path")
-    .data(root.descendants().filter((d) => d.depth))
-    .join("path")
-    .attr("fill", (d) => d.data.color)
-    .attr("d", arc)
-    .append("title")
-    .text(
-      (d) =>
-        `${d
-          .ancestors()
-          .filter((d) => d.depth > 0)
-          .map((d) => {
-            if (d.value) {
-              dataExists = true;
-            }
-            return d.data.info;
-          })} `,
-    );
+  root.sum((d) => {
+    if (d.value) {
+      dataExists = true;
+    }
+    return Math.max(0, d.value);
+  });
 
   if (!dataExists) {
     return;
   }
 
+  root.sort((a, b) => b.data.sortBy - a.data.sortBy);
+
+  const startAngle = 0; // Starting angle
+  const endAngle = 2 * Math.PI; // Ending angle
+  const radius = Math.min(width - 2 * margin, height - 2 * margin) / 2; // Outer radius
+  d3.partition().size([endAngle - startAngle, radius])(root); // Polar coordinates: x (angle), y (radius)
+
+  const arc = d3
+    .arc()
+    .startAngle((d) => d.x0 + startAngle)
+    .endAngle((d) => d.x1 + startAngle)
+    .padAngle((d) => Math.min((d.x1 - d.x0) / 2, (2 * arcPadding) / radius))
+    .padRadius(radius / 2)
+    .innerRadius((d) => d.y0)
+    .outerRadius((d) => d.y1 - arcPadding);
+
+  const svg = d3
+    .create("svg")
+    .attr("viewBox", [
+      2 * margin - width / 2,
+      2 * margin - height / 2,
+      width,
+      height,
+    ])
+    .attr("width", width)
+    .attr("height", height)
+    .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
+    .attr("font-size", "0.8rem")
+    .attr("text-anchor", "middle");
+
   svg
-    .append("g")
-    .attr("pointer-events", "none")
+    .append("text")
     .attr("text-anchor", "middle")
-    .selectAll("text")
-    .data(
-      root
-        .descendants()
-        .filter((d) => d.depth && ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 10),
-    )
-    .join("text")
-    .attr("transform", function (d) {
-      const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+    .style("font-size", "1.5rem")
+    .text(data.title);
+
+  const cell = svg.selectAll("a").data(root.descendants()).join("a");
+
+  cell
+    .append("path")
+    .attr("d", arc)
+    .attr("fill", (d) => d.data.color || "rgba(0,0,0,0)");
+
+  cell
+    .filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 10)
+    .append("text")
+    .attr("transform", (d) => {
+      if (!d.depth) return;
+      const x = (((d.x0 + d.x1) / 2 + startAngle) * 180) / Math.PI;
       const y = (d.y0 + d.y1) / 2;
-      return `rotate(${x - 90}) translate(${y}, 0) rotate(${
-        x < 180 ? 0 : 180
-      })`;
+      return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
     })
-    .attr("dy", "0.35em")
-    .attr("width", 100)
+    .attr("dy", "0.32em")
     .text((d) => {
+      if (d.data.children) {
+        return;
+      }
       const maxLength = 30;
       const str = d.data.title;
       if (str.length > maxLength) {
@@ -99,19 +102,7 @@ export function getSunburstSvg(data) {
       return str;
     });
 
-  svg
-    .append("text")
-    .attr("text-anchor", "middle")
-    .style("font-size", "1.8rem")
-    .text(data.title);
+  cell.append("title").text((d) => d.data.info);
 
-  return svg
-    .attr("viewBox", function autoBox() {
-      document.body.appendChild(this);
-      const { x, y, width, height } = this.getBBox();
-      document.body.removeChild(this);
-      return [x, y, width, height];
-    })
-    .attr("width", `min(${maxWidth},100%)`)
-    .node();
+  return svg.node();
 }

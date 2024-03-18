@@ -23,8 +23,11 @@ const translations = {
         howToUseButton: "? How to Use",
         howToUseContent: [
           "The graph at the top of the page compares how 12 broad food groups contribute to intake among children, youth & adolescents, adult females and adult males and the whole population.",
+          "",
           "1) Choose a Nutrient by selecting from the dropdown menu at the top left hand side of the screen To display a detailed description of what is included in each food group, hover over or tab to any specific food group in the graph or the legend. Click to isolate a food group, click again to restore the complete graph. Use the “Switch to” button to toggle between number and percentage of contribution. Download the raw data in csv format by clicking on the download button.",
+          "",
           "2) Select an age-sex group to take a deeper look at how more specific food sub-groups contribute to intakes in the graph at the bottom of the page.",
+          "",
           "Each broad food group is represented in a different color and sub-group contribution is shown in the outside layers. Hover over a food group for more information. Click on the label to take a closer look into a food group. Click again to restore the complete graph. To see the level 2 sub-groups results in ascending order, click on the grey circle. Click again on the grey circle to restore the complete graph.",
         ],
         moreInfoButton: "* More Info",
@@ -46,7 +49,7 @@ const translations = {
 
     filters: {
       titles: {
-        title: "Select Chemical, Year(s) and Graph Type:",
+        title: "Select Graph Type, Chemical, and Year(s):",
 
         chemicalGroup: "Chemical Group",
         chemical: "Chemical",
@@ -105,7 +108,7 @@ const translations = {
         foodGroup: "Food Groups",
       },
       [GraphTypes.RBASG]: {
-        title: "Dietary exposure estimate by age sex group for",
+        title: "Dietary Exposure Estimate by Age-Sex Group for",
         range: "Dietary Exposure",
         domain: {
           [RbasgDomainFormat.AGESEX]: "Age Group(s)",
@@ -113,10 +116,10 @@ const translations = {
         },
       },
       [GraphTypes.RBF]: {
-        title: "Dietary exposure estimate by food for",
+        title: "Dietary Exposure Estimate by Food for",
       },
       [GraphTypes.RBFG]: {
-        title: "Dietary exposure estimate by food group for",
+        title: "Dietary Exposure Estimate by Food Group for",
         range: {
           [RbfgRangeFormat.PERCENT]: "% of Total Exposure",
           [RbfgRangeFormat.NUMBER]: "Dietary Exposure",

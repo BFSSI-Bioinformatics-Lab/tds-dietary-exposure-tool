@@ -75,9 +75,9 @@ export function addEventListenersToPage() {
   [el.header.information.howToUse, el.header.information.moreInfo].forEach(
     (dropdown) => {
       dropdown.button.addEventListener("click", () => {
-        dropdown.content.classList.contains("dropdown-content")
-          ? dropdown.content.classList.remove("dropdown-content")
-          : dropdown.content.classList.add("dropdown-content");
+        dropdown.content.classList.contains("hidden")
+          ? dropdown.content.classList.remove("hidden")
+          : dropdown.content.classList.add("hidden");
       });
     },
   );

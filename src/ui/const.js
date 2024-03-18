@@ -69,7 +69,7 @@ export const el = {
 
   graphs: {
     title: document.getElementById("graph-title"),
-    graph: document.getElementById("graph-content"),
+    graph: document.getElementById("graph"),
 
     [GraphTypes.RBASG]: {
       graphSelect: document.getElementById("rbasg-graph-select"),

@@ -121,6 +121,9 @@ export function formatRbsagToDataTable(data, filters) {
 
   Object.values(data).forEach((ageSexGroup) => {
     Object.values(ageSexGroup).forEach((row) => {
+      if (!row.ageSexGroup) {
+        return;
+      }
       dataTableData.push({
         [headers.chemical]: filters.chemical,
         [headers.ageSexGroup]: row.ageSexGroup,
