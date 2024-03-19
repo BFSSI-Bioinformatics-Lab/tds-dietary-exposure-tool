@@ -90,18 +90,10 @@
         <select id="filter-year-select" multiple></select>
       </div>
 
-      <div class="filter">
+      <div class="filter bordered-filter">
         <label id="filter-lod-title" for="filter-lod-select"></label>
         <select id="filter-lod-select"></select>
         <div id="filter-lod-subtitle" class="small"></div>
-      </div>
-
-      <div id="filter-consumption-units" class="filter">
-        <label
-          id="filter-consumption-units-title"
-          for="filter-consumption-units-select"
-        ></label>
-        <select id="filter-consumption-units-select"></select>
       </div>
 
       <div
@@ -112,6 +104,30 @@
           for="filter-rbasg-age-group-select"
         ></label>
         <select id="filter-rbasg-age-group-select" multiple></select>
+      </div>
+
+      <div class="filter filter-additional filter-additional-rbf">
+        <label
+          id="filter-rbf-age-sex-group-title"
+          for="filter-rbf-age-sex-group-select"
+        ></label>
+        <select id="filter-rbf-age-sex-group-select"></select>
+      </div>
+
+      <div class="filter filter-additional filter-additional-rbfg">
+        <label
+          id="filter-rbfg-age-sex-group-title"
+          for="filter-rbfg-age-sex-group-select"
+        ></label>
+        <select id="filter-rbfg-age-sex-group-select" multiple></select>
+      </div>
+
+      <div class="filter bordered-filter">
+        <label
+          id="filter-consumption-units-title"
+          for="filter-consumption-units-select"
+        ></label>
+        <select id="filter-consumption-units-select"></select>
       </div>
 
       <div
@@ -132,22 +148,6 @@
         <select id="filter-rbf-sort-by-select"></select>
       </div>
 
-      <div class="filter filter-additional filter-additional-rbf">
-        <label
-          id="filter-rbf-age-sex-group-title"
-          for="filter-rbf-age-sex-group-select"
-        ></label>
-        <select id="filter-rbf-age-sex-group-select"></select>
-      </div>
-
-      <div class="filter filter-additional filter-additional-rbfg">
-        <label
-          id="filter-rbfg-age-sex-group-title"
-          for="filter-rbfg-age-sex-group-select"
-        ></label>
-        <select id="filter-rbfg-age-sex-group-select" multiple></select>
-      </div>
-
       <div class="filter filter-additional filter-additional-rbfg">
         <label
           id="filter-rbfg-range-title"
@@ -166,14 +166,14 @@
     -->
 
     <div id="graph-content">
-      <div id="legend-container">
-        <div id="legend-title" class="bold"></div>
-        <div id="legend-content"></div>
-      </div>
-
       <div id="graph-container">
         <div id="graph-title" class="bold big"></div>
         <div id="graph"></div>
+      </div>
+
+      <div id="legend-container">
+        <div id="legend-title" class="bold"></div>
+        <div id="legend-content"></div>
       </div>
     </div>
 

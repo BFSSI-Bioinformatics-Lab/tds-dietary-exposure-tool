@@ -241,7 +241,7 @@ body {
       cursor: pointer;
     }
   }
-  #filter-consumption-units {
+  .bordered-filter {
     border-right: 0.13rem dotted #ccd1d1;
     padding-right: 1rem;
   }
@@ -277,6 +277,7 @@ body {
     gap: 0.3rem;
     flex-shrink: 1;
     flex-grow: 0;
+    margin: 2.5rem 2rem;
     #legend-content {
       display: flex;
       flex-direction: column;
