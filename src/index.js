@@ -1,7 +1,6 @@
 import { getTDSData } from "./data/dataTranslator.js";
 import {
   addEventListenersToPage,
-  filterTdsDataAndUpdateGraph,
   initializeFilters,
 } from "./ui/filterComponent.js";
 import { initializePageText } from "./ui/page.js";
@@ -13,7 +12,6 @@ async function main() {
   const tdsData = await getTDSData();
 
   initializeFilters(tdsData);
-  filterTdsDataAndUpdateGraph(tdsData);
 }
 
 main();

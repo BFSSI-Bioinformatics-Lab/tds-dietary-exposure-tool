@@ -49,7 +49,7 @@ const translations = {
 
     filters: {
       titles: {
-        title: "Select Graph Type, Chemical, and Year(s):",
+        title: "Select Graph Type and Chemical:",
 
         chemicalGroup: "Chemical Group",
         chemical: "Chemical",
@@ -163,6 +163,7 @@ const translations = {
      */
 
     misc: {
+      selectPlaceholder: "Select",
       noDataMsg: "No data available",
       consumptionUnitsShort: {
         [ConsumptionUnits.KGBW]: "/kg bw/day",

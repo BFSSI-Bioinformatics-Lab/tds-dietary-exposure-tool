@@ -154,8 +154,8 @@ b,
   font-size: 0.7rem;
 }
 
-.hidden {
-  display: none;
+.faded:focus {
+  color: red;
 }
 
 button {
@@ -330,4 +330,8 @@ body {
       background-color: #f2f2f2;
     }
   }
+}
+
+.hidden {
+  display: none !important;
 }

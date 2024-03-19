@@ -30,6 +30,19 @@ export function getSelectedGraphType() {
   }
 }
 
+/**
+ *
+ * Check if the user has filled out manditory filters
+ *
+ */
+export function selectionsCompleted() {
+  return (
+    document.querySelector(".active-graph-select") &&
+    el.filters.selects.chemicalGroup.value &&
+    el.filters.selects.chemical.value
+  );
+}
+
 export function getActiveFilters() {
   const graphType = getSelectedGraphType();
 
@@ -98,11 +111,12 @@ function addEventListenersToFilters(tdsData) {
   });
 
   [el.filters.selects.chemicalGroup, el.filters.selects.chemical].forEach(
-    (filter) => {
-      filter.addEventListener("change", () => {
-        displayYears(tdsData);
-      });
-    },
+    (select) =>
+      select.addEventListener("change", () => {
+        if (selectionsCompleted()) {
+          displayDynamicFilters(tdsData);
+        }
+      }),
   );
 
   el.graphs[GraphTypes.RBASG].filters.domain.addEventListener("change", () => {
@@ -114,17 +128,17 @@ function addEventListenersToFilters(tdsData) {
     el.graphs[GraphTypes.RBF].graphSelect,
     el.graphs[GraphTypes.RBFG].graphSelect,
   ];
-  const additionalFilterContainers = [
-    ...el.graphs[GraphTypes.RBASG].filterContainers,
-    ...el.graphs[GraphTypes.RBF].filterContainers,
-    ...el.graphs[GraphTypes.RBFG].filterContainers,
-  ];
+
   graphSelects.forEach((element) => {
     element.addEventListener("click", () => {
       graphSelects.forEach((element) => {
         element.classList.remove("active-graph-select");
       });
-      additionalFilterContainers.forEach((filter) => {
+      [
+        ...el.graphs[GraphTypes.RBASG].filterContainers,
+        ...el.graphs[GraphTypes.RBF].filterContainers,
+        ...el.graphs[GraphTypes.RBFG].filterContainers,
+      ].forEach((filter) => {
         filter.classList.remove("filter-additional-active");
       });
       element.classList.add("active-graph-select");
@@ -134,7 +148,10 @@ function addEventListenersToFilters(tdsData) {
           container.classList.add("filter-additional-active");
         }
       });
-      filterTdsDataAndUpdateGraph(tdsData);
+      if (selectionsCompleted()) {
+        displayDynamicFilters(tdsData);
+        filterTdsDataAndUpdateGraph(tdsData);
+      }
     });
   });
 
@@ -145,27 +162,35 @@ function addEventListenersToFilters(tdsData) {
     ...Object.values(el.graphs[GraphTypes.RBFG].filters),
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
-      filterTdsDataAndUpdateGraph(tdsData);
+      if (selectionsCompleted()) {
+        filterTdsDataAndUpdateGraph(tdsData);
+      }
     });
   });
 }
 
 export function initializeFilters(tdsData) {
   addEventListenersToFilters(tdsData);
-
   displayChemicalGroups(tdsData);
-  displayChemicals(tdsData);
-  displayYears(tdsData);
-  displayLods(tdsData);
+  displayLods();
   displayConsumptionUnits();
+}
 
-  displayRbasgAdditionalFilters(tdsData);
-  displayRbfgAdditionalFilters(tdsData);
-  displayRbfAdditionalFilters(tdsData);
+function addPlaceholderToSelect(select, text) {
+  const oe = document.createElement("option");
+  oe.value = "";
+  oe.selected = true;
+  oe.disabled = true;
+  oe.text = text;
+  select.appendChild(oe);
 }
 
 function displayChemicalGroups(tdsData) {
   el.filters.selects.chemicalGroup.innerHTML = "";
+  addPlaceholderToSelect(
+    el.filters.selects.chemicalGroup,
+    getTranslations().misc.selectPlaceholder,
+  );
   Object.keys(tdsData.contaminent)
     .sort()
     .forEach((chemicalGroup) => {
@@ -189,12 +214,26 @@ function displayChemicals(tdsData) {
   });
 }
 
+/**
+ *
+ * Displays filters that depend on the user selecting out manditory filters
+ *
+ */
+function displayDynamicFilters(tdsData) {
+  displayYears(tdsData);
+  displayRbasgAdditionalFilters();
+  displayRbfgAdditionalFilters();
+  displayRbfAdditionalFilters();
+  el.filters.containers.forEach((container) => {
+    container.classList.remove("hidden");
+  });
+}
+
 function displayYears(tdsData) {
+  const filters = getActiveFilters();
   el.filters.selects.years.innerHTML = "";
   const years = Object.keys(
-    tdsData.contaminent[el.filters.selects.chemicalGroup.value][
-    el.filters.selects.chemical.value
-    ],
+    tdsData.contaminent[filters.chemicalGroup][filters.chemical],
   ).sort();
   years.forEach((year) => {
     const oe = document.createElement("option");
@@ -226,7 +265,7 @@ function displayConsumptionUnits() {
   });
 }
 
-function displayRbasgAdditionalFilters(tdsData) {
+function displayRbasgAdditionalFilters() {
   const domainEl = el.graphs[GraphTypes.RBASG].filters.domain;
   domainEl.innerHTML = "";
 
@@ -306,30 +345,22 @@ function displayRbfAdditionalFilters() {
 }
 
 export function filterTdsDataAndUpdateGraph(tdsData) {
-  const selectedYears = Array.from(
-    el.filters.selects.years.selectedOptions,
-  ).map((option) => option.value);
-
+  const filters = getActiveFilters();
   const filteredTdsData = {
     ...tdsData,
     contaminent: {},
   };
 
   Object.keys(
-    tdsData.contaminent[el.filters.selects.chemicalGroup.value][
-    el.filters.selects.chemical.value
-    ],
+    tdsData.contaminent[filters.chemicalGroup][filters.chemical],
   ).forEach((year) => {
-    if (selectedYears.includes(year)) {
+    if (filters.years.includes(year)) {
       filteredTdsData.contaminent[year] =
-        tdsData.contaminent[el.filters.selects.chemicalGroup.value][
-        el.filters.selects.chemical.value
-        ][year];
+        tdsData.contaminent[filters.chemicalGroup][filters.chemical][year];
     }
   });
 
   updateLodFilterDescription(filteredTdsData);
-
   displayGraph(filteredTdsData);
 }
 

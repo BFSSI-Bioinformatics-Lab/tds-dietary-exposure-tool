@@ -29,6 +29,7 @@ export const el = {
    */
 
   filters: {
+    containers: document.querySelectorAll(".filter"),
     titles: {
       title: document.getElementById("filters-title"),
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
