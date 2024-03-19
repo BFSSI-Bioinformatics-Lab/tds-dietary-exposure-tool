@@ -139,6 +139,7 @@ const translations = {
       buttons: {
         downloadContaminentData: "Download Contaminent Data",
         downloadConsumptionData: "Download Consumption Data",
+        downloadDataTable: "Download Calculations",
       },
       headers: {
         chemical: "Chemical",

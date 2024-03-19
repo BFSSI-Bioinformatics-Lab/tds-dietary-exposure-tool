@@ -1,11 +1,15 @@
-import { DataType } from "../config.js";
+import { DataType, GraphTypes } from "../config.js";
 import { downloadCSV } from "../data/dataDownloader.js";
 import {
   getRawFilteredConsumptionData,
   getRawFilteredContaminentData,
 } from "../data/dataTranslator.js";
+import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
+import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
+import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
 import { getTranslations } from "../translation/translation.js";
 import { el } from "./const.js";
+import { getActiveFilters } from "./filterComponent.js";
 
 /**
  *
@@ -25,6 +29,43 @@ export async function downloadTDSData(dataToDownload) {
   data.forEach((d) => {
     downloadCSV(d);
   });
+}
+
+/**
+ *
+ * Download current graph calculations shown in data table
+ * Parameters:
+ * - tdsData: formatted TDS data
+ * - graphType: the graph the downloaded calculations will be for
+ *
+ */
+export function downloadDataTable(tdsData, graphType) {
+  const filters = getActiveFilters();
+
+  const graphMapping = {
+    [GraphTypes.RBASG]: {
+      getDataFn: getRbasg,
+      getDataTableDataFn: formatRbsagToDataTable,
+    },
+    [GraphTypes.RBF]: {
+      getDataFn: getRbf,
+      getDataTableDataFn: formatRbfToDataTable,
+    },
+    [GraphTypes.RBFG]: {
+      getDataFn: getRbfg,
+      getDataTableDataFn: formatRbfgToDataTable,
+    },
+  };
+  const [getDataFn, getDataTableDataFn] = Object.values(
+    graphMapping[graphType],
+  );
+
+  const specificData = getDataFn(tdsData, filters);
+  const data = {
+    filename: "Dietary Exposure Calculations",
+    rows: getDataTableDataFn(specificData, filters),
+  };
+  downloadCSV(data);
 }
 
 /*

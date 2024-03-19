@@ -46,4 +46,6 @@ export async function initializePageText() {
     translations.dataTable.buttons.downloadConsumptionData;
   el.dataTable.buttons.downloadContaminentData.innerHTML =
     translations.dataTable.buttons.downloadContaminentData;
+  el.dataTable.buttons.downloadDataTable.innerHTML =
+    translations.dataTable.buttons.downloadDataTable;
 }

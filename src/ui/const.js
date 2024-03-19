@@ -114,7 +114,9 @@ export const el = {
    */
 
   dataTable: {
+    dataContainer: document.getElementById("data-container"),
     title: document.getElementById("data-table-title"),
+    container: document.getElementById("data-table-container"),
     dataTable: document.getElementById("data-table"),
     buttons: {
       downloadConsumptionData: document.getElementById(
@@ -122,6 +124,9 @@ export const el = {
       ),
       downloadContaminentData: document.getElementById(
         "download-contaminent-data-button",
+      ),
+      downloadDataTable: document.getElementById(
+        "download-data-table-button",
       ),
     },
   },

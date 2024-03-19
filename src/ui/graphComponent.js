@@ -20,7 +20,11 @@ import { displayColorLegend } from "./graph/colorLegend.js";
 import { getGroupedBarSvg } from "./graph/groupedBar.js";
 import { getStackedBarSvg } from "./graph/stackedBar.js";
 import { getSunburstSvg } from "./graph/sunburst.js";
-import { getActiveFilters, getSelectedGraphType } from "./filterComponent.js";
+import {
+  getActiveFilters,
+  getSelectedGraphType,
+  updateLodFilterDescription,
+} from "./filterComponent.js";
 import { displayDataTable } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
 
@@ -85,6 +89,8 @@ export function displayGraph(data) {
     legendTitle,
   ] = Object.values(graphMapping[graphType]);
 
+  updateLodFilterDescription(data);
+
   const specificData = getDataFn(data, filters);
   const graphData = getGraphDataFn(specificData, filters, colorLegendMapping);
   const graphSvg = getSvgFn(graphData);
@@ -95,6 +101,7 @@ export function displayGraph(data) {
 
   displayColorLegend(colorLegendMapping, legendTitle);
 
+  el.dataTable.dataContainer.classList.remove("hidden");
   const dataTableData = getDataTableDataFn(specificData, filters);
   displayDataTable(dataTableData);
 }

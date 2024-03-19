@@ -12,7 +12,7 @@ import {
   ageGroups,
   ageSexGroups,
 } from "../config.js";
-import { downloadTDSData } from "./dataTableComponent.js";
+import { downloadDataTable, downloadTDSData } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
 
 export function getSelectedGraphType() {
@@ -84,7 +84,7 @@ export function getActiveFilters() {
   };
 }
 
-export function addEventListenersToPage() {
+export function addEventListenersToPage(tdsData) {
   [el.header.information.howToUse, el.header.information.moreInfo].forEach(
     (dropdown) => {
       dropdown.button.addEventListener("click", () => {
@@ -94,14 +94,21 @@ export function addEventListenersToPage() {
       });
     },
   );
-  Object.values(el.dataTable.buttons).forEach((button) => {
-    button.addEventListener("click", () => {
-      downloadTDSData(
-        button.id == el.dataTable.buttons.downloadConsumptionData.id
-          ? DataType.CONSUMPTION
-          : DataType.CONTAMINENT,
-      );
-    });
+  el.dataTable.title.addEventListener("click", () => {
+    if (el.dataTable.container.classList.contains("hidden")) {
+      el.dataTable.container.classList.remove("hidden");
+    } else {
+      el.dataTable.container.classList.add("hidden");
+    }
+  });
+  el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
+    downloadTDSData(DataType.CONSUMPTION);
+  });
+  el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
+    downloadTDSData(DataType.CONTAMINENT);
+  });
+  el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
+    downloadDataTable(getFilteredTdsData(tdsData), getSelectedGraphType());
   });
 }
 
@@ -150,7 +157,7 @@ function addEventListenersToFilters(tdsData) {
       });
       if (selectionsCompleted()) {
         displayDynamicFilters(tdsData);
-        filterTdsDataAndUpdateGraph(tdsData);
+        displayGraph(getFilteredTdsData(tdsData));
       }
     });
   });
@@ -163,7 +170,7 @@ function addEventListenersToFilters(tdsData) {
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
       if (selectionsCompleted()) {
-        filterTdsDataAndUpdateGraph(tdsData);
+        displayGraph(getFilteredTdsData(tdsData));
       }
     });
   });
@@ -344,7 +351,7 @@ function displayRbfAdditionalFilters() {
   });
 }
 
-export function filterTdsDataAndUpdateGraph(tdsData) {
+export function getFilteredTdsData(tdsData) {
   const filters = getActiveFilters();
   const filteredTdsData = {
     ...tdsData,
@@ -360,11 +367,10 @@ export function filterTdsDataAndUpdateGraph(tdsData) {
     }
   });
 
-  updateLodFilterDescription(filteredTdsData);
-  displayGraph(filteredTdsData);
+  return filteredTdsData;
 }
 
-function updateLodFilterDescription(filteredTdsData) {
+export function updateLodFilterDescription(filteredTdsData) {
   el.filters.titles.lodSubtitle.innerHTML = "";
   let maxContaminentLod = 0;
   let minContaminentLod = Infinity;

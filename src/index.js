@@ -7,10 +7,10 @@ import { initializePageText } from "./ui/page.js";
 
 async function main() {
   await initializePageText();
-  addEventListenersToPage();
 
   const tdsData = await getTDSData();
 
+  addEventListenersToPage(tdsData);
   initializeFilters(tdsData);
 }
 
