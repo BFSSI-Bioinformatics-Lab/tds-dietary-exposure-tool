@@ -125,10 +125,21 @@ export const el = {
       downloadContaminentData: document.getElementById(
         "download-contaminent-data-button",
       ),
-      downloadDataTable: document.getElementById(
-        "download-data-table-button",
-      ),
+      downloadDataTable: document.getElementById("download-data-table-button"),
     },
+  },
+
+  /*
+   *
+   * About section
+   *
+   */
+
+  about: {
+    container: document.getElementById("about-container"),
+    title: document.getElementById("about-title"),
+    tableContainer: document.getElementById("about-table-container"),
+    table: document.getElementById("about-table"),
   },
 
   /*

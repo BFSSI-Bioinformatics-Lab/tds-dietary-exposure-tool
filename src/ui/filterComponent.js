@@ -94,6 +94,7 @@ export function addEventListenersToPage(tdsData) {
       });
     },
   );
+
   el.dataTable.title.addEventListener("click", () => {
     if (el.dataTable.container.classList.contains("hidden")) {
       el.dataTable.container.classList.remove("hidden");
@@ -109,6 +110,14 @@ export function addEventListenersToPage(tdsData) {
   });
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
     downloadDataTable(getFilteredTdsData(tdsData), getSelectedGraphType());
+  });
+
+  el.about.title.addEventListener("click", () => {
+    if (el.about.tableContainer.classList.contains("hidden")) {
+      el.about.tableContainer.classList.remove("hidden");
+    } else {
+      el.about.tableContainer.classList.add("hidden");
+    }
   });
 }
 

@@ -1,5 +1,6 @@
 import { getTranslations } from "../translation/translation.js";
 import { el } from "./const.js";
+import { displayAboutTable } from "./dataTableComponent.js";
 
 /**
  *
@@ -48,4 +49,7 @@ export async function initializePageText() {
     translations.dataTable.buttons.downloadContaminentData;
   el.dataTable.buttons.downloadDataTable.innerHTML =
     translations.dataTable.buttons.downloadDataTable;
+
+  el.about.title.innerHTML = translations.about.title;
+  displayAboutTable();
 }

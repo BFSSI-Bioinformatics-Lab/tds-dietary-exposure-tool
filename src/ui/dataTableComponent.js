@@ -110,3 +110,31 @@ export async function displayDataTable(data) {
   });
   tableContainer.appendChild(table);
 }
+
+/*
+ *
+ * Display table providing additional information about the tool
+ *
+ */
+export async function displayAboutTable() {
+  const data = getTranslations().about.table;
+
+  const tableContainer = el.about.tableContainer;
+  tableContainer.innerHTML = "";
+
+  const table = document.createElement("table");
+
+  data.forEach((item) => {
+    const row = document.createElement("tr");
+    const th = document.createElement("th");
+    th.textContent = item.header;
+    th.classList.add("bold");
+    row.appendChild(th);
+    const td = document.createElement("td");
+    td.textContent = item.value;
+    row.appendChild(td);
+    table.appendChild(row);
+  });
+
+  tableContainer.appendChild(table);
+}
