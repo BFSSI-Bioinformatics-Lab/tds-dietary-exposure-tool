@@ -16,7 +16,6 @@
  *
  */
 export function getSunburstSvg(data) {
-  console.log(data);
   if (!data) return;
   let dataExists = false;
 

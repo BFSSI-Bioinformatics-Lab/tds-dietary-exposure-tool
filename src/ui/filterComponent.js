@@ -1,4 +1,4 @@
-import { el } from "./const.js";
+import { classs, el } from "./const.js";
 
 import { displayGraph } from "./graphComponent.js";
 import {
@@ -26,7 +26,7 @@ export function getSelectedGraphType() {
     case "rbf":
       return GraphTypes.RBF;
     default:
-      console.error("Invalid graph type selected");
+      throw "Invalid graph type selected";
   }
 }
 
@@ -35,7 +35,7 @@ export function getSelectedGraphType() {
  * Check if the user has filled out manditory filters
  *
  */
-export function selectionsCompleted() {
+function selectionsCompleted() {
   return (
     document.querySelector(".active-graph-select") &&
     el.filters.selects.chemicalGroup.value &&
@@ -44,7 +44,10 @@ export function selectionsCompleted() {
 }
 
 export function getActiveFilters() {
-  const graphType = getSelectedGraphType();
+  let graphType;
+  try {
+    graphType = getSelectedGraphType();
+  } catch (e) { }
 
   return {
     chemicalGroup: el.filters.selects.chemicalGroup.value,
@@ -65,10 +68,12 @@ export function getActiveFilters() {
               getTranslations().filters.lods[LODs.Exclude]
               ? LODs.Exclude
               : LODs[0],
-    ageSexGroups: Array.from(
-      el.graphs[graphType].filters.ageSexGroup.selectedOptions,
-    ).map((option) => option.value),
-    ageSexGroupsIsAgeGroups: getSelectedGraphType() == GraphTypes.RBASG,
+    ageSexGroups: graphType
+      ? Array.from(
+        el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
+      ).map((option) => option.value)
+      : [],
+    ageSexGroupsIsAgeGroups: graphType == GraphTypes.RBASG,
     showByAgeSexGroup:
       el.graphs[GraphTypes.RBASG].filters.domain.value ==
       getTranslations().filters.rbasgDomainFormat[RbasgDomainFormat.AGESEX],
@@ -88,18 +93,18 @@ export function addEventListenersToPage(tdsData) {
   [el.header.information.howToUse, el.header.information.moreInfo].forEach(
     (dropdown) => {
       dropdown.button.addEventListener("click", () => {
-        dropdown.content.classList.contains("hidden")
-          ? dropdown.content.classList.remove("hidden")
-          : dropdown.content.classList.add("hidden");
+        dropdown.content.classList.contains(classs.HIDDEN)
+          ? dropdown.content.classList.remove(classs.HIDDEN)
+          : dropdown.content.classList.add(classs.HIDDEN);
       });
     },
   );
 
   el.dataTable.title.addEventListener("click", () => {
-    if (el.dataTable.container.classList.contains("hidden")) {
-      el.dataTable.container.classList.remove("hidden");
+    if (el.dataTable.container.classList.contains(classs.HIDDEN)) {
+      el.dataTable.container.classList.remove(classs.HIDDEN);
     } else {
-      el.dataTable.container.classList.add("hidden");
+      el.dataTable.container.classList.add(classs.HIDDEN);
     }
   });
   el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
@@ -113,10 +118,10 @@ export function addEventListenersToPage(tdsData) {
   });
 
   el.about.title.addEventListener("click", () => {
-    if (el.about.tableContainer.classList.contains("hidden")) {
-      el.about.tableContainer.classList.remove("hidden");
+    if (el.about.tableContainer.classList.contains(classs.HIDDEN)) {
+      el.about.tableContainer.classList.remove(classs.HIDDEN);
     } else {
-      el.about.tableContainer.classList.add("hidden");
+      el.about.tableContainer.classList.add(classs.HIDDEN);
     }
   });
 }
@@ -129,14 +134,17 @@ function addEventListenersToFilters(tdsData) {
   [el.filters.selects.chemicalGroup, el.filters.selects.chemical].forEach(
     (select) =>
       select.addEventListener("change", () => {
+        displayYears(tdsData);
         if (selectionsCompleted()) {
-          displayDynamicFilters(tdsData);
+          el.filters.containers.forEach((container) => {
+            container.classList.remove(classs.HIDDEN);
+          });
         }
       }),
   );
 
   el.graphs[GraphTypes.RBASG].filters.domain.addEventListener("change", () => {
-    displayRbasgAgeSexGroupFilter(tdsData);
+    displayRbasgAgeGroupFilter(tdsData);
   });
 
   const graphSelects = [
@@ -165,7 +173,9 @@ function addEventListenersToFilters(tdsData) {
         }
       });
       if (selectionsCompleted()) {
-        displayDynamicFilters(tdsData);
+        el.filters.containers.forEach((container) => {
+          container.classList.remove(classs.HIDDEN);
+        });
         displayGraph(getFilteredTdsData(tdsData));
       }
     });
@@ -179,6 +189,9 @@ function addEventListenersToFilters(tdsData) {
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
       if (selectionsCompleted()) {
+        el.filters.containers.forEach((container) => {
+          container.classList.remove(classs.HIDDEN);
+        });
         displayGraph(getFilteredTdsData(tdsData));
       }
     });
@@ -190,6 +203,12 @@ export function initializeFilters(tdsData) {
   displayChemicalGroups(tdsData);
   displayLods();
   displayConsumptionUnits();
+  displayRbasgDomainFilter();
+  displayRbfSortByFilter();
+  displayRbfgRangeFilter();
+  displayRbasgAgeGroupFilter();
+  displayRbfAgeSexGroupFilter();
+  displayRbfgAgeSexGroupFilter();
 }
 
 function addPlaceholderToSelect(select, text) {
@@ -230,21 +249,6 @@ function displayChemicals(tdsData) {
   });
 }
 
-/**
- *
- * Displays filters that depend on the user selecting out manditory filters
- *
- */
-function displayDynamicFilters(tdsData) {
-  displayYears(tdsData);
-  displayRbasgAdditionalFilters();
-  displayRbfgAdditionalFilters();
-  displayRbfAdditionalFilters();
-  el.filters.containers.forEach((container) => {
-    container.classList.remove("hidden");
-  });
-}
-
 function displayYears(tdsData) {
   const filters = getActiveFilters();
   el.filters.selects.years.innerHTML = "";
@@ -281,21 +285,7 @@ function displayConsumptionUnits() {
   });
 }
 
-function displayRbasgAdditionalFilters() {
-  const domainEl = el.graphs[GraphTypes.RBASG].filters.domain;
-  domainEl.innerHTML = "";
-
-  Object.keys(RbasgDomainFormat).forEach((key) => {
-    const format = getTranslations().filters.rbasgDomainFormat[key];
-    const oe = document.createElement("option");
-    oe.value = format;
-    oe.text = format;
-    domainEl.appendChild(oe);
-  });
-  displayRbasgAgeSexGroupFilter();
-}
-
-function displayRbasgAgeSexGroupFilter() {
+function displayRbasgAgeGroupFilter() {
   const ageGroupEl = el.graphs[GraphTypes.RBASG].filters.ageSexGroup;
   ageGroupEl.innerHTML = "";
   const { showByAgeSexGroup } = getActiveFilters();
@@ -316,7 +306,20 @@ function displayRbasgAgeSexGroupFilter() {
   });
 }
 
-function displayRbfgAdditionalFilters() {
+function displayRbasgDomainFilter() {
+  const domainEl = el.graphs[GraphTypes.RBASG].filters.domain;
+  domainEl.innerHTML = "";
+
+  Object.keys(RbasgDomainFormat).forEach((key) => {
+    const format = getTranslations().filters.rbasgDomainFormat[key];
+    const oe = document.createElement("option");
+    oe.value = format;
+    oe.text = format;
+    domainEl.appendChild(oe);
+  });
+}
+
+function displayRbfgAgeSexGroupFilter() {
   const ageSexGroupEl = el.graphs[GraphTypes.RBFG].filters.ageSexGroup;
   ageSexGroupEl.innerHTML = "";
 
@@ -327,7 +330,8 @@ function displayRbfgAdditionalFilters() {
     oe.selected = true;
     ageSexGroupEl.appendChild(oe);
   });
-
+}
+function displayRbfgRangeFilter() {
   const rangeEl = el.graphs[GraphTypes.RBFG].filters.range;
   rangeEl.innerHTML = "";
   Object.keys(RbfgRangeFormat).forEach((key) => {
@@ -339,7 +343,7 @@ function displayRbfgAdditionalFilters() {
   });
 }
 
-function displayRbfAdditionalFilters() {
+function displayRbfAgeSexGroupFilter() {
   const ageSexGroupEl = el.graphs[GraphTypes.RBF].filters.ageSexGroup;
   ageSexGroupEl.innerHTML = "";
   Object.keys(ageSexGroups).forEach((asg) => {
@@ -348,7 +352,9 @@ function displayRbfAdditionalFilters() {
     oe.text = asg;
     ageSexGroupEl.appendChild(oe);
   });
+}
 
+function displayRbfSortByFilter() {
   const sortByEl = el.graphs[GraphTypes.RBF].filters.sortBy;
   sortByEl.innerHTML = "";
   Object.keys(RbfSortByFormat).forEach((key) => {

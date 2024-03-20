@@ -1,5 +1,5 @@
 import { GraphTypes, sexGroups } from "../config.js";
-import { el } from "./const.js";
+import { classs, el } from "./const.js";
 import {
   formatRbasgToGroupedBar,
   formatRbsagToDataTable,
@@ -101,7 +101,7 @@ export function displayGraph(data) {
 
   displayColorLegend(colorLegendMapping, legendTitle);
 
-  el.dataTable.dataContainer.classList.remove("hidden");
+  el.dataTable.dataContainer.classList.remove(classs.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);
   displayDataTable(dataTableData);
 }

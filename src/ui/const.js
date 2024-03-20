@@ -1,5 +1,9 @@
 import { GraphTypes } from "../config.js";
 
+export const classs = {
+  HIDDEN: "hidden",
+};
+
 export const el = {
   /*
    *
