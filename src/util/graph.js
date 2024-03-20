@@ -50,7 +50,10 @@ export function getContaminentExposure(
   if (filters.chemicalGroup === "Radionuclides") {
     const IDC = IDCs[filters.chemical][ageGroupToIDCAgeGroup[age]];
     return (
-      meanContaminentOccurence * meanConsumptionOfFoodComposite * 1000 * IDC
+      // Unit: mSv/year
+      ((meanContaminentOccurence * meanConsumptionOfFoodComposite) / 1000) *
+      IDC *
+      365
     );
   }
 
