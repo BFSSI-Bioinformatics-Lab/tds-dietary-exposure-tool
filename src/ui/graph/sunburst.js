@@ -9,13 +9,14 @@
  *   - color: Color code for the node
  *   - title: Node title that will be displayed
  *   - info: Additional information for the node tooltip
- *   - sortBy: Value to consider for this node when sorting
+ *   - sortBy: Array of values to consider for this node when sorting
  *
  * Returns:
  * - Generated sunburst SVG as a string
  *
  */
 export function getSunburstSvg(data) {
+  console.log(data);
   if (!data) return;
   let dataExists = false;
 
@@ -37,7 +38,12 @@ export function getSunburstSvg(data) {
     return;
   }
 
-  root.sort((a, b) => b.data.sortBy - a.data.sortBy);
+  root.sort((a, b) => {
+    if (b.data.sortBy[0] != a.data.sortBy[0]) {
+      return b.data.sortBy[0] - a.data.sortBy[0];
+    }
+    return b.data.sortBy[1] - a.data.sortBy[1];
+  });
 
   const startAngle = 0; // Starting angle
   const endAngle = 2 * Math.PI; // Ending angle

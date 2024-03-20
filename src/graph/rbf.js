@@ -85,8 +85,7 @@ export function getRbf(tdsData, filters) {
   Object.values(rbfData).forEach((row) => {
     const percentExposure = (row.exposure / sumExposures) * 100 || 0;
     row.percentExposure = percentExposure;
-    row.percentExposureWithFoodGroup =
-      foodGroupExposures[row.foodGroup] + percentExposure;
+    row.percentExposureForFoodGroup = foodGroupExposures[row.foodGroup];
   });
 
   return rbfData;
@@ -143,8 +142,8 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
       color: colorMapping[row.foodGroup],
       value: row.percentExposure,
       sortBy: filters.sortByFood
-        ? row.percentExposure
-        : row.percentExposureWithFoodGroup,
+        ? [row.percentExposure]
+        : [row.percentExposureForFoodGroup, row.percentExposure],
 
       title: row.percentExposure < 1 ? " " : getCompositeInfo(row),
       info:
