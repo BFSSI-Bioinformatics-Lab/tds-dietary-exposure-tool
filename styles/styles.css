@@ -147,7 +147,7 @@ b,
 }
 
 .big {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
 
 .small {
@@ -261,6 +261,7 @@ body {
   display: flex;
   flex-direction: row;
   gap: 2rem;
+  margin: 4rem 0;
   #graph-container {
     display: flex;
     flex-direction: column;

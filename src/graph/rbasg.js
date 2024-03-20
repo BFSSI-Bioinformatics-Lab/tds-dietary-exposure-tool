@@ -138,8 +138,8 @@ export function formatRbsagToDataTable(data, filters) {
         [headers.years]: row.years.join(", "),
         [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
         [headers.treatment]: filters.lod,
-        [headers.flagged]: row.consumptionsFlagged.join(", "),
-        [headers.suppressed]: row.consumptionsSuppressed.join(", "),
+        [headers.flagged]: row.consumptionsFlagged.join("; "),
+        [headers.suppressed]: row.consumptionsSuppressed.join("; "),
       });
     });
   });

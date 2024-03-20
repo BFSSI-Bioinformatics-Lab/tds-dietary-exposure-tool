@@ -78,7 +78,7 @@ export function formatNumber(number) {
  *
  */
 export function formatPercent(percent) {
-  return "%" + parseFloat(percent.toFixed(2)).toLocaleString();
+  return parseFloat(percent.toFixed(2)).toLocaleString() + "%";
 }
 
 /**

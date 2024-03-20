@@ -104,4 +104,6 @@ export function displayGraph(data) {
   el.dataTable.dataContainer.classList.remove(classs.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);
   displayDataTable(dataTableData);
+
+  el.about.container.classList.remove(classs.HIDDEN);
 }
