@@ -5,7 +5,12 @@ import {
 } from "../util/graph.js";
 import { ConsumptionUnits, MeanFlag } from "../config.js";
 import { getTranslations } from "../translation/translation.js";
-import { formatNumber, formatPercent } from "../util/data.js";
+import {
+  formatNumber,
+  formatPercent,
+  getConsumptionUnit,
+  getExposureUnit,
+} from "../util/data.js";
 
 /**
  *
@@ -32,7 +37,7 @@ export function getRbf(tdsData, filters) {
         consumptionMeanFlag: filters.usePerPersonPerDay
           ? consumption.meanFlagForPerPersonPerDay
           : consumption.meanFlagForPerKgBWPerDay,
-        contaminentUnits: "",
+        contaminentUnit: "",
         foodGroup,
       };
 
@@ -43,7 +48,7 @@ export function getRbf(tdsData, filters) {
       filters.years.forEach((year) => {
         tdsData.contaminent[year].forEach((contaminent) => {
           if (contaminent.compositeInfo.includes(composite)) {
-            rbfData[composite].contaminentUnits = contaminent.units;
+            rbfData[composite].contaminentUnit = contaminent.units;
 
             numContaminents++;
             sumContaminents += getOccurenceForContaminentEntry(
@@ -96,11 +101,11 @@ export function getRbf(tdsData, filters) {
  * Take in data formatted for comparing food composites and format it to data table format
  *
  */
-export function formatRbfToDataTable(data, filters) {
-  const dataTableData = Object.values(data).map((row) => {
-    const compositeInfo = getCompositeInfo(row);
+export function formatRbfToDataTable(rbfData, filters) {
+  const headers = getTranslations().dataTable.headers;
 
-    const headers = getTranslations().dataTable.headers;
+  const dataTableData = Object.values(rbfData).map((row) => {
+    const compositeInfo = getCompositeInfo(row);
 
     return {
       [headers.chemical]: filters.chemical,
@@ -108,14 +113,8 @@ export function formatRbfToDataTable(data, filters) {
       [headers.foodGroup]: row.foodGroup,
       [headers.composite]: compositeInfo,
       [headers.percentExposure]: formatPercent(row.percentExposure),
-      [headers.exposure]: formatNumber(row.exposure),
-      [headers.exposureUnit]:
-        row.contaminentUnits.split("/")[0] +
-        getTranslations().misc.consumptionUnitsShort[
-        filters.usePerPersonPerDay
-          ? ConsumptionUnits.PERSON
-          : ConsumptionUnits.KGBW
-        ],
+      [headers.exposure]: formatNumber(row.exposure, filters),
+      [headers.exposureUnit]: getExposureUnit(row.contaminentUnit, filters),
       [headers.years]: filters.years.join(", "),
       [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
       [headers.treatment]: filters.lod,
@@ -153,14 +152,9 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         ")\n" +
         getTranslations().graphs.info.exposure +
         ": " +
-        formatNumber(row.exposure) +
+        formatNumber(row.exposure, filters) +
         " " +
-        row.contaminentUnits.split("/")[0] +
-        getTranslations().misc.consumptionUnitsShort[
-        filters.usePerPersonPerDay
-          ? ConsumptionUnits.PERSON
-          : ConsumptionUnits.KGBW
-        ] +
+        getExposureUnit(row.contaminentUnit, filters) +
         "\n" +
         getTranslations().graphs.info.percentExposure +
         ": " +
@@ -168,20 +162,13 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         "\n" +
         getTranslations().graphs.info.occurence +
         ": " +
-        formatNumber(row.meanOccurence) +
+        formatNumber(row.meanOccurence, filters) +
         " " +
-        row.contaminentUnits +
+        row.contaminentUnit +
         "\n" +
         getTranslations().graphs.info.foodConsumption +
         ": " +
-        formatNumber(row.meanConsumption) +
-        " " +
-        getTranslations().misc.gramsShort +
-        getTranslations().misc.consumptionUnitsShort[
-        filters.usePerPersonPerDay
-          ? ConsumptionUnits.PERSON
-          : ConsumptionUnits.KGBW
-        ],
+        getConsumptionUnit(row, filters),
     });
   });
 

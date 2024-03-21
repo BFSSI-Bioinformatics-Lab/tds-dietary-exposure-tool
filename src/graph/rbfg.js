@@ -5,7 +5,12 @@ import {
   RbfgRangeFormat,
   ageGroups,
 } from "../config.js";
-import { formatNumber, formatPercent, getAgeAndSex } from "../util/data.js";
+import {
+  formatNumber,
+  formatPercent,
+  getAgeAndSex,
+  getExposureUnit,
+} from "../util/data.js";
 import {
   getCompositeInfo,
   getContaminentExposure,
@@ -29,7 +34,7 @@ export function getRbfg(tdsData, filters) {
         ageSexGroup,
         consumptionsSuppressed: [],
         consumptionsFlagged: [],
-        contaminentUnits: Object.values(tdsData.contaminent)[0][0].units, // All occurences use the same value for a given chemical group
+        contaminentUnit: Object.values(tdsData.contaminent)[0][0].units, // All occurences use the same value for a given chemical group
         exposure: 0,
         foodGroup,
         percentUnderLod: 0,
@@ -115,26 +120,20 @@ export function getRbfg(tdsData, filters) {
  *
  *
  */
-export function formatRbfgToDataTable(data, filters) {
+export function formatRbfgToDataTable(rbfgData, filters) {
   const dataTableData = [];
 
   const headers = getTranslations().dataTable.headers;
 
-  Object.values(data).forEach((ageSexGroup) => {
+  Object.values(rbfgData).forEach((ageSexGroup) => {
     Object.values(ageSexGroup).forEach((row) => {
       dataTableData.push({
         [headers.chemical]: filters.chemical,
         [headers.ageSexGroup]: row.ageSexGroup,
         [headers.foodGroup]: row.foodGroup,
         [headers.percentExposure]: formatPercent(row.percentExposure),
-        [headers.exposure]: formatNumber(row.exposure),
-        [headers.exposureUnit]:
-          row.contaminentUnits.split("/")[0] +
-          getTranslations().misc.consumptionUnitsShort[
-          filters.usePerPersonPerDay
-            ? ConsumptionUnits.PERSON
-            : ConsumptionUnits.KGBW
-          ],
+        [headers.exposure]: formatNumber(row.exposure, filters),
+        [headers.exposureUnit]: getExposureUnit(row.contaminentUnit, filters),
         [headers.years]: filters.years.join(", "),
         [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
         [headers.treatment]: filters.lod,
@@ -152,22 +151,15 @@ export function formatRbfgToDataTable(data, filters) {
  *
  */
 export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
-  const contaminentUnits = Object.values(Object.values(rbfgData)[0])[0]
-    .contaminentUnits;
-
-  const consumptionUnits =
-    getTranslations().misc.consumptionUnitsShort[
-    filters.usePerPersonPerDay
-      ? ConsumptionUnits.PERSON
-      : ConsumptionUnits.KGBW
-    ];
+  const contaminentUnit = Object.values(Object.values(rbfgData)[0])[0]
+    .contaminentUnit;
 
   const stackedBarData = {
     children: [],
     titleY: `${getTranslations().graphs[GraphTypes.RBFG].range[
       filters.usePercent ? RbfgRangeFormat.PERCENT : RbfgRangeFormat.NUMBER
       ]
-      } (${contaminentUnits.split("/")[0]}${consumptionUnits})`,
+      } (${getExposureUnit(contaminentUnit, filters)})`,
     titleX: getTranslations().graphs[GraphTypes.RBFG].domain,
   };
 
@@ -197,10 +189,9 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
           ": " +
           (filters.usePercent
             ? formatPercent(exposure)
-            : formatNumber(exposure) +
+            : formatNumber(exposure, filters) +
             " " +
-            contaminentUnits.split("/")[0] +
-            consumptionUnits),
+            getExposureUnit(contaminentUnit, filters)),
       });
     });
   });

@@ -1,4 +1,5 @@
-import { MeanFlag, ageGroups, sexGroups } from "../config.js";
+import { ConsumptionUnits, MeanFlag, ageGroups, sexGroups } from "../config.js";
+import { getTranslations } from "../translation/translation.js";
 
 /**
  *
@@ -68,8 +69,15 @@ export function getAgeAndSex(ageSexGroup) {
  * Function used to format numbers when displaying to users. Used throughout the application.
  *
  */
-export function formatNumber(number) {
-  return parseFloat(number.toFixed(1)).toLocaleString();
+export function formatNumber(number, filters) {
+  const precision = filters?.chemicalGroup === "Radionuclides" ? 6 : 2;
+  const roundedNumber = Number.parseFloat(number).toFixed(precision);
+
+  if (parseFloat(roundedNumber) === 0) {
+    return "0";
+  } else {
+    return parseFloat(roundedNumber).toLocaleString();
+  }
 }
 
 /*
@@ -79,6 +87,36 @@ export function formatNumber(number) {
  */
 export function formatPercent(percent) {
   return parseFloat(percent.toFixed(2)).toLocaleString() + "%";
+}
+
+export function getExposureUnit(contaminentUnit, filters) {
+  if (!contaminentUnit) {
+    return getTranslations().misc.na;
+  }
+  if (filters.chemicalGroup == "Radionuclides") {
+    return "mSv/year";
+  }
+  return (
+    contaminentUnit.split("/")[0] +
+    getTranslations().misc.consumptionUnitShort[
+    filters.usePerPersonPerDay
+      ? ConsumptionUnits.PERSON
+      : ConsumptionUnits.KGBW
+    ]
+  );
+}
+
+export function getConsumptionUnit(graphEntry, filters) {
+  return (
+    formatNumber(graphEntry.meanConsumption) +
+    " " +
+    getTranslations().misc.gramsShort +
+    getTranslations().misc.consumptionUnitShort[
+    filters.usePerPersonPerDay
+      ? ConsumptionUnits.PERSON
+      : ConsumptionUnits.KGBW
+    ]
+  );
 }
 
 /**

@@ -389,15 +389,17 @@ export function updateLodFilterDescription(filteredTdsData) {
   el.filters.titles.lodSubtitle.innerHTML = "";
   let maxContaminentLod = 0;
   let minContaminentLod = Infinity;
-  let units = null;
+  let maxUnits = null;
+  let minUnits = null;
   Object.values(filteredTdsData.contaminent).forEach((value) => {
     value.forEach((row) => {
       const currLod = row.lod;
-      units = row.units;
       if (currLod > maxContaminentLod) {
+        maxUnits = row.units;
         maxContaminentLod = currLod;
       }
       if (currLod < minContaminentLod) {
+        minUnits = row.units;
         minContaminentLod = currLod;
       }
     });
@@ -407,9 +409,11 @@ export function updateLodFilterDescription(filteredTdsData) {
       getTranslations().filters.titles.lodSubtitle +
       " " +
       minContaminentLod +
+      " " +
+      minUnits +
       " - " +
       maxContaminentLod +
       " " +
-      units;
+      maxUnits;
   }
 }

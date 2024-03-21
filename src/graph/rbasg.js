@@ -11,7 +11,7 @@ import {
   getOccurenceForContaminentEntry,
 } from "../util/graph.js";
 import { getTranslations } from "../translation/translation.js";
-import { formatNumber, formatPercent } from "../util/data.js";
+import { formatNumber, formatPercent, getExposureUnit } from "../util/data.js";
 
 /**
  *
@@ -31,7 +31,7 @@ export function getRbasg(tdsData, filters) {
     Object.keys(sexGroups).forEach((sex) => {
       rbasgData[entry][sex] = {
         exposure: 0,
-        contaminentUnits: "",
+        contaminentUnit: "",
         ageSexGroup: "",
         years: filters.showByAgeSexGroup ? filters.years : [entry],
         consumptionsSuppressed: [],
@@ -71,7 +71,7 @@ export function getRbasg(tdsData, filters) {
             years.forEach((year) => {
               tdsData.contaminent[year].forEach((contaminent) => {
                 if (contaminent.compositeInfo.includes(composite)) {
-                  rbasgData[entry][sex].contaminentUnits = contaminent.units;
+                  rbasgData[entry][sex].contaminentUnit = contaminent.units;
                   numContaminents++;
                   sumContaminents += getOccurenceForContaminentEntry(
                     contaminent,
@@ -91,8 +91,8 @@ export function getRbasg(tdsData, filters) {
                 ? consumption.meanGramsPerPersonPerDay
                 : consumption.meanGramsPerKgBWPerDay,
               meanOccurence,
-              consumption,
               filters,
+              consumption.age,
             );
 
             rbasgData[entry][sex].exposure += exposure;
@@ -106,6 +106,7 @@ export function getRbasg(tdsData, filters) {
         100 || 0;
     });
   });
+
   return rbasgData;
 }
 
@@ -114,12 +115,12 @@ export function getRbasg(tdsData, filters) {
  * Take in data formatted for comparing age-sex groups and format it to data table format
  *
  */
-export function formatRbsagToDataTable(data, filters) {
+export function formatRbsagToDataTable(rbasgData, filters) {
   const dataTableData = [];
 
   const headers = getTranslations().dataTable.headers;
 
-  Object.values(data).forEach((ageSexGroup) => {
+  Object.values(rbasgData).forEach((ageSexGroup) => {
     Object.values(ageSexGroup).forEach((row) => {
       if (!row.ageSexGroup) {
         return;
@@ -127,14 +128,8 @@ export function formatRbsagToDataTable(data, filters) {
       dataTableData.push({
         [headers.chemical]: filters.chemical,
         [headers.ageSexGroup]: row.ageSexGroup,
-        [headers.exposure]: formatNumber(row.exposure),
-        [headers.exposureUnit]:
-          row.contaminentUnits.split("/")[0] +
-          getTranslations().misc.consumptionUnitsShort[
-          filters.usePerPersonPerDay
-            ? ConsumptionUnits.PERSON
-            : ConsumptionUnits.KGBW
-          ],
+        [headers.exposure]: formatNumber(row.exposure, filters),
+        [headers.exposureUnit]: getExposureUnit(row.contaminentUnit, filters),
         [headers.years]: row.years.join(", "),
         [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
         [headers.treatment]: filters.lod,
@@ -152,18 +147,13 @@ export function formatRbsagToDataTable(data, filters) {
  *
  */
 export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
-  const contaminentUnits = Object.values(Object.values(rbasgData)[0])[0]
-    .contaminentUnits;
-  const consumptionUnits =
-    getTranslations().misc.consumptionUnitsShort[
-    filters.usePerPersonPerDay
-      ? ConsumptionUnits.PERSON
-      : ConsumptionUnits.KGBW
-    ];
+  const contaminentUnit = Object.values(Object.values(rbasgData)[0])[0]
+    .contaminentUnit;
+
   const groupedBarData = {
     children: [],
-    titleY: `${getTranslations().graphs[GraphTypes.RBASG].range} (${contaminentUnits.split("/")[0]
-      }${consumptionUnits})`,
+    titleY: `${getTranslations().graphs[GraphTypes.RBASG].range
+      } (${getExposureUnit(contaminentUnit, filters)})`,
     titleX:
       getTranslations().graphs[GraphTypes.RBASG].domain[
       filters.showByAgeSexGroup
@@ -183,10 +173,9 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
         info:
           getTranslations().graphs.info.exposure +
           ": " +
-          formatNumber(row.exposure) +
+          formatNumber(row.exposure, filters) +
           " " +
-          contaminentUnits.split("/")[0] +
-          consumptionUnits +
+          getExposureUnit(contaminentUnit, filters) +
           "\n" +
           (filters.showByAgeSexGroup
             ? getTranslations().graphs.info.ageSexGroup
