@@ -13,6 +13,8 @@ import {
   getCompositeForConsumptionEntry,
   getCompositeInfoForContaminentEntry,
   getMeanFlagForConsumptionEntry,
+  getOccurenceForContaminentEntry,
+  getUnitForContaminentEntry,
   getYearForContaminentEntry,
 } from "../util/data.js";
 import {
@@ -88,8 +90,8 @@ export async function getTDSData() {
         chemical,
         year,
         compositeInfo: getCompositeInfoForContaminentEntry(row),
-        occurence: Number(row["Result Value"]),
-        units: row["Units of measurement"],
+        occurence: getOccurenceForContaminentEntry(row),
+        units: getUnitForContaminentEntry(row["Units of measurement"]),
         lod: Number(row["LOD"] || row["MDL"]),
       });
     });

@@ -154,6 +154,42 @@ export function getCompositeInfoForContaminentEntry(row) {
 
 /**
  *
+ * Return if the contaminent unit µg/g
+ * The µ symbol is not read properly by d3.csv. If it is not one of the other 4 units found in the data, it is µg/g.
+ *
+ */
+function isContaminentEntryMicroGrams(unit) {
+  return !["ng/g", "ng/ml", "pg/g", "Bq/Kg"].includes(unit);
+}
+
+/**
+ *
+ * Return occurence for raw contaminent entry
+ *
+ */
+export function getOccurenceForContaminentEntry(row) {
+  let result = Number(row["Result Value"]);
+  if (isContaminentEntryMicroGrams(row["Units of measurement"])) {
+    return result * 1000; // Convert to ng 
+  }
+  return result;
+}
+
+/**
+ *
+ * Return unit for raw contaminent entry unit
+ * Some entries of the phthalate di-(2-ethylhexyl) adipate (DEHA) use µg/g. The µ symbol is not read properly by d3.csv.
+ *
+ */
+export function getUnitForContaminentEntry(unit) {
+  if (isContaminentEntryMicroGrams(unit)) {
+    unit = "ng/g";
+  }
+  return unit;
+}
+
+/**
+ *
  * Under some circumstances, the LOD or MDL value is misrepresenting and should never be used.
  * This function checks if this is the case.
  *

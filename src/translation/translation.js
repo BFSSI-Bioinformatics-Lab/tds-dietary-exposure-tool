@@ -72,7 +72,7 @@ export function getTranslations() {
         },
         consumptionUnits: {
           [ConsumptionUnits.PERSON]: "Per Person per Day",
-          [ConsumptionUnits.KGBW]: "Per kg Bodyweight per Day",
+          [ConsumptionUnits.KGBW]: "Per Kg Bodyweight per Day",
         },
         rbasgDomainFormat: {
           [RbasgDomainFormat.AGESEX]: "Show by Age-Sex",
@@ -196,7 +196,7 @@ export function getTranslations() {
         noDataMsg: "No data available",
         na: "NA",
         consumptionUnitShort: {
-          [ConsumptionUnits.KGBW]: "/kg BW/day",
+          [ConsumptionUnits.KGBW]: "/Kg BW/day",
           [ConsumptionUnits.PERSON]: "/person/day",
         },
         gramsShort: "g",
