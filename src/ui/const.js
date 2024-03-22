@@ -6,9 +6,7 @@ export const classs = {
 
 export const el = {
   /*
-   *
    * Introductory Text Elements
-   *
    */
 
   header: {
@@ -23,13 +21,12 @@ export const el = {
         content: document.getElementById("more-info-content"),
       },
     },
+    languageButton: document.getElementById("language-button"),
     subtitle: document.getElementById("subtitle"),
   },
 
   /*
-   *
    * Filters and Filter Titles
-   *
    */
 
   filters: {
@@ -67,9 +64,7 @@ export const el = {
   },
 
   /*
-   *
    * Graphs and Legend
-   *
    */
 
   graphs: {
@@ -112,9 +107,7 @@ export const el = {
   },
 
   /*
-   *
    * Data Tables
-   *
    */
 
   dataTable: {
@@ -134,9 +127,7 @@ export const el = {
   },
 
   /*
-   *
    * About section
-   *
    */
 
   about: {
@@ -147,8 +138,6 @@ export const el = {
   },
 
   /*
-   *
    * Misc.
-   *
    */
 };

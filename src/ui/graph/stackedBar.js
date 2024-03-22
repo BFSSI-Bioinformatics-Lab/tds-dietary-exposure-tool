@@ -1,5 +1,4 @@
 /**
- *
  * Generate a stacked bar SVG based on input data
  *
  * Parameters:
@@ -15,7 +14,6 @@
  *
  * Returns:
  * - Generated stacked bar SVG as a string
- *
  */
 export function getStackedBarSvg(data) {
   if (!data) return;

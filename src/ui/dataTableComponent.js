@@ -12,11 +12,9 @@ import { el } from "./const.js";
 import { getActiveFilters } from "./filterComponent.js";
 
 /**
- *
  * Download raw filtered TDS data
  * Parameters:
  * - dataToDownload: either DataType.CONSUMPTION or DataType.CONTAMINENT
- *
  */
 export async function downloadTDSData(dataToDownload) {
   const getData = {
@@ -32,12 +30,10 @@ export async function downloadTDSData(dataToDownload) {
 }
 
 /**
- *
  * Download current graph calculations shown in data table
  * Parameters:
  * - tdsData: formatted TDS data
  * - graphType: the graph the downloaded calculations will be for
- *
  */
 export function downloadDataTable(tdsData, graphType) {
   const filters = getActiveFilters();
@@ -69,12 +65,10 @@ export function downloadDataTable(tdsData, graphType) {
 }
 
 /*
- *
  * Display calculations and other important TDS data for a current graph
  *
  * Parameters:
  * - data: the data to display, in object format where each key is a column with a corresponding value
- *
  */
 export async function displayDataTable(data) {
   const tableContainer = el.dataTable.dataTable;
@@ -112,9 +106,7 @@ export async function displayDataTable(data) {
 }
 
 /*
- *
  * Display table providing additional information about the tool
- *
  */
 export async function displayAboutTable() {
   const data = getTranslations().about.table;

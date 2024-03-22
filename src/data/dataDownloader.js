@@ -1,14 +1,12 @@
 import { getTranslations } from "../translation/translation.js";
 
 /**
- *
  * Download data in CSV format
  *
  * Parameters:
  * - An object that represents downloadable data
  *   - rows: Array of objects, where each object has column titles as keys with corresponding values
  *   - filename: Formatted filename
- *
  */
 export function downloadCSV(data) {
   const csvContent = d3.csvFormat(data.rows);

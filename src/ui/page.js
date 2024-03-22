@@ -3,13 +3,11 @@ import { el } from "./const.js";
 import { displayAboutTable } from "./dataTableComponent.js";
 
 /**
- *
  * Much of the text found on the page is hard-coded. For this reason,
  * this function exists to dynamically load that text into the page.
- *
  */
 export async function initializePageText() {
-  const translations = await getTranslations();
+  const translations = getTranslations();
 
   el.header.title.innerHTML = translations.header.title;
   el.header.subtitle.innerHTML = translations.header.subtitle;
@@ -21,6 +19,7 @@ export async function initializePageText() {
     translations.header.information.moreInfoButton;
   el.header.information.moreInfo.content.innerHTML =
     translations.header.information.moreInfoContent.join("<br/>");
+  el.header.languageButton.innerHTML = translations.header.language;
 
   el.filters.titles.title.innerHTML = translations.filters.titles.title;
   el.filters.titles.chemicalGroup.innerHTML =

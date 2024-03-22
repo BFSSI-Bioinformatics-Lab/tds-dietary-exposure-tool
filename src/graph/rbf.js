@@ -13,9 +13,7 @@ import {
 } from "../util/data.js";
 
 /**
- *
  * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing food composites
- *
  */
 export function getRbf(tdsData, filters) {
   const foodGroupExposures = {};
@@ -97,9 +95,7 @@ export function getRbf(tdsData, filters) {
 }
 
 /**
- *
  * Take in data formatted for comparing food composites and format it to data table format
- *
  */
 export function formatRbfToDataTable(rbfData, filters) {
   const headers = getTranslations().dataTable.headers;
@@ -129,9 +125,7 @@ export function formatRbfToDataTable(rbfData, filters) {
 }
 
 /**
- *
  * Take in data formatted for comparing food composites and format it to sunburst data
- *
  */
 export function formatRbfToSunburst(rbfData, filters, colorMapping) {
   const sunburstData = { title: filters.chemical, children: [] };

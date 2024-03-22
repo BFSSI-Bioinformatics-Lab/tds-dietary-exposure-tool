@@ -11,6 +11,8 @@ import {
   RbfgRangeFormat,
   ageGroups,
   ageSexGroups,
+  toggleUserLanguage,
+  userLanguage,
 } from "../config.js";
 import { downloadDataTable, downloadTDSData } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
@@ -31,9 +33,7 @@ export function getSelectedGraphType() {
 }
 
 /**
- *
  * Check if the user has filled out manditory filters
- *
  */
 function selectionsCompleted() {
   return (
@@ -47,7 +47,7 @@ export function getActiveFilters() {
   let graphType;
   try {
     graphType = getSelectedGraphType();
-  } catch (e) { }
+  } catch (e) {}
 
   return {
     chemicalGroup: el.filters.selects.chemicalGroup.value,
@@ -60,18 +60,18 @@ export function getActiveFilters() {
         ? LODs[0]
         : el.filters.selects.lod.value ==
           getTranslations().filters.lods[LODs["1/2 LOD"]]
-          ? LODs["1/2 LOD"]
-          : el.filters.selects.lod.value ==
-            getTranslations().filters.lods[LODs["LOD"]]
-            ? LODs["LOD"]
-            : el.filters.selects.lod.value ==
-              getTranslations().filters.lods[LODs.Exclude]
-              ? LODs.Exclude
-              : LODs[0],
+        ? LODs["1/2 LOD"]
+        : el.filters.selects.lod.value ==
+          getTranslations().filters.lods[LODs["LOD"]]
+        ? LODs["LOD"]
+        : el.filters.selects.lod.value ==
+          getTranslations().filters.lods[LODs.Exclude]
+        ? LODs.Exclude
+        : LODs[0],
     ageSexGroups: graphType
       ? Array.from(
-        el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
-      ).map((option) => option.value)
+          el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
+        ).map((option) => option.value)
       : [],
     ageSexGroupsIsAgeGroups: graphType == GraphTypes.RBASG,
     showByAgeSexGroup:
@@ -99,6 +99,10 @@ export function addEventListenersToPage(tdsData) {
       });
     },
   );
+  el.header.languageButton.addEventListener("click", () => {
+    toggleUserLanguage();
+    el.header.languageButton.innerHTML = getTranslations().header.language;
+  });
 
   el.dataTable.title.addEventListener("click", () => {
     if (el.dataTable.container.classList.contains(classs.HIDDEN)) {

@@ -14,9 +14,7 @@ import { getTranslations } from "../translation/translation.js";
 import { formatNumber, formatPercent, getExposureUnit } from "../util/data.js";
 
 /**
- *
  * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing age-sex groups
- *
  */
 export function getRbasg(tdsData, filters) {
   const rbasgData = {};
@@ -103,7 +101,7 @@ export function getRbasg(tdsData, filters) {
       rbasgData[entry][sex].percentUnderLod =
         (rbasgData[entry][sex].numContaminentsUnderLod /
           rbasgData[entry][sex].numContaminents) *
-        100 || 0;
+          100 || 0;
     });
   });
 
@@ -111,9 +109,7 @@ export function getRbasg(tdsData, filters) {
 }
 
 /**
- *
  * Take in data formatted for comparing age-sex groups and format it to data table format
- *
  */
 export function formatRbsagToDataTable(rbasgData, filters) {
   const dataTableData = [];
@@ -142,9 +138,7 @@ export function formatRbsagToDataTable(rbasgData, filters) {
 }
 
 /**
- *
  * Take in data formatted for comparing age-sex groups and format it to grouped bar data
- *
  */
 export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
   const contaminentUnit = Object.values(Object.values(rbasgData)[0])[0]
@@ -152,13 +146,14 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
 
   const groupedBarData = {
     children: [],
-    titleY: `${getTranslations().graphs[GraphTypes.RBASG].range
-      } (${getExposureUnit(contaminentUnit, filters)})`,
+    titleY: `${
+      getTranslations().graphs[GraphTypes.RBASG].range
+    } (${getExposureUnit(contaminentUnit, filters)})`,
     titleX:
       getTranslations().graphs[GraphTypes.RBASG].domain[
-      filters.showByAgeSexGroup
-        ? RbasgDomainFormat.AGESEX
-        : RbasgDomainFormat.YEAR
+        filters.showByAgeSexGroup
+          ? RbasgDomainFormat.AGESEX
+          : RbasgDomainFormat.YEAR
       ],
   };
 

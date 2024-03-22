@@ -1,5 +1,4 @@
 /**
- *
  * Read a CSV file and return data in a custom format
  *
  * Parameters:
@@ -10,7 +9,6 @@
  *   - columnTitles: An array of column titles in the CSV
  *   - rows: An array of objects representing rows in where each key is a column title with a corresponding value
  *   or null if there is an error.
- *
  */
 export async function readCSV(filepath) {
   try {
@@ -29,7 +27,6 @@ export async function readCSV(filepath) {
 }
 
 /**
- *
  * Read a JSON file and return data in object format
  *
  * Parameters:
@@ -37,7 +34,6 @@ export async function readCSV(filepath) {
  *
  * Returns:
  * - A promise that resolves to an object containing JSON data, or null if there is an error
- *
  */
 
 export async function readJSON(file) {

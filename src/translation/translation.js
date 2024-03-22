@@ -1,23 +1,28 @@
 import {
   ConsumptionUnits,
   DataColumns,
-  DataType,
   GraphTypes,
   LODs,
   RbasgDomainFormat,
   RbfSortByFormat,
   RbfgRangeFormat,
+  language,
+  userLanguage,
 } from "../config.js";
-
-const userLanguage = navigator.language.split("-")[0];
 
 export function getTranslations() {
   const translations = {
-    en: {
+    /*
+    ------------
+
+    English
+
+    ------------
+    */
+
+    [language.EN]: {
       /**
-       *
        * Introductory Text
-       *
        */
 
       header: {
@@ -40,14 +45,13 @@ export function getTranslations() {
             '- <a href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130" target="_blank">The 2008-2022 Total Diet Study Food Consumption Tables (2015 CCHS-Nutrition).</a>',
           ],
         },
+        language: "Switch to French",
         subtitle:
           "How much of various chemicals is the Canadian population exposed to through their diet? And which foods and food groups contribute the most?",
       },
 
       /**
-       *
        * Filter Titles and Options
-       *
        */
 
       filters: {
@@ -91,9 +95,7 @@ export function getTranslations() {
       },
 
       /**
-       *
        * Graph Info, Legends, and Graph Specifics
-       *
        */
 
       graphs: {
@@ -132,9 +134,7 @@ export function getTranslations() {
       },
 
       /**
-       *
        * Data Tables
-       *
        */
 
       dataTable: {
@@ -167,9 +167,7 @@ export function getTranslations() {
       },
 
       /**
-       *
        * About Section
-       *
        */
 
       about: {
@@ -194,9 +192,7 @@ export function getTranslations() {
       },
 
       /**
-       *
        * Misc.
-       *
        */
 
       misc: {
@@ -211,9 +207,7 @@ export function getTranslations() {
       },
 
       /**
-       *
        * Data (TDS)
-       *
        */
 
       tdsData: {
@@ -245,6 +239,49 @@ export function getTranslations() {
         values: {
           allPeople: "All people",
           radionuclides: "Radionuclides",
+        },
+      },
+    },
+
+    /*
+    ------------
+
+    French 
+
+    ------------
+    */
+
+    [language.FR]: {
+      header: {
+        language: "Passer à l'anglais",
+      },
+      tdsData: {
+        headers: {
+          /* Consumption */
+          [DataColumns.MAPPING_COMPOSITE_DESC]: "",
+          [DataColumns.MAPPING_COMPOSITE_CODE]: "",
+          [DataColumns.POPULATION]: "",
+          [DataColumns.POPULATION_GROUP]: "",
+          [DataColumns.COMPOSITE_DESC]: "",
+          [DataColumns.COMPOSITE_CODE]: "",
+          [DataColumns.MEAN_FLAG]: "",
+          [DataColumns.MEAN_G_PPPD]: "",
+          [DataColumns.MEAN_G_PKGBWPD]: "",
+          /* Contaminent */
+          [DataColumns.CHEMICAL_GROUP]: "",
+          [DataColumns.CHEMICAL]: "",
+          [DataColumns.COLLECTION_DATE]: "",
+          [DataColumns.PROJECT_CODE]: "",
+          [DataColumns.SAMPLE_CODE]: "",
+          [DataColumns.PRODUCT_DESC]: "",
+          [DataColumns.RESULT_VALUE]: "",
+          [DataColumns.UNIT]: "",
+          [DataColumns.LOD]: "",
+          [DataColumns.MDL]: "",
+        },
+        values: {
+          allPeople: "",
+          radionuclides: "",
         },
       },
     },

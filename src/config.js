@@ -1,5 +1,16 @@
 import { getAgeSex } from "./util/data.js";
 
+export const language = {
+  EN: "EN",
+  FR: "FR",
+};
+
+export let userLanguage =
+  navigator.language.split("-")[0] == "fr" ? language.FR : language.EN;
+
+export const toggleUserLanguage = () =>
+  (userLanguage = userLanguage == language.EN ? language.FR : language.EN);
+
 export const consumptionFiles = Object.assign(
   {},
   ...Object.entries({
@@ -13,18 +24,29 @@ export const consumptionFiles = Object.assign(
   })),
 );
 
-export const contaminentFiles = [
-  "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
-  "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
-  "Total Diet Study Mycotoxin results 2008-2009.csv",
-  "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
-  "Total Diet Study Radionuclides results 2000-2020.csv",
-  "Total Diet Study Radionuclides results 2021.csv",
-  "Total Diet Study Radionuclides results 2022.csv",
-  "Total Diet Study Trace Elements results 1993-2018.csv",
-  "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
-  "Total Diet Study PFAS results 2016-2017.csv",
-].map((file) => "./data/contaminent/" + file);
+const contaminentFiles = {
+  [language.EN]: [
+    "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
+    "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
+    "Total Diet Study Mycotoxin results 2008-2009.csv",
+    "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
+    "Total Diet Study Radionuclides results 2000-2020.csv",
+    "Total Diet Study Radionuclides results 2021.csv",
+    "Total Diet Study Radionuclides results 2022.csv",
+    "Total Diet Study Trace Elements results 1993-2018.csv",
+    "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
+    "Total Diet Study PFAS results 2016-2017.csv",
+  ].map((file) => "./data/contaminent/" + file),
+  [language.FR]: [
+    "PFAS TDS 2016 public French(Export).csv",
+    "PFAS TDS 2017 public French(Export).csv",
+    "Radionuclide TDS 2022 public French(Export).csv",
+    "Radionuclides TDS 2021 public French(Export).csv",
+    "Trace Elements TDS 1993-2018 public French(Les résultats des Micro élément).csv",
+  ].map((file) => "./data/contaminent/" + file),
+};
+
+export const getContaminentFiles = () => contaminentFiles[userLanguage];
 
 export const DataType = {
   CONSUMPTION: "CONSUMPTION",

@@ -29,12 +29,10 @@ import { displayDataTable } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
 
 /**
- *
  * Display a graph based on the selected type
  *
  * Parameters:
  * - data: The TDS data for the graph
- *
  */
 export function displayGraph(data) {
   const graphType = getSelectedGraphType();

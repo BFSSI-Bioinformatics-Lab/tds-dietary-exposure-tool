@@ -1,16 +1,14 @@
 import { el } from "../const.js";
 
 /*
- *
  * Display a color legend on the provided HTML element
  *
  * Parameters:
  * - data: An object mapping labels to colors for display
  * - title: The title of the legend
- *
  */
 export function displayColorLegend(data, title) {
-  el.graphs.legend.title.innerHTML = title
+  el.graphs.legend.title.innerHTML = title;
 
   const contentEl = el.graphs.legend.content;
   contentEl.innerHTML = "";

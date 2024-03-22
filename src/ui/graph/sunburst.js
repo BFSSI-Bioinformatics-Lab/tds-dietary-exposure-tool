@@ -1,5 +1,4 @@
 /**
- *
  * Generate a sunburst SVG based on input data
  *
  * Parameters:
@@ -13,7 +12,6 @@
  *
  * Returns:
  * - Generated sunburst SVG as a string
- *
  */
 export function getSunburstSvg(data) {
   if (!data) return;

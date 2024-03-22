@@ -19,9 +19,7 @@ import {
 import { getTranslations } from "../translation/translation.js";
 
 /**
- *
  * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing food groups
- *
  */
 export function getRbfg(tdsData, filters) {
   const rbfgData = {};
@@ -115,10 +113,7 @@ export function getRbfg(tdsData, filters) {
 }
 
 /**
- *
  * Take in data formatted for comparing food groups and format it to data table format
- *
- *
  */
 export function formatRbfgToDataTable(rbfgData, filters) {
   const dataTableData = [];
@@ -146,9 +141,7 @@ export function formatRbfgToDataTable(rbfgData, filters) {
 }
 
 /**
- *
  * Take in data formatted for comparing food groups and format it to stacked bar data
- *
  */
 export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
   const contaminentUnit = Object.values(Object.values(rbfgData)[0])[0]

@@ -1,5 +1,4 @@
 /*
- *
  * Generates a color mapping for a given set of labels.
  *
  * Parameters:
@@ -7,7 +6,6 @@
  *
  * Returns:
  * - A mapping from label to color.
- *
  */
 export function generateColorMapping(labels) {
   const mapping = {};

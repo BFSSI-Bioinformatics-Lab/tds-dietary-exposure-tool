@@ -1,5 +1,5 @@
 import {
-  contaminentFiles,
+  getContaminentFiles,
   consumptionFiles,
   YearMin,
   YearMax,
@@ -27,7 +27,6 @@ import {
 import { getTranslations } from "../translation/translation.js";
 
 /**
- *
  * Load Total Diet Study Data into a known structured format
  *
  * Returns:
@@ -65,7 +64,6 @@ import { getTranslations } from "../translation/translation.js";
  *         - sex
  *       // ... (more composites)
  *     // ... (more food groups)
- *
  */
 export async function getTDSData() {
   const data = {
@@ -74,7 +72,7 @@ export async function getTDSData() {
   };
 
   // Fill contaminent data
-  for (const file of contaminentFiles) {
+  for (const file of getContaminentFiles()) {
     const raw = (await readCSV(file)).rows;
     const chemicalGroup =
       raw[0][getTranslations().tdsData.headers[DataColumns.CHEMICAL_GROUP]]; // A given file will only be for a specific chemical group
@@ -102,7 +100,7 @@ export async function getTDSData() {
         ),
         lod: Number(
           row[getTranslations().tdsData.headers[DataColumns.MDL]] ||
-          row[getTranslations().tdsData.headers[DataColumns.MDL]],
+            row[getTranslations().tdsData.headers[DataColumns.MDL]],
         ),
       });
     });
@@ -114,13 +112,13 @@ export async function getTDSData() {
   (await readCSV(consumptionFiles.desc)).rows.forEach((row) => {
     const compositeDescription =
       row[
-      getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_DESC]
+        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_DESC]
       ];
     if (!compositeDescription) {
       // Entry is a food group if other entires are empty (the way the data is formatted)
       currentFoodGroup =
         row[
-        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
+          getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
         ];
       data.consumption[currentFoodGroup] = {};
     } else {
@@ -206,7 +204,7 @@ export async function getTDSData() {
             r.meanGramsPerKgBWPerDay =
               Number(
                 row[
-                getTranslations().tdsData.headers[DataColumns.MEAN_G_PKGBWPD]
+                  getTranslations().tdsData.headers[DataColumns.MEAN_G_PKGBWPD]
                 ],
               ) || 0;
 
@@ -223,7 +221,6 @@ export async function getTDSData() {
 }
 
 /**
- *
  * Load all consumption data into a raw format and filters based on the current filters.
  * This function is useful for downloading raw data for a specific graph (the data must be in raw format but still needs to be filtered).
  *
@@ -231,7 +228,6 @@ export async function getTDSData() {
  * - A promise that resolves to an array of objects, where each entry represents a file
  *   - rows: Array of raw data for consumption
  *   - filename: Formatted filename
- *
  */
 export async function getRawFilteredConsumptionData() {
   const filters = getActiveFilters();
@@ -241,7 +237,8 @@ export async function getRawFilteredConsumptionData() {
   for (const fileInfo of [
     {
       file: consumptionFiles.perPerson,
-      filename: getTranslations().dataTable.exportNames[ConsumptionUnits.PERSON],
+      filename:
+        getTranslations().dataTable.exportNames[ConsumptionUnits.PERSON],
     },
     {
       file: consumptionFiles.perKgBw,
@@ -255,7 +252,7 @@ export async function getRawFilteredConsumptionData() {
       );
       return (
         row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] ==
-        getTranslations().tdsData.values.allPeople &&
+          getTranslations().tdsData.values.allPeople &&
         filters.ageSexGroups.includes(
           filters.ageSexGroupsIsAgeGroups ? age : ageSexGroup,
         )
@@ -270,7 +267,6 @@ export async function getRawFilteredConsumptionData() {
 }
 
 /**
- *
  * Load all contaminant data into a raw format and filter based on the current filters.
  * This function is useful for downloading raw data for a specific graph.
  * The data must be in raw format but still needs to be filtered.
@@ -279,14 +275,13 @@ export async function getRawFilteredConsumptionData() {
  * - A promise that resolves to an array of objects, where each entry represents a file
  *   - rows: Array of raw data for contaminants
  *   - filename: Formatted filename
- *
  */
 export async function getRawFilteredContaminentData() {
   const filters = getActiveFilters();
 
   let filtered = [];
 
-  for (const file of contaminentFiles) {
+  for (const file of getContaminentFiles()) {
     let data = {};
     let rows = (await readCSV(file)).rows;
     const chemicalGroup =
@@ -297,7 +292,7 @@ export async function getRawFilteredContaminentData() {
     data.rows = rows.filter(
       (row) =>
         row[getTranslations().tdsData.headers[DataColumns.CHEMICAL]] ==
-        filters.chemical &&
+          filters.chemical &&
         filters.years.includes(getYearForContaminentEntry(row)),
     );
     data.filename = filters.chemicalGroup + " - " + filters.chemical;
