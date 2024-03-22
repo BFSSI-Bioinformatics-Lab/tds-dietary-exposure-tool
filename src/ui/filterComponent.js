@@ -110,7 +110,7 @@ export function addEventListenersToPage(tdsData) {
   el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
     downloadTDSData(DataType.CONSUMPTION);
   });
-  el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
+  el.dataTable.buttons.downloadContaminentData.addEventListener("click", () => {
     downloadTDSData(DataType.CONTAMINENT);
   });
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {

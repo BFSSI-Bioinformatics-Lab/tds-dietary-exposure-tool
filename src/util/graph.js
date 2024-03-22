@@ -1,4 +1,5 @@
 import { IDCs, LODs, ageGroupToIDCAgeGroup } from "../config.js";
+import { getTranslations } from "../translation/translation.js";
 import { lodOrMdlIsValid } from "./data.js";
 
 /**
@@ -47,7 +48,7 @@ export function getContaminentExposure(
   age,
 ) {
   // Special case when calculating radionuclide occurence
-  if (filters.chemicalGroup === "Radionuclides") {
+  if (filters.chemicalGroup == getTranslations().tdsData.values.radionuclides) {
     const IDC = IDCs[filters.chemical][ageGroupToIDCAgeGroup[age]];
     return (
       // Unit: mSv/year

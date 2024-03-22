@@ -5,6 +5,9 @@ import {
   YearMax,
   GraphTypes,
   MeanFlag,
+  DataType,
+  DataColumns,
+  ConsumptionUnits,
 } from "../config.js";
 import { readCSV } from "./dataLoader.js";
 import {
@@ -21,6 +24,7 @@ import {
   getActiveFilters,
   getSelectedGraphType,
 } from "../ui/filterComponent.js";
+import { getTranslations } from "../translation/translation.js";
 
 /**
  *
@@ -72,7 +76,8 @@ export async function getTDSData() {
   // Fill contaminent data
   for (const file of contaminentFiles) {
     const raw = (await readCSV(file)).rows;
-    const chemicalGroup = raw[0]["Analyte Group"]; // A given file will only be for a specific chemical group
+    const chemicalGroup =
+      raw[0][getTranslations().tdsData.headers[DataColumns.CHEMICAL_GROUP]]; // A given file will only be for a specific chemical group
     data.contaminent[chemicalGroup] ??= {};
     raw.forEach((row) => {
       const year = getYearForContaminentEntry(row);
@@ -80,7 +85,8 @@ export async function getTDSData() {
         return;
       }
 
-      const chemical = row["Analyte Name"];
+      const chemical =
+        row[getTranslations().tdsData.headers[DataColumns.CHEMICAL]];
 
       data.contaminent[chemicalGroup][chemical] ??= {};
       data.contaminent[chemicalGroup][chemical][year] ??= [];
@@ -91,8 +97,13 @@ export async function getTDSData() {
         year,
         compositeInfo: getCompositeInfoForContaminentEntry(row),
         occurence: getOccurenceForContaminentEntry(row),
-        units: getUnitForContaminentEntry(row["Units of measurement"]),
-        lod: Number(row["LOD"] || row["MDL"]),
+        units: getUnitForContaminentEntry(
+          row[getTranslations().tdsData.headers[DataColumns.UNIT]],
+        ),
+        lod: Number(
+          row[getTranslations().tdsData.headers[DataColumns.MDL]] ||
+          row[getTranslations().tdsData.headers[DataColumns.MDL]],
+        ),
       });
     });
   }
@@ -101,14 +112,23 @@ export async function getTDSData() {
 
   // Prepare consumption data with food groups and relative composites
   (await readCSV(consumptionFiles.desc)).rows.forEach((row) => {
-    const foodDescription = row["Composite Description (TDS_FC_Label)"];
-    if (!foodDescription) {
+    const compositeDescription =
+      row[
+      getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_DESC]
+      ];
+    if (!compositeDescription) {
       // Entry is a food group if other entires are empty (the way the data is formatted)
-      currentFoodGroup = row["Composite Code (TDS_FC_Code)"];
+      currentFoodGroup =
+        row[
+        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
+        ];
       data.consumption[currentFoodGroup] = {};
     } else {
       // Entry is a food composite mapping for the current food group (until the next food group is encountered)
-      const composite = row["Composite Code (TDS_FC_Code)"].toUpperCase();
+      const composite =
+        row[
+          getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
+        ].toUpperCase();
       data.consumption[currentFoodGroup][composite] = [];
     }
   });
@@ -116,7 +136,10 @@ export async function getTDSData() {
   // Fill consumption data
   (await readCSV(consumptionFiles.perPerson)).rows.forEach((row) => {
     // Only considering data surveyed for all people
-    if (row["Population_group"] != "All people") {
+    if (
+      row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] !=
+      getTranslations().tdsData.values.allPeople
+    ) {
       return;
     }
 
@@ -126,7 +149,7 @@ export async function getTDSData() {
     for (const foodGroup of Object.keys(data.consumption)) {
       if (data.consumption[foodGroup][composite]) {
         const [ageSexGroup, age, sex] = getAgeSexGroupInfoForConsumptionEntry(
-          row["population"],
+          row[getTranslations().tdsData.headers[DataColumns.POPULATION]],
         );
         if (
           data.consumption[foodGroup][composite].find(
@@ -140,16 +163,18 @@ export async function getTDSData() {
           ageSexGroup,
           composite,
           compositeDesc: getCompositeDescForConsumptionEntry(
-            row["TDS_FC_label"],
+            row[getTranslations().tdsData.headers[DataColumns.COMPOSITE_DESC]],
           ),
           foodGroup,
           meanFlagForPerKgBWPerDay: MeanFlag.NONE,
           meanGramsPerKgBWPerDay: 0, // Fill in in the next function
           meanFlagForPerPersonPerDay: getMeanFlagForConsumptionEntry(
-            row["Mean_flag"],
+            row[getTranslations().tdsData.headers[DataColumns.MEAN_FLAG]],
           ),
           meanGramsPerPersonPerDay:
-            Number(row["Mean_grams_per_person_per_day"]) || 0,
+            Number(
+              row[getTranslations().tdsData.headers[DataColumns.MEAN_G_PPPD]],
+            ) || 0,
           sex,
         });
         break; // There is only one place this composite can go
@@ -159,7 +184,10 @@ export async function getTDSData() {
 
   // Fill the consumption data with values for mean grams per kg bw per day (these values located in different file)
   (await readCSV(consumptionFiles.perKgBw)).rows.forEach((row) => {
-    if (row["Population_group"] != "All people") {
+    if (
+      row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] !=
+      getTranslations().tdsData.values.allPeople
+    ) {
       return;
     }
 
@@ -167,7 +195,7 @@ export async function getTDSData() {
 
     // Must use the age-sex group to find the matching entry in the data for this row
     const [ageSexGroup, _, __] = getAgeSexGroupInfoForConsumptionEntry(
-      row["population"],
+      row[getTranslations().tdsData.headers[DataColumns.POPULATION]],
     );
 
     // Find which entry in the consumption data has the composite
@@ -176,10 +204,14 @@ export async function getTDSData() {
         data.consumption[foodGroup][composite].forEach((r) => {
           if (r.ageSexGroup == ageSexGroup) {
             r.meanGramsPerKgBWPerDay =
-              Number(row["Mean_grams_per_kilogrambodyweight_per_day"]) || 0;
+              Number(
+                row[
+                getTranslations().tdsData.headers[DataColumns.MEAN_G_PKGBWPD]
+                ],
+              ) || 0;
 
             r.meanFlagForPerKgBWPerDay = getMeanFlagForConsumptionEntry(
-              row["Mean_flag"],
+              row[getTranslations().tdsData.headers[DataColumns.MEAN_FLAG]],
             );
           }
         });
@@ -209,20 +241,21 @@ export async function getRawFilteredConsumptionData() {
   for (const fileInfo of [
     {
       file: consumptionFiles.perPerson,
-      filename: "Food Consumption per Person per Day",
+      filename: getTranslations().dataTable.exportNames[ConsumptionUnits.PERSON],
     },
     {
       file: consumptionFiles.perKgBw,
-      filename: "Food Consumption per Kg Bodyweight per Day",
+      filename: getTranslations().dataTable.exportNames[ConsumptionUnits.KGBW],
     },
   ]) {
     let data = {};
     data.rows = (await readCSV(fileInfo.file)).rows.filter((row) => {
       const [ageSexGroup, age, _] = getAgeSexGroupInfoForConsumptionEntry(
-        row["population"],
+        row[getTranslations().tdsData.headers[DataColumns.POPULATION]],
       );
       return (
-        row["Population_group"] == "All people" &&
+        row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] ==
+        getTranslations().tdsData.values.allPeople &&
         filters.ageSexGroups.includes(
           filters.ageSexGroupsIsAgeGroups ? age : ageSexGroup,
         )
@@ -256,13 +289,15 @@ export async function getRawFilteredContaminentData() {
   for (const file of contaminentFiles) {
     let data = {};
     let rows = (await readCSV(file)).rows;
-    const chemicalGroup = rows[0]["Analyte Group"];
+    const chemicalGroup =
+      rows[0][getTranslations().tdsData.headers[DataColumns.CHEMICAL_GROUP]];
     if (chemicalGroup != filters.chemicalGroup) {
       continue;
     }
     data.rows = rows.filter(
       (row) =>
-        row["Analyte Name"] == filters.chemical &&
+        row[getTranslations().tdsData.headers[DataColumns.CHEMICAL]] ==
+        filters.chemical &&
         filters.years.includes(getYearForContaminentEntry(row)),
     );
     data.filename = filters.chemicalGroup + " - " + filters.chemical;

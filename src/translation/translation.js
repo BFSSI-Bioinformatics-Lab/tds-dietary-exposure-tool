@@ -1,5 +1,7 @@
 import {
   ConsumptionUnits,
+  DataColumns,
+  DataType,
   GraphTypes,
   LODs,
   RbasgDomainFormat,
@@ -142,6 +144,12 @@ export function getTranslations() {
           downloadConsumptionData: "Download Consumption Data",
           downloadDataTable: "Download Calculations",
         },
+        exportNames: {
+          [ConsumptionUnits.PERSON]: "Food Consumption per Person per Day",
+          [ConsumptionUnits.KGBW]: "Food Consumption per Kg Bodyweight per Day",
+          dataExport: "Data Export",
+          calculations: "Dietary Exposure Calculations",
+        },
         headers: {
           chemical: "Chemical",
           ageSexGroup: "Age-sex Group",
@@ -200,6 +208,44 @@ export function getTranslations() {
           [ConsumptionUnits.PERSON]: "/person/day",
         },
         gramsShort: "g",
+      },
+
+      /**
+       *
+       * Data (TDS)
+       *
+       */
+
+      tdsData: {
+        headers: {
+          /* Consumption */
+          [DataColumns.MAPPING_COMPOSITE_DESC]:
+            "Composite Description (TDS_FC_Label)",
+          [DataColumns.MAPPING_COMPOSITE_CODE]: "Composite Code (TDS_FC_Code)",
+          [DataColumns.POPULATION]: "population",
+          [DataColumns.POPULATION_GROUP]: "Population_group",
+          [DataColumns.COMPOSITE_DESC]: "TDS_FC_label",
+          [DataColumns.COMPOSITE_CODE]: "TDS_FC_Code",
+          [DataColumns.MEAN_FLAG]: "Mean_flag",
+          [DataColumns.MEAN_G_PPPD]: "Mean_grams_per_person_per_day",
+          [DataColumns.MEAN_G_PKGBWPD]:
+            "Mean_grams_per_kilogrambodyweight_per_day",
+          /* Contaminent */
+          [DataColumns.CHEMICAL_GROUP]: "Analyte Group",
+          [DataColumns.CHEMICAL]: "Analyte Name",
+          [DataColumns.COLLECTION_DATE]: "Sample Collection Date",
+          [DataColumns.PROJECT_CODE]: "Project Code",
+          [DataColumns.SAMPLE_CODE]: "Sample Code",
+          [DataColumns.PRODUCT_DESC]: "Product Description",
+          [DataColumns.RESULT_VALUE]: "Result Value",
+          [DataColumns.UNIT]: "Units of measurement",
+          [DataColumns.LOD]: "LOD",
+          [DataColumns.MDL]: "MDL",
+        },
+        values: {
+          allPeople: "All people",
+          radionuclides: "Radionuclides",
+        },
       },
     },
   };
