@@ -162,6 +162,12 @@ export function getYearForContaminentEntry(row) {
   ) {
     return "2014";
   }
+  if (
+    row[getTranslations().tdsData.headers[DataColumns.PROJECT_CODE]] ==
+    "BCS.TDS2011.Radionuclides"
+  ) {
+    return "2011";
+  }
   return year;
 }
 
