@@ -12,7 +12,6 @@ import {
   ageGroups,
   ageSexGroups,
   toggleUserLanguage,
-  userLanguage,
 } from "../config.js";
 import { downloadDataTable, downloadTDSData } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
@@ -237,12 +236,7 @@ function addEventListenersToFilters(tdsData) {
         }
       });
       if (selectionsCompleted()) {
-        el.filters.containers.forEach((container) => {
-          container.classList.remove(classs.HIDDEN);
-        });
-        el.filters.borders.forEach((border) => {
-          border.classList.remove(classs.HIDDEN);
-        });
+        displayFilters();
         displayGraph(getFilteredTdsData(tdsData));
       }
     });
@@ -256,9 +250,7 @@ function addEventListenersToFilters(tdsData) {
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
       if (selectionsCompleted()) {
-        el.filters.containers.forEach((container) => {
-          container.classList.remove(classs.HIDDEN);
-        });
+        displayFilters();
         displayGraph(getFilteredTdsData(tdsData));
       }
     });
@@ -321,6 +313,22 @@ function displayChemicals(tdsData) {
     oe.text = chemical;
     el.filters.inputs.chemical.appendChild(oe);
   });
+}
+
+function displayFilters() {
+  el.filters.containers.forEach((container) => {
+    container.classList.remove(classs.HIDDEN);
+  });
+  el.filters.borders.forEach((border) => {
+    border.classList.remove(classs.HIDDEN);
+  });
+
+  if (
+    el.filters.inputs.chemicalGroup.value ==
+    getTranslations().tdsData.values.radionuclides
+  ) {
+    el.filters.containersMap.consumptionUnits.classList.add(classs.HIDDEN);
+  }
 }
 
 function displayYears(tdsData) {

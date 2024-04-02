@@ -31,6 +31,9 @@ export const el = {
 
   filters: {
     containers: document.querySelectorAll(".filter"),
+    containersMap:{
+      consumptionUnits: document.getElementById("filter-consumption-units-container")
+    },
     titles: {
       title: document.getElementById("filters-title"),
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
