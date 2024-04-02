@@ -157,4 +157,8 @@ export const el = {
   /*
    * Misc.
    */
+
+  misc: {
+    loader: document.getElementById("loader"),
+  },
 };

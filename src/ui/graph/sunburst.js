@@ -97,7 +97,7 @@ export function getSunburstSvg(data) {
       if (d.data.children) {
         return;
       }
-      const maxLength = 30;
+      const maxLength = 28;
       const str = d.data.title;
       if (str.length > maxLength) {
         return str.slice(0, maxLength) + "...";
