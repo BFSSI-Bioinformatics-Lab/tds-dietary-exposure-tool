@@ -41,6 +41,27 @@ export async function initializePageText() {
     translations.filters.titles.ageSexGroup;
   el.filters.titles.rbfgRange.innerHTML = translations.filters.titles.range;
 
+  el.filters.sandbox.openButton.innerHTML =
+    translations.filters.sandbox.openButton;
+  el.filters.sandbox.closeButton.innerHTML =
+    translations.filters.sandbox.closeButton;
+  el.filters.sandbox.title.innerHTML = translations.filters.sandbox.title;
+  el.filters.sandbox.referenceLineTitle.innerHTML =
+    translations.filters.sandbox.referenceLineTitle;
+  el.filters.sandbox.overrideTitle.innerHTML =
+    translations.filters.sandbox.overrideTitle;
+
+  el.filters.titles.referenceLine.innerHTML =
+    translations.filters.titles.referenceLine;
+  el.filters.inputs.referenceLine.placeholder =
+    translations.filters.placeholders.none;
+  el.filters.titles.overrideFood.innerHTML =
+    translations.filters.titles.overrideFood;
+  el.filters.titles.overrideValue.innerHTML =
+    translations.filters.titles.overrideValue;
+  el.filters.inputs.overrideValue.placeholder =
+    translations.filters.placeholders.none;
+
   el.dataTable.title.innerHTML = translations.dataTable.title;
   el.dataTable.buttons.downloadConsumptionData.innerHTML =
     translations.dataTable.buttons.downloadConsumptionData;

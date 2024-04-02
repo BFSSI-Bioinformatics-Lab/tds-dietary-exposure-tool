@@ -57,18 +57,24 @@ export function getTranslations() {
       filters: {
         titles: {
           title: "Select Graph Type and Chemical:",
-
           chemicalGroup: "Chemical Group",
           chemical: "Chemical",
           years: "Year(s)",
-          lod: "Occurence &ltLOD =",
+          lod: "Occurrence &ltLOD =",
           lodSubtitle: "LOD Range: ",
           units: "Units",
           ageGroup: "Age Group",
-          domain: "Domain Format",
+          domain: "Domain",
           ageSexGroup: "Age-Sex Group",
           range: "Range Format",
           sortBy: "Sort By",
+          referenceLine: "Limit",
+          overrideFood: "Food",
+          overrideValue: "New Value",
+        },
+        placeholders: {
+          select: "Select",
+          none: "None",
         },
         lods: {
           [LODs[0]]: "0",
@@ -78,19 +84,26 @@ export function getTranslations() {
         },
         consumptionUnits: {
           [ConsumptionUnits.PERSON]: "Per Person per Day",
-          [ConsumptionUnits.KGBW]: "Per Kg Bodyweight per Day",
+          [ConsumptionUnits.KGBW]: "Per kg Bodyweight per Day",
         },
         rbasgDomainFormat: {
-          [RbasgDomainFormat.AGESEX]: "Show by Age-Sex",
-          [RbasgDomainFormat.YEAR]: "Show by Year",
+          [RbasgDomainFormat.AGESEX]: "Age-Sex",
+          [RbasgDomainFormat.YEAR]: "Year",
         },
         rbfgRangeFormat: {
           [RbfgRangeFormat.PERCENT]: "Percentages",
-          [RbfgRangeFormat.NUMBER]: "Numbers",
+          [RbfgRangeFormat.ABSOLUTE]: "Absolute",
         },
         rbfSortByFormat: {
           [RbfSortByFormat.FOOD]: "Food",
           [RbfSortByFormat.GROUP]: "Food Group",
+        },
+        sandbox: {
+          openButton: "Open Sandbox",
+          closeButton: "Close",
+          title: "Sandbox Environment",
+          referenceLineTitle: "Add Reference Line to Graph:",
+          overrideTitle: "Override Occurrence Value(s):",
         },
       },
 
@@ -102,7 +115,7 @@ export function getTranslations() {
         info: {
           exposure: "Dietary Exposure",
           percentExposure: "% Dietary Exposure",
-          occurence: "Contaminent Occurence (mean)",
+          occurrence: "Contaminent Occurrence (mean)",
           foodConsumption: "Mean Food Composite Consumption",
           ageSexGroup: "Age-Sex Group",
           ageGroup: "Age Group",
@@ -142,11 +155,11 @@ export function getTranslations() {
         buttons: {
           downloadContaminentData: "Download Contaminent Data",
           downloadConsumptionData: "Download Consumption Data",
-          downloadDataTable: "Download Calculations",
+          downloadDataTable: "Download Calculations (Found Below)",
         },
         exportNames: {
           [ConsumptionUnits.PERSON]: "Food Consumption per Person per Day",
-          [ConsumptionUnits.KGBW]: "Food Consumption per Kg Bodyweight per Day",
+          [ConsumptionUnits.KGBW]: "Food Consumption per kg Bodyweight per Day",
           dataExport: "Data Export",
           calculations: "Dietary Exposure Calculations",
         },
@@ -161,8 +174,12 @@ export function getTranslations() {
           years: "Year(s)",
           percentUnderLod: "% <LOD",
           treatment: "Treatment of <LOD",
+          modified: "User Modified Values",
           flagged: "'E' Flag",
           suppressed: "'F' Supressed",
+        },
+        values: {
+          occurrence: "Occurrence",
         },
       },
 
@@ -196,11 +213,10 @@ export function getTranslations() {
        */
 
       misc: {
-        selectPlaceholder: "Select",
         noDataMsg: "No data available",
         na: "NA",
         consumptionUnitShort: {
-          [ConsumptionUnits.KGBW]: "/Kg BW/day",
+          [ConsumptionUnits.KGBW]: "/kg BW/day",
           [ConsumptionUnits.PERSON]: "/person/day",
         },
         gramsShort: "g",

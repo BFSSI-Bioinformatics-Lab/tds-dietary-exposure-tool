@@ -51,8 +51,22 @@ export const el = {
         "filter-rbfg-age-sex-group-title",
       ),
       rbfgRange: document.getElementById("filter-rbfg-range-title"),
+      referenceLine: document.getElementById("filter-reference-line-title"),
+      overrideFood: document.getElementById("filter-override-food-title"),
+      overrideValue: document.getElementById("filter-override-value-title"),
     },
-    selects: {
+    borders: document.querySelectorAll(".filter-border"),
+    sandbox: {
+      openButton: document.getElementById("sandbox-open-button"),
+      closeButton: document.getElementById("sandbox-close-button"),
+      container: document.getElementById("sandbox-container"),
+      title: document.getElementById("sandbox-title"),
+      referenceLineTitle: document.getElementById("reference-line-title"),
+      overrideTitle: document.getElementById("override-title"),
+      addOverrideButton: document.getElementById("override-add-button"),
+      overridesList: document.getElementById("overrides-list-container"),
+    },
+    inputs: {
       chemicalGroup: document.getElementById("filter-chemical-group-select"),
       chemical: document.getElementById("filter-chemical-select"),
       years: document.getElementById("filter-year-select"),
@@ -60,6 +74,9 @@ export const el = {
       consumptionUnits: document.getElementById(
         "filter-consumption-units-select",
       ),
+      referenceLine: document.getElementById("filter-reference-line-select"),
+      overrideFood: document.getElementById("filter-override-food-select"),
+      overrideValue: document.getElementById("filter-override-value-select"),
     },
   },
 

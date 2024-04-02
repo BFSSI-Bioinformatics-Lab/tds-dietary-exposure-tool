@@ -72,7 +72,7 @@ export function formatNumber(number, filters) {
     filters?.chemicalGroup === getTranslations().tdsData.values.radionuclides
       ? 6
       : 2;
-  const roundedNumber = Number.parseFloat(number).toFixed(precision);
+  const roundedNumber = parseFloat(number).toFixed(precision);
 
   if (parseFloat(roundedNumber) === 0) {
     return "0";
@@ -86,6 +86,26 @@ export function formatNumber(number, filters) {
  */
 export function formatPercent(percent) {
   return parseFloat(percent.toFixed(2)).toLocaleString() + "%";
+}
+
+/**
+ * Function used to get text to display for a given sandbox override value
+ */
+export function getOverrideText(override) {
+  return override.composite + ": " + formatNumber(override.occurrence);
+}
+
+/**
+ * Function used to get text to display in data table for user modifications
+ */
+export function getUserModifiedValueText(override) {
+  return (
+    override.composite +
+    "-" +
+    getTranslations().dataTable.values.occurrence +
+    "=" +
+    formatNumber(override.occurrence)
+  );
 }
 
 export function getExposureUnit(contaminentUnit, filters) {
@@ -168,9 +188,9 @@ function isContaminentEntryMicroGrams(unit) {
 }
 
 /**
- * Return occurence for raw contaminent entry
+ * Return occurrence for raw contaminent entry
  */
-export function getOccurenceForContaminentEntry(row) {
+export function getOccurrenceForContaminentEntry(row) {
   let result = Number(
     row[getTranslations().tdsData.headers[DataColumns.RESULT_VALUE]],
   );

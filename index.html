@@ -73,18 +73,18 @@
 
     -->
 
-    <div id="filters-container">
+    <div class="filters-container">
       <div class="filter">
         <label
           id="filter-chemical-group-title"
           for="filter-chemical-group-select"
         ></label>
-        <select id="filter-chemical-group-select"></select>
+        <select required id="filter-chemical-group-select"></select>
       </div>
 
       <div class="filter">
         <label id="filter-chemical-title" for="filter-chemical-select"></label>
-        <select id="filter-chemical-select"></select>
+        <select required id="filter-chemical-select"></select>
       </div>
 
       <div class="filter hidden">
@@ -92,11 +92,13 @@
         <select id="filter-year-select" multiple></select>
       </div>
 
-      <div class="filter hidden bordered-filter">
+      <div class="filter hidden">
         <label id="filter-lod-title" for="filter-lod-select"></label>
         <select id="filter-lod-select"></select>
         <div id="filter-lod-subtitle" class="small"></div>
       </div>
+
+      <div class="hidden border filter-border"></div>
 
       <div
         class="filter hidden filter-additional filter-additional-rbasg filter-additional-active"
@@ -124,13 +126,15 @@
         <select id="filter-rbfg-age-sex-group-select" multiple></select>
       </div>
 
-      <div class="filter hidden bordered-filter">
+      <div class="filter hidden">
         <label
           id="filter-consumption-units-title"
           for="filter-consumption-units-select"
         ></label>
         <select id="filter-consumption-units-select"></select>
       </div>
+
+      <div class="hidden border filter-border"></div>
 
       <div
         class="filter hidden filter-additional filter-additional-rbasg filter-additional-active"
@@ -156,6 +160,64 @@
           for="filter-rbfg-range-select"
         ></label>
         <select id="filter-rbfg-range-select"></select>
+      </div>
+
+      <div class="filter hidden">
+        <button id="sandbox-open-button"></button>
+      </div>
+    </div>
+
+    <!--
+
+
+    Sandbox
+
+
+    -->
+
+    <div id="sandbox-container" class="hidden">
+      <div id="sandbox-header">
+        <div id="sandbox-title" class="bold"></div>
+        <button id="sandbox-close-button" class="sandbox-button"></button>
+      </div>
+
+      <div id="sandbox-content">
+        <div id="reference-line-container" class="sandbox-item">
+          <div id="reference-line-title"></div>
+          <div class="filters-container">
+            <div class="filter hidden">
+              <label
+                id="filter-reference-line-title"
+                for="filter-reference-line-select"
+              ></label>
+              <input id="filter-reference-line-select" type="number" />
+            </div>
+          </div>
+        </div>
+
+        <div class="border"></div>
+
+        <div id="override-container" class="sandbox-item">
+          <div id="override-title"></div>
+          <div class="filters-container">
+            <div class="filter hidden">
+              <label
+                id="filter-override-food-title"
+                for="filter-override-food-select"
+              ></label>
+              <select required id="filter-override-food-select"></select>
+            </div>
+            <div class="filter hidden">
+              <label
+                id="filter-override-value-title"
+                for="filter-override-value-select"
+              ></label>
+              <input id="filter-override-value-select" type="number" />
+            </div>
+            <button id="override-add-button" class="sandbox-button">+</button>
+          </div>
+          <div id="overrides-list-container"></div>
+        </div>
       </div>
     </div>
 

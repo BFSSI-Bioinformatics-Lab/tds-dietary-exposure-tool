@@ -89,7 +89,7 @@ export const RbasgDomainFormat = {
 
 export const RbfgRangeFormat = {
   PERCENT: "PERCENT",
-  NUMBER: "NUMBER",
+  ABSOLUTE: "ABSOLUTE",
 };
 
 export const RbfSortByFormat = {

@@ -24,6 +24,7 @@ import {
   getActiveFilters,
   getSelectedGraphType,
   updateLodFilterDescription,
+  updateSandbox,
 } from "./filterComponent.js";
 import { displayDataTable } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
@@ -46,34 +47,40 @@ export function displayGraph(data) {
 
   const graphMapping = {
     [GraphTypes.RBASG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${filters.chemical
-        }, (${filters.years.join(", ")})`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${
+        filters.chemical
+      }, (${filters.years.join(", ")})`,
       colorLegendData: sexGroupColorMapping,
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
       getSvgFn: getGroupedBarSvg,
       getDataTableDataFn: formatRbsagToDataTable,
       legendTitle: getTranslations().graphs.legend.ageGroup,
+      hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title} ${filters.chemical
-        }, ${filters.ageSexGroups}, \(${filters.years.join(", ")}\)`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title} ${
+        filters.chemical
+      }, ${filters.ageSexGroups}, \(${filters.years.join(", ")}\)`,
       colorLegendMapping: foodGroupColorMapping,
       getDataFn: getRbf,
       getGraphDataFn: formatRbfToSunburst,
       getSvgFn: getSunburstSvg,
       getDataTableDataFn: formatRbfToDataTable,
       legendTitle: getTranslations().graphs.legend.foodGroup,
+      hasReferenceLine: false,
     },
     [GraphTypes.RBFG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${filters.chemical
-        }, \(${filters.years.join(", ")}\)`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${
+        filters.chemical
+      }, \(${filters.years.join(", ")}\)`,
       colorLegendData: foodGroupColorMapping,
       getDataFn: getRbfg,
       getGraphDataFn: formatRbfgToStackedBar,
       getSvgFn: getStackedBarSvg,
       getDataTableDataFn: formatRbfgToDataTable,
       legendTitle: getTranslations().graphs.legend.foodGroup,
+      hasReferenceLine: !filters.usePercent,
     },
   };
 
@@ -85,12 +92,17 @@ export function displayGraph(data) {
     getSvgFn,
     getDataTableDataFn,
     legendTitle,
+    hasReferenceLine,
   ] = Object.values(graphMapping[graphType]);
 
   updateLodFilterDescription(data);
+  updateSandbox(data, filters);
 
   const specificData = getDataFn(data, filters);
   const graphData = getGraphDataFn(specificData, filters, colorLegendMapping);
+  if (filters.referenceLine && hasReferenceLine) {
+    graphData.hr = filters.referenceLine;
+  }
   const graphSvg = getSvgFn(graphData);
 
   el.graphs.title.innerHTML = graphTitle;

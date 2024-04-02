@@ -4,15 +4,15 @@ import { lodOrMdlIsValid } from "./data.js";
 
 /**
  *
- * Return the occurence value for a given row in the TDS contaminent data.
- * This value could change from the occurence value already existing in the data, based upon
+ * Return the occurrence value for a given row in the TDS contaminent data.
+ * This value could change from the occurrence value already existing in the data, based upon
  * the current filters and LOD levels.
  *
  */
-export function getOccurenceForContaminentEntry(row, filters) {
-  let result = row.occurence;
+export function getOccurrenceForContaminentEntry(row, filters) {
+  let result = row.occurrence;
 
-  if (row.occurence == 0) {
+  if (row.occurrence == 0) {
     if (!lodOrMdlIsValid(row.chemicalGroup)) {
       return 0;
     }
@@ -36,29 +36,29 @@ export function getOccurenceForContaminentEntry(row, filters) {
  *
  * Parameters:
  *  - consumption: The mean consumption of a food composite
- *  - occurence: The contaminent occurence value
+ *  - occurrence: The contaminent occurrence value
  *  - filters: Currently selected filters. Required to check for and handle special cases.
  *  - age: Age that the consumption value is for. Required for handling special cases.
  *
  */
 export function getContaminentExposure(
   meanConsumptionOfFoodComposite,
-  meanContaminentOccurence,
+  meanContaminentOccurrence,
   filters,
   age,
 ) {
-  // Special case when calculating radionuclide occurence
+  // Special case when calculating radionuclide occurrence
   if (filters.chemicalGroup == getTranslations().tdsData.values.radionuclides) {
     const IDC = IDCs[filters.chemical][ageGroupToIDCAgeGroup[age]];
     return (
       // Unit: mSv/year
-      ((meanContaminentOccurence * meanConsumptionOfFoodComposite) / 1000) *
+      ((meanContaminentOccurrence * meanConsumptionOfFoodComposite) / 1000) *
       IDC *
       365
     );
   }
 
-  return meanConsumptionOfFoodComposite * meanContaminentOccurence;
+  return meanConsumptionOfFoodComposite * meanContaminentOccurrence;
 }
 
 /**

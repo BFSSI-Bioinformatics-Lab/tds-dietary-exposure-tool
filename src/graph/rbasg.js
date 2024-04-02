@@ -1,5 +1,4 @@
 import {
-  ConsumptionUnits,
   GraphTypes,
   MeanFlag,
   RbasgDomainFormat,
@@ -8,10 +7,10 @@ import {
 import {
   getCompositeInfo,
   getContaminentExposure,
-  getOccurenceForContaminentEntry,
+  getOccurrenceForContaminentEntry,
 } from "../util/graph.js";
 import { getTranslations } from "../translation/translation.js";
-import { formatNumber, formatPercent, getExposureUnit } from "../util/data.js";
+import { formatNumber, formatPercent, getExposureUnit, getUserModifiedValueText } from "../util/data.js";
 
 /**
  * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing age-sex groups
@@ -71,24 +70,24 @@ export function getRbasg(tdsData, filters) {
                 if (contaminent.compositeInfo.includes(composite)) {
                   rbasgData[entry][sex].contaminentUnit = contaminent.units;
                   numContaminents++;
-                  sumContaminents += getOccurenceForContaminentEntry(
+                  sumContaminents += getOccurrenceForContaminentEntry(
                     contaminent,
                     filters,
                     entry,
                   );
                   rbasgData[entry][sex].numContaminents++;
-                  if (contaminent.occurence < contaminent.lod) {
+                  if (contaminent.occurrence < contaminent.lod) {
                     rbasgData[entry][sex].numContaminentsUnderLod++;
                   }
                 }
               });
             });
-            const meanOccurence = sumContaminents / numContaminents || 0;
+            const meanOccurrence = sumContaminents / numContaminents || 0;
             const exposure = getContaminentExposure(
               filters.usePerPersonPerDay
                 ? consumption.meanGramsPerPersonPerDay
                 : consumption.meanGramsPerKgBWPerDay,
-              meanOccurence,
+              meanOccurrence,
               filters,
               consumption.age,
             );
@@ -129,6 +128,9 @@ export function formatRbsagToDataTable(rbasgData, filters) {
         [headers.years]: row.years.join(", "),
         [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
         [headers.treatment]: filters.lod,
+        [headers.modified]: filters.override.list
+          .map((override) => getUserModifiedValueText(override))
+          .join("; "),
         [headers.flagged]: row.consumptionsFlagged.join("; "),
         [headers.suppressed]: row.consumptionsSuppressed.join("; "),
       });

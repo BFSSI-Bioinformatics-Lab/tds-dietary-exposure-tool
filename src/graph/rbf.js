@@ -1,7 +1,7 @@
 import {
   getCompositeInfo,
   getContaminentExposure,
-  getOccurenceForContaminentEntry,
+  getOccurrenceForContaminentEntry as getOccurrenceForContaminentEntry,
 } from "../util/graph.js";
 import { ConsumptionUnits, MeanFlag } from "../config.js";
 import { getTranslations } from "../translation/translation.js";
@@ -10,6 +10,7 @@ import {
   formatPercent,
   getConsumptionUnit,
   getExposureUnit,
+  getUserModifiedValueText,
 } from "../util/data.js";
 
 /**
@@ -49,12 +50,12 @@ export function getRbf(tdsData, filters) {
             rbfData[composite].contaminentUnit = contaminent.units;
 
             numContaminents++;
-            sumContaminents += getOccurenceForContaminentEntry(
+            sumContaminents += getOccurrenceForContaminentEntry(
               contaminent,
               filters,
             );
 
-            if (contaminent.occurence < contaminent.lod) {
+            if (contaminent.occurrence < contaminent.lod) {
               numContaminentUnderLod++;
             }
           }
@@ -64,11 +65,11 @@ export function getRbf(tdsData, filters) {
         ? consumption.meanGramsPerPersonPerDay
         : consumption.meanGramsPerKgBWPerDay;
 
-      const occurence = sumContaminents / numContaminents || 0;
+      const occurrence = sumContaminents / numContaminents || 0;
 
       const exposure = getContaminentExposure(
         meanConsumption,
-        occurence,
+        occurrence,
         filters,
         consumption.age,
       );
@@ -76,7 +77,7 @@ export function getRbf(tdsData, filters) {
 
       rbfData[composite] = {
         ...rbfData[composite],
-        meanOccurence: occurence,
+        meanOccurrence: occurrence,
         exposure,
         meanConsumption,
         percentUnderLod: (numContaminentUnderLod / numContaminents) * 100 || 0,
@@ -114,6 +115,9 @@ export function formatRbfToDataTable(rbfData, filters) {
       [headers.years]: filters.years.join(", "),
       [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
       [headers.treatment]: filters.lod,
+      [headers.modified]: filters.override.list
+        .filter((override) => override.composite.includes(row.composite))
+        .map((override) => getUserModifiedValueText(override)),
       [headers.flagged]:
         row.consumptionMeanFlag == MeanFlag.FLAGGED ? compositeInfo : "",
       [headers.suppressed]:
@@ -154,9 +158,9 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         ": " +
         formatPercent(row.percentExposure) +
         "\n" +
-        getTranslations().graphs.info.occurence +
+        getTranslations().graphs.info.occurrence +
         ": " +
-        formatNumber(row.meanOccurence, filters) +
+        formatNumber(row.meanOccurrence, filters) +
         " " +
         row.contaminentUnit +
         "\n" +

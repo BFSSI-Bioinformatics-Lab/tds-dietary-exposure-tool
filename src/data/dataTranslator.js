@@ -16,7 +16,7 @@ import {
   getCompositeForConsumptionEntry,
   getCompositeInfoForContaminentEntry,
   getMeanFlagForConsumptionEntry,
-  getOccurenceForContaminentEntry,
+  getOccurrenceForContaminentEntry,
   getUnitForContaminentEntry,
   getYearForContaminentEntry,
 } from "../util/data.js";
@@ -43,7 +43,7 @@ import { getTranslations } from "../translation/translation.js";
  *                            These values will be concatenated and stored in compositeInfo.
  *           - occurrence
  *           - units
- *           - lod: When the occurence value is 0, the user may be able to adjust that value based upon the Level of Detection (LOD).
+ *           - lod: When the occurrence value is 0, the user may be able to adjust that value based upon the Level of Detection (LOD).
  *                  If the LOD is null, use the MDL.
  *         // ... (more years)
  *       // ... (more chemicals)
@@ -94,12 +94,12 @@ export async function getTDSData() {
         chemical,
         year,
         compositeInfo: getCompositeInfoForContaminentEntry(row),
-        occurence: getOccurenceForContaminentEntry(row),
+        occurrence: getOccurrenceForContaminentEntry(row),
         units: getUnitForContaminentEntry(
           row[getTranslations().tdsData.headers[DataColumns.UNIT]],
         ),
         lod: Number(
-          row[getTranslations().tdsData.headers[DataColumns.MDL]] ||
+          row[getTranslations().tdsData.headers[DataColumns.LOD]] ||
             row[getTranslations().tdsData.headers[DataColumns.MDL]],
         ),
       });

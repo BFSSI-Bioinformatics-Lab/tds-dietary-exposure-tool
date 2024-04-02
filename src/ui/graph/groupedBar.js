@@ -4,6 +4,7 @@
  * Parameters:
  * - data.titleX: Title for the x-axis
  * - data.titleY: Title for the y-axis
+ * - data.hr: If provided, a horizontal rule will be placed at this y value
  * - data.children: Child nodes with specific properties
  *   - value: Numeric value associated with the node
  *   - color: Color code for the node
@@ -90,12 +91,30 @@ export function getGroupedBarSvg(data) {
     .call(d3.axisBottom(fx).tickSizeOuter(0))
     .call((g) => g.selectAll(".domain").remove());
 
+  svg
+    .append("line")
+    .attr("x1", marginLeft)
+    .attr("y1", height-marginBottom+1)
+    .attr("x2", marginLeft)
+    .attr("y2", marginTop)
+    .attr("stroke", "black")
+    .attr("stroke-width", 2);
+
   // Append the vertical axis.
   svg
     .append("g")
     .attr("transform", `translate(${marginLeft}, 0)`)
     .call(d3.axisLeft(y).ticks(null, "s"))
     .call((g) => g.selectAll(".domain").remove());
+
+  svg
+    .append("line")
+    .attr("x1", marginLeft)
+    .attr("y1", height-marginBottom)
+    .attr("x2", width)
+    .attr("y2", height-marginBottom)
+    .attr("stroke", "black")
+    .attr("stroke-width", 2);
 
   svg
     .append("text")
@@ -112,6 +131,17 @@ export function getGroupedBarSvg(data) {
     .attr("transform", `rotate(-90, 15, ${height / 2})`)
     .style("text-anchor", "middle")
     .text(data.titleY);
+
+  if (data.hr) {
+    svg
+      .append("line")
+      .attr("x1", marginLeft)
+      .attr("y1", y(data.hr))
+      .attr("x2", width - marginRight)
+      .attr("y2", y(data.hr))
+      .attr("stroke", "red")
+      .attr("stroke-width", 2);
+  }
 
   return svg.node();
 }
