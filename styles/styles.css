@@ -219,8 +219,15 @@ Header
 
 */
 
-#title {
-  font-size: 2.5rem;
+#title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  #title {
+    font-size: 2.5rem;
+  }
 }
 
 #information-container {

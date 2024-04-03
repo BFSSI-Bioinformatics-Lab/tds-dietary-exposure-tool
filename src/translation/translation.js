@@ -38,7 +38,7 @@ export function getTranslations() {
             "",
             "Each broad food group is represented in a different color and sub-group contribution is shown in the outside layers. Hover over a food group for more information. Click on the label to take a closer look into a food group. Click again to restore the complete graph. To see the level 2 sub-groups results in ascending order, click on the grey circle. Click again on the grey circle to restore the complete graph.",
           ],
-          moreInfoButton: "* Data Info",
+          moreInfoButton: "* Data Source",
           moreInfoContent: [
             "The data used to create this interactive tool are from the following sources:",
             '- The Canadian Total Diet Study results from the 2008-2022 collection years. Available on the <a href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c" target="_blank">Canadian Laboratory Information Network.</a>',
