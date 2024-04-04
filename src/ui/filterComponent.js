@@ -1,5 +1,4 @@
 import { classs, el } from "./const.js";
-
 import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
@@ -15,8 +14,16 @@ import {
 } from "../config.js";
 import { downloadDataTable, downloadTDSData } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
-import { getExposureUnit, getOverrideText } from "../util/data.js";
+import {
+  getAgeAndSex,
+  getAgeSex,
+  getAgeSexDisplay,
+  getExposureUnit,
+  getOverrideText,
+} from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
+import { initializePageText } from "./page.js";
+import { loadTdsData, tdsData } from "../data/dataTranslator.js";
 
 export function getSelectedGraphType() {
   const id = document.querySelector(".active-graph-select")?.id.split("-")[0];
@@ -48,7 +55,7 @@ export function getActiveFilters() {
   let graphType;
   try {
     graphType = getSelectedGraphType();
-  } catch (e) {}
+  } catch (e) { }
 
   return {
     chemicalGroup: el.filters.inputs.chemicalGroup.value,
@@ -61,18 +68,18 @@ export function getActiveFilters() {
         ? LODs[0]
         : el.filters.inputs.lod.value ==
           getTranslations().filters.lods[LODs["1/2 LOD"]]
-        ? LODs["1/2 LOD"]
-        : el.filters.inputs.lod.value ==
-          getTranslations().filters.lods[LODs["LOD"]]
-        ? LODs["LOD"]
-        : el.filters.inputs.lod.value ==
-          getTranslations().filters.lods[LODs.Exclude]
-        ? LODs.Exclude
-        : LODs[0],
+          ? LODs["1/2 LOD"]
+          : el.filters.inputs.lod.value ==
+            getTranslations().filters.lods[LODs["LOD"]]
+            ? LODs["LOD"]
+            : el.filters.inputs.lod.value ==
+              getTranslations().filters.lods[LODs.Exclude]
+              ? LODs.Exclude
+              : LODs[0],
     ageSexGroups: graphType
       ? Array.from(
-          el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
-        ).map((option) => option.value)
+        el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
+      ).map((option) => option.value)
       : [],
     ageSexGroupsIsAgeGroups: graphType == GraphTypes.RBASG,
     showByAgeSexGroup:
@@ -101,7 +108,7 @@ export function getActiveFilters() {
   };
 }
 
-export function addEventListenersToPage(tdsData) {
+export function addEventListenersToPage() {
   [el.header.information.howToUse, el.header.information.moreInfo].forEach(
     (dropdown) => {
       dropdown.button.addEventListener("click", () => {
@@ -111,9 +118,9 @@ export function addEventListenersToPage(tdsData) {
       });
     },
   );
-  el.header.languageButton.addEventListener("click", () => {
+  el.header.languageButton.addEventListener("click", async () => {
     toggleUserLanguage();
-    el.header.languageButton.innerHTML = getTranslations().header.language;
+    await resetPage();
   });
 
   el.filters.sandbox.openButton.addEventListener("click", () => {
@@ -150,14 +157,14 @@ export function addEventListenersToPage(tdsData) {
           (option) =>
             JSON.parse(option.value || null)?.composite == override.composite,
         ).disabled = false;
-        displayGraph(getFilteredTdsData(tdsData));
+        displayGraph(getFilteredTdsData());
       });
 
       itemContainer.appendChild(itemText);
       itemContainer.appendChild(removeButton);
       el.filters.sandbox.overridesList.appendChild(itemContainer);
     }
-    displayGraph(getFilteredTdsData(tdsData));
+    displayGraph(getFilteredTdsData());
   });
 
   el.dataTable.title.addEventListener("click", () => {
@@ -174,7 +181,7 @@ export function addEventListenersToPage(tdsData) {
     downloadTDSData(DataType.CONTAMINENT);
   });
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
-    downloadDataTable(getFilteredTdsData(tdsData), getSelectedGraphType());
+    downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
   });
 
   el.about.title.addEventListener("click", () => {
@@ -186,15 +193,15 @@ export function addEventListenersToPage(tdsData) {
   });
 }
 
-function addEventListenersToFilters(tdsData) {
+function addEventListenersToFilters() {
   el.filters.inputs.chemicalGroup.addEventListener("change", () => {
-    displayChemicals(tdsData);
+    displayChemicals();
   });
 
   [el.filters.inputs.chemicalGroup, el.filters.inputs.chemical].forEach(
     (select) =>
       select.addEventListener("change", () => {
-        displayYears(tdsData);
+        displayYears();
         if (selectionsCompleted()) {
           el.filters.containers.forEach((container) => {
             container.classList.remove(classs.HIDDEN);
@@ -207,7 +214,7 @@ function addEventListenersToFilters(tdsData) {
   );
 
   el.graphs[GraphTypes.RBASG].filters.domain.addEventListener("change", () => {
-    displayRbasgAgeGroupFilter(tdsData);
+    displayRbasgAgeGroupFilter();
   });
 
   const graphSelects = [
@@ -237,7 +244,7 @@ function addEventListenersToFilters(tdsData) {
       });
       if (selectionsCompleted()) {
         displayFilters();
-        displayGraph(getFilteredTdsData(tdsData));
+        displayGraph(getFilteredTdsData());
       }
     });
   });
@@ -251,15 +258,32 @@ function addEventListenersToFilters(tdsData) {
     filter.addEventListener("change", () => {
       if (selectionsCompleted()) {
         displayFilters();
-        displayGraph(getFilteredTdsData(tdsData));
+        displayGraph(getFilteredTdsData());
       }
     });
   });
 }
 
-export function initializeFilters(tdsData) {
-  addEventListenersToFilters(tdsData);
-  displayChemicalGroups(tdsData);
+export function initializeFilters() {
+  addEventListenersToFilters();
+  displayFilterText();
+}
+
+async function resetPage() {
+  el.misc.loader.classList.remove(classs.HIDDEN);
+  initializePageText();
+  hideFilters();
+  el.graphs.container.classList.add(classs.HIDDEN);
+  el.dataTable.dataContainer.classList.add(classs.HIDDEN);
+  el.about.container.classList.add(classs.HIDDEN);
+  el.filters.sandbox.container.classList.add(classs.HIDDEN);
+  await loadTdsData();
+  displayFilterText();
+  el.misc.loader.classList.add(classs.HIDDEN);
+}
+
+function displayFilterText() {
+  displayChemicalGroups();
   addPlaceholderToSelect(el.filters.inputs.chemical, "...");
   displayLods();
   displayConsumptionUnits();
@@ -273,7 +297,7 @@ export function initializeFilters(tdsData) {
     el.filters.inputs.overrideFood,
     getTranslations().filters.placeholders.select,
   );
-  displayOverrideFood(tdsData);
+  displayOverrideFood();
 }
 
 function addPlaceholderToSelect(select, text) {
@@ -286,7 +310,7 @@ function addPlaceholderToSelect(select, text) {
   select.appendChild(oe);
 }
 
-function displayChemicalGroups(tdsData) {
+function displayChemicalGroups() {
   el.filters.inputs.chemicalGroup.innerHTML = "";
   addPlaceholderToSelect(
     el.filters.inputs.chemicalGroup,
@@ -302,7 +326,7 @@ function displayChemicalGroups(tdsData) {
     });
 }
 
-function displayChemicals(tdsData) {
+function displayChemicals() {
   el.filters.inputs.chemical.innerHTML = "";
   const chemicals = Object.keys(
     tdsData.contaminent[el.filters.inputs.chemicalGroup.value],
@@ -315,8 +339,17 @@ function displayChemicals(tdsData) {
   });
 }
 
+function hideFilters() {
+  el.filters.hiddenContainers.forEach((container) => {
+    container.classList.add(classs.HIDDEN);
+  });
+  el.filters.borders.forEach((border) => {
+    border.classList.add(classs.HIDDEN);
+  });
+}
+
 function displayFilters() {
-  el.filters.containers.forEach((container) => {
+  el.filters.hiddenContainers.forEach((container) => {
     container.classList.remove(classs.HIDDEN);
   });
   el.filters.borders.forEach((border) => {
@@ -331,7 +364,7 @@ function displayFilters() {
   }
 }
 
-function displayYears(tdsData) {
+function displayYears() {
   const filters = getActiveFilters();
   el.filters.inputs.years.innerHTML = "";
   const years = Object.keys(
@@ -358,6 +391,7 @@ function displayLods() {
 }
 
 function displayConsumptionUnits() {
+  el.filters.inputs.consumptionUnits.innerHTML = "";
   Object.keys(ConsumptionUnits).forEach((key) => {
     const unit = getTranslations().filters.consumptionUnits[key];
     const oe = document.createElement("option");
@@ -408,7 +442,7 @@ function displayRbfgAgeSexGroupFilter() {
   Object.keys(ageSexGroups).forEach((asg) => {
     const oe = document.createElement("option");
     oe.value = asg;
-    oe.text = asg;
+    oe.text = getAgeSexDisplay(asg);
     oe.selected = true;
     ageSexGroupEl.appendChild(oe);
   });
@@ -428,10 +462,11 @@ function displayRbfgRangeFilter() {
 function displayRbfAgeSexGroupFilter() {
   const ageSexGroupEl = el.graphs[GraphTypes.RBF].filters.ageSexGroup;
   ageSexGroupEl.innerHTML = "";
+
   Object.keys(ageSexGroups).forEach((asg) => {
     const oe = document.createElement("option");
     oe.value = asg;
-    oe.text = asg;
+    oe.text = getAgeSexDisplay(asg);
     ageSexGroupEl.appendChild(oe);
   });
 }
@@ -448,14 +483,14 @@ function displayRbfSortByFilter() {
   });
 }
 
-function displayOverrideFood(data) {
+function displayOverrideFood() {
   const overrideFoodEl = el.filters.inputs.overrideFood;
   overrideFoodEl.innerHTML = "";
   addPlaceholderToSelect(
     overrideFoodEl,
     getTranslations().filters.placeholders.select,
   );
-  Object.values(data.consumption).forEach((foodGroup) => {
+  Object.values(tdsData.consumption).forEach((foodGroup) => {
     Object.values(foodGroup).forEach((compositeValues) => {
       if (compositeValues.length == 0) {
         return;
@@ -471,7 +506,7 @@ function displayOverrideFood(data) {
   });
 }
 
-export function getFilteredTdsData(tdsData) {
+export function getFilteredTdsData() {
   const filters = getActiveFilters();
   let filteredTdsData = {
     ...tdsData,

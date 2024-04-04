@@ -36,10 +36,10 @@ export function getAgeSexGroupInfoForConsumptionEntry(ageSexGroup) {
   // Sex
   let sex = "";
   for (let i = 0; i < ageSexGroup.length; i++) {
-    if (ageSexGroup[i] == "F") {
+    if (ageSexGroup[i] == getTranslations().tdsData.values[sexGroups.F]) {
       sex = sexGroups.F;
     }
-    if (ageSexGroup[i] == "M") {
+    if (ageSexGroup[i] == getTranslations().tdsData.values[sexGroups.M]) {
       sex = sexGroups.M;
     }
   }
@@ -62,6 +62,14 @@ export function getAgeSex(age, sex) {
  */
 export function getAgeAndSex(ageSexGroup) {
   return ageSexGroup.split(" ");
+}
+
+/**
+ * Return age-sex group for display from domain specific age-sex group
+ */
+export function getAgeSexDisplay(ageSexGroup) {
+  let [age, sex] = getAgeAndSex(ageSexGroup);
+  return getAgeSex(age, getTranslations().tdsData.values[sex]);
 }
 
 /**
@@ -118,9 +126,9 @@ export function getExposureUnit(contaminentUnit, filters) {
   return (
     contaminentUnit.split("/")[0] +
     getTranslations().misc.consumptionUnitShort[
-      filters.usePerPersonPerDay
-        ? ConsumptionUnits.PERSON
-        : ConsumptionUnits.KGBW
+    filters.usePerPersonPerDay
+      ? ConsumptionUnits.PERSON
+      : ConsumptionUnits.KGBW
     ]
   );
 }
@@ -131,9 +139,9 @@ export function getConsumptionUnit(graphEntry, filters) {
     " " +
     getTranslations().misc.gramsShort +
     getTranslations().misc.consumptionUnitShort[
-      filters.usePerPersonPerDay
-        ? ConsumptionUnits.PERSON
-        : ConsumptionUnits.KGBW
+    filters.usePerPersonPerDay
+      ? ConsumptionUnits.PERSON
+      : ConsumptionUnits.KGBW
     ]
   );
 }
@@ -142,12 +150,11 @@ export function getConsumptionUnit(graphEntry, filters) {
  * Return year for raw contaminent entry
  */
 export function getYearForContaminentEntry(row) {
-  const year = new Date(
-    row[getTranslations().tdsData.headers[DataColumns.COLLECTION_DATE]] +
-      "T12:00:00",
-  )
-    .getFullYear()
-    .toString();
+  const year =
+    "20" +
+    row[getTranslations().tdsData.headers[DataColumns.COLLECTION_DATE]].split(
+      "/",
+    )[2];
   // Edge-cases discovered in data...
   if (
     row[getTranslations().tdsData.headers[DataColumns.PROJECT_CODE]].includes(
@@ -186,25 +193,13 @@ export function getCompositeInfoForContaminentEntry(row) {
 }
 
 /**
- * Return if the contaminent unit µg/g
- * The µ symbol is not read properly by d3.csv. If it is not one of the other 4 units found in the data, it is µg/g.
- */
-function isContaminentEntryMicroGrams(unit) {
-  return !["ng/g", "ng/ml", "pg/g", "Bq/Kg"].includes(unit);
-}
-
-/**
  * Return occurrence for raw contaminent entry
  */
 export function getOccurrenceForContaminentEntry(row) {
   let result = Number(
     row[getTranslations().tdsData.headers[DataColumns.RESULT_VALUE]],
   );
-  if (
-    isContaminentEntryMicroGrams(
-      row[getTranslations().tdsData.headers[DataColumns.UNIT]],
-    )
-  ) {
+  if (row[getTranslations().tdsData.headers[DataColumns.UNIT]] == "µg/g") {
     return result * 1000; // Convert to ng
   }
   return result;
@@ -212,10 +207,10 @@ export function getOccurrenceForContaminentEntry(row) {
 
 /**
  * Return unit for raw contaminent entry unit
- * Some entries of the phthalate di-(2-ethylhexyl) adipate (DEHA) use µg/g. The µ symbol is not read properly by d3.csv.
+ * Some entries of the phthalate di-(2-ethylhexyl) adipate (DEHA) use µg/g.
  */
 export function getUnitForContaminentEntry(unit) {
-  if (isContaminentEntryMicroGrams(unit)) {
+  if (unit == "µg/g") {
     unit = "ng/g";
   }
   return unit;
@@ -246,8 +241,8 @@ export function getMeanFlagForConsumptionEntry(meanFlag) {
   return meanFlag == "E"
     ? MeanFlag.FLAGGED
     : meanFlag == "F"
-    ? MeanFlag.SUPPRESSED
-    : MeanFlag.NONE;
+      ? MeanFlag.SUPPRESSED
+      : MeanFlag.NONE;
 }
 
 /**

@@ -1,6 +1,5 @@
 import {
   getContaminentFiles,
-  consumptionFiles,
   YearMin,
   YearMax,
   GraphTypes,
@@ -8,6 +7,7 @@ import {
   DataType,
   DataColumns,
   ConsumptionUnits,
+  getConsumptionFiles,
 } from "../config.js";
 import { readCSV } from "./dataLoader.js";
 import {
@@ -22,15 +22,11 @@ import {
 } from "../util/data.js";
 import {
   getActiveFilters,
-  getSelectedGraphType,
 } from "../ui/filterComponent.js";
 import { getTranslations } from "../translation/translation.js";
 
 /**
- * Load Total Diet Study Data into a known structured format
- *
- * Returns:
- * - An object containing TDS data in a structured format with the following properties:
+ * An object containing TDS data in a structured format with the following properties:
  *   - contaminant
  *     - chemicalGroup
  *       - chemical
@@ -65,7 +61,14 @@ import { getTranslations } from "../translation/translation.js";
  *       // ... (more composites)
  *     // ... (more food groups)
  */
-export async function getTDSData() {
+export let tdsData;
+
+/**
+ *
+ * Load Total Diet Study Data into a known structured format
+ *
+ */
+export async function loadTdsData() {
   const data = {
     contaminent: {},
     consumption: {},
@@ -109,13 +112,17 @@ export async function getTDSData() {
   let currentFoodGroup = null;
 
   // Prepare consumption data with food groups and relative composites
-  (await readCSV(consumptionFiles.desc)).rows.forEach((row) => {
+  (await readCSV(getConsumptionFiles().desc)).rows.forEach((row) => {
     const compositeDescription =
       row[
         getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_DESC]
       ];
-    if (!compositeDescription) {
-      // Entry is a food group if other entires are empty (the way the data is formatted)
+    const compositeContent =
+      row[
+        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CONTENT]
+      ];
+    if (!compositeDescription && !compositeContent) {
+      // Entry is a food group if other entrees are empty (the way the data is formatted)
       currentFoodGroup =
         row[
           getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
@@ -132,7 +139,7 @@ export async function getTDSData() {
   });
 
   // Fill consumption data
-  (await readCSV(consumptionFiles.perPerson)).rows.forEach((row) => {
+  (await readCSV(getConsumptionFiles().perPerson)).rows.forEach((row) => {
     // Only considering data surveyed for all people
     if (
       row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] !=
@@ -181,7 +188,7 @@ export async function getTDSData() {
   });
 
   // Fill the consumption data with values for mean grams per kg bw per day (these values located in different file)
-  (await readCSV(consumptionFiles.perKgBw)).rows.forEach((row) => {
+  (await readCSV(getConsumptionFiles().perKgBw)).rows.forEach((row) => {
     if (
       row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] !=
       getTranslations().tdsData.values.allPeople
@@ -217,7 +224,7 @@ export async function getTDSData() {
     }
   });
 
-  return data;
+  tdsData = data;
 }
 
 /**
@@ -236,12 +243,12 @@ export async function getRawFilteredConsumptionData() {
 
   for (const fileInfo of [
     {
-      file: consumptionFiles.perPerson,
+      file: getConsumptionFiles().perPerson,
       filename:
         getTranslations().dataTable.exportNames[ConsumptionUnits.PERSON],
     },
     {
-      file: consumptionFiles.perKgBw,
+      file: getConsumptionFiles().perKgBw,
       filename: getTranslations().dataTable.exportNames[ConsumptionUnits.KGBW],
     },
   ]) {

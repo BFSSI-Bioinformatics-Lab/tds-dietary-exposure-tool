@@ -10,7 +10,13 @@ import {
   getOccurrenceForContaminentEntry,
 } from "../util/graph.js";
 import { getTranslations } from "../translation/translation.js";
-import { formatNumber, formatPercent, getExposureUnit, getUserModifiedValueText } from "../util/data.js";
+import {
+  formatNumber,
+  formatPercent,
+  getAgeSexDisplay,
+  getExposureUnit,
+  getUserModifiedValueText,
+} from "../util/data.js";
 
 /**
  * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing age-sex groups
@@ -100,7 +106,7 @@ export function getRbasg(tdsData, filters) {
       rbasgData[entry][sex].percentUnderLod =
         (rbasgData[entry][sex].numContaminentsUnderLod /
           rbasgData[entry][sex].numContaminents) *
-          100 || 0;
+        100 || 0;
     });
   });
 
@@ -122,7 +128,7 @@ export function formatRbsagToDataTable(rbasgData, filters) {
       }
       dataTableData.push({
         [headers.chemical]: filters.chemical,
-        [headers.ageSexGroup]: row.ageSexGroup,
+        [headers.ageSexGroup]: getAgeSexDisplay(row.ageSexGroup),
         [headers.exposure]: formatNumber(row.exposure, filters),
         [headers.exposureUnit]: getExposureUnit(row.contaminentUnit, filters),
         [headers.years]: row.years.join(", "),
@@ -148,25 +154,25 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
 
   const groupedBarData = {
     children: [],
-    titleY: `${
-      getTranslations().graphs[GraphTypes.RBASG].range
-    } (${getExposureUnit(contaminentUnit, filters)})`,
+    titleY: `${getTranslations().graphs[GraphTypes.RBASG].range
+      } (${getExposureUnit(contaminentUnit, filters)})`,
     titleX:
       getTranslations().graphs[GraphTypes.RBASG].domain[
-        filters.showByAgeSexGroup
-          ? RbasgDomainFormat.AGESEX
-          : RbasgDomainFormat.YEAR
+      filters.showByAgeSexGroup
+        ? RbasgDomainFormat.AGESEX
+        : RbasgDomainFormat.YEAR
       ],
   };
 
   Object.keys(rbasgData).forEach((entry) => {
     Object.keys(rbasgData[entry]).forEach((sex) => {
       const row = rbasgData[entry][sex];
+      const sexDisplay = getTranslations().tdsData.values[sex];
       groupedBarData.children.push({
         entry: entry,
-        group: sex,
+        group: sexDisplay,
         value: row.exposure,
-        color: colorMapping[sex],
+        color: colorMapping[sexDisplay],
         info:
           getTranslations().graphs.info.exposure +
           ": " +
@@ -178,7 +184,7 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
             ? getTranslations().graphs.info.ageSexGroup
             : getTranslations().graphs.info.year) +
           ": " +
-          (filters.showByAgeSexGroup ? entry + " " + sex : entry),
+          (filters.showByAgeSexGroup ? entry + " " + sexDisplay : entry),
       });
     });
   });

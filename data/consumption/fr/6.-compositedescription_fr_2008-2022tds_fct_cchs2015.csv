@@ -1,0 +1,180 @@
+﻿Code de composite (EAT_AC_Code),Description du composite alimentaire (EAT_AC_étiquette),La description des aliments inclus dans la mise en correspondance des composites
+Produits laitiers,,
+AA01,Lait entier,Comprends le lait de chèvre/Ne comprends pas le lait en poudre
+AA02,Lait 2 %,Ne comprends pas le lait en poudre
+AA03,Lait 1 %,Ne comprends pas le lait en poudre
+AA04,Lait écrémé,"Comprends le lait écrémé 0,5 %/Ne comprends pas le lait en poudre"
+AA05,Lait évaporé en conserve,Comprends tous les types de laits évaporés
+AA06,Crème,Comprends tous les types de crèmes incluant la crème fouettée. Ne comprends pas la crème sure et les substituts de crème (colorant)
+AA07,Crème glacée,"Comprends tous les types de crèmes glacées (molle, régulière et légère), les fantaisies de crème glacée (sandwich, cornet, barre/bâton) et les gâteaux à la crème glacée."
+,,Recettes de coupe glacée décomposée au niveau des ingrédients.
+AA08,Yogourt,"Comprends tous les types de yogourts (de lait de chèvre, de lait de soja, pour bébé, à boire et les yogourts de type grec). Comprends aussi les yogourts glacés et les trempettes à base de yogourt, ex : tzatziki."
+,,Ne comprends pas le kéfir.
+AA09,Fromage,Comprends tous les fromages qui ne sont pas inclus dans les composites suivants et incluant les fromages à pâte molle comme le fromage de chèvre et la ricotta. Ne comprends pas le fromage à la crème
+AA10,Fromage cottage,Comprends tous les fromages cottage
+AA11,Fromage fondu,"Comprends tous les fromages fondus (en tranche, en pain, à tartiner)"
+AA12,Beurre,"Comprends le beurre salé et non salé, léger et ordinaire"
+AA13,Lait au chocolat 1 %,Comprends toutes les teneurs en matière grasse du lait au chocolat
+AA14,Babeurre 1 %,Comprends toutes les teneurs en matière grasse du babeurre
+Viandes,,
+BB01,Bifteck,Comprends toutes les coupes de biftecks 
+BB02,Rôti de bœuf,Comprends toutes les coupes de rôtis de bœuf
+BB03,Bœuf haché,"Comprends tous les types de bœuf haché (extra-maigre, maigre, mi-maigre et régulier)"
+BB04,Porc frais,"Comprends tous les types de porc frais (côtelettes, rôti, côtes, haché)"
+BB05,Porc salé,"Comprends le jambon, le bacon et les tranches pour le déjeuner"
+BB06,Escalopes de veau,
+,,Comprends toutes les coupes de veau
+BB07,Agneau,Comprends toutes les coupes d’agneau
+BB08,Viandes à sandwich_viandes froides,Comprends tous les types de viandes à sandwich de porc et de bœuf. Ne comprends pas les viandes à sandwich à base de volaille.
+BB09,Viandes froides en conserve,Comprends le jambon en conserve et le bœuf salé en conserve
+BB10,Abats ,"Comprends tous les types d’abats, de bœuf, de veau, d’agneau et de porc (cœur, reins, foie). Ne comprends pas les abats de volaille"
+BB11,Saucisses fraîches et fumées,Comprends tous les types de saucisses fraîches et fumées et saucisses de Francfort à base de porc et de bœuf. Ne comprends pas les saucisses à base de volaille.
+Œufs et volaille,,
+CC01,Œufs,"Comprends tous les œufs de volaille (poulet, canard, oie, dinde), blanc d’œuf et jaune d’œuf. Les omelettes, les quiches et les autres plats à base d’œufs sont décomposés au niveau des ingrédients."
+CC02,Volaille_poulet et dinde,"Comprends toutes les coupes de poulet et de dinde. Ne comprends pas tous les autres types de volaille (c.-à-d. oie, caille, faisan, canard)"
+CC03,Pâtés de foie de volaille,Comprends tous les types de pâtés
+Poissons et fruits de mer,,
+DD01,Poisson marin,"Comprends tous les poissons marins, incluant les poissons enrobés, fumés, salés et marinés"
+DD02,Poissons d’eau douce,"Comprends tous les poissons d’eau douce, incluant les poissons enrobés"
+DD03,Poisson en conserve,"Comprends tous les types de poisson en conserve (thon, saumon, sardines). Ne comprends pas les mollusques et les crustacés en conserve. "
+DD04,Les mollusques et crustacés,"Comprends tous les mollusques et crustacés, incluant ceux en conserve, enrobés, séchés et marinés. Les mollusques et crustacés farcis sont décomposés au niveau des ingrédients"
+Soupes,,
+EE01,Soupes en conserve avec viande ,"Comprends tous les types de soupes avec viande, incluant les soupes à base de crème"
+EE02,Soupes en conserve à base de crème,Comprends toutes les soupes en conserve à base de crème excepté les soupes avec viande. Comprends également les soupes au fromage et les soupes condensées préparées avec du lait. 
+EE03,Soupes_bouillons en conserve,Comprends tous les types de consommés et de bouillons en conserve
+EE04,Soupes déshydratées,"Comprends tous les types de soupes et de bouillons déshydratés, incluant les soupes déshydratées à base de crème"
+Pains et Grains,,
+FF01,Pain blanc,"Comprends tous les types de pains blancs, incluant le pain aux raisins, le pain à l’ail et le pain avec fibres ajoutées"
+FF02,Pain de blé entier,Comprends les pains de blé entier à 60 % et les pains de grains entiers. Ne comprends pas le pain multigrains
+FF03,Pain de seigle,Comprends le pain de seigle et de seigle noir
+FF04,Gâteau,Comprends tous les types de gâteaux avec ou sans glaçage. Comprends également les brownies. 
+FF05,Céréales de blé à cuire,"Comprends la crème de blé ordinaire, rapide et instantanée"
+FF06,Céréales de maïs,"Comprends les céréales de maïs soufflé, les carrés de maïs et les flocons de maïs"
+FF07,Céréales d’avoine,"Comprends les flocons d’avoine instantanés, rapides, aromatisés et nature"
+FF08,Céréales de riz et de son,"Comprends tous les types de céréales de riz et de son, tels que les flocons de son de blé avec ou sans raisins secs et les céréales de riz soufflé"
+FF09,Biscuits,Comprends tous les types de biscuits et de barres
+FF10,Craquelins,"Tous les types de craquelins, pains plats, biscottes et gressins"
+FF11,Danoises_beignes et croissants,"Comprends les beignes, les danoises, les beignets de fruits, les strudels, les chaussons et les brioches avec ou sans glaçage et garnitures"
+FF12,Farine blanche (de blé),Comprends la farine à gâteaux et boulangeable. Ne comprends pas la farine de blé entier
+FF13,Muffins,"Comprends tous les types de muffins, comprends également les pains éclairs comme le pain aux bananes. "
+FF14,Crêpes et gaufres,"Comprends tous les types de crêpes et de gaufres, y compris celles surgelées et préparées à partir d’un mélange. "
+FF15,Pâtes_plats composés,"Comprends les plats à base de pâtes avec ou sans viande comme les pâtes farcies avec de la viande ou de la sauce tomate, la lasagne et le macaroni au fromage. Comprends les mélanges secs préparés. "
+FF16,Pâtes nature,"Comprends tous les types de pâtes nature (blé entier, soja, riz, œufs, légumes)"
+FF17,Tarte aux pommes,Comprends la tarte aux pommes à une ou deux croûtes ainsi que la tarte aux pommes frites
+FF18,Tartes_autres,"Comprends tous les autres types de tartes comme la tarte aux fruits, la tarte au sucre et la tarte aux pacanes"
+FF19,Riz,"Comprends tous les types de riz comme le riz blanc, brun, instantané, étuvé et aromatisé. Ne comprends pas le riz sauvage."
+FF20,Petits pains et pains mollets,Comprends tous les types de petits pains et de pains mollets y compris les pains à hot-dog et les pains à hamburgers
+FF21,Pains_autres,"Comprends les pains pitas, les tortillas, les pains naans, les muffins anglais, les bagels et les biscuits à la poudre à pâte"
+Légumes,,
+GG01,Fèves au lard en conserve,Comprends tous les types de fèves au lard avec ou sans viande. Comprends les haricots frits
+GG02,Haricots,"Comprends les haricots mange-tout verts/jaunes, frais, en conserve et surgelés"
+GG03,Betteraves,"Comprends les betteraves fraîches, en conserve et marinées"
+GG04,Brocoli,"Comprends le brocoli surgelé, cru et cuit. Inclus aussi le brocoli chinois."
+GG05,Chou,"Comprends tous les types de choux (pak-choï, napa, chou rouge, chou de Chine). Inclus aussi la choucroute et le kimchi. Ne comprends pas le chou vert frisé"
+GG06,Carottes,"Comprends les carottes en conserve, surgelées, crues et cuites"
+GG07,Choux-fleurs,"Comprends les choux-fleurs surgelés, crus et cuits."
+GG08,Céleri,
+GG09,Maïs,"Comprends le maïs frais, surgelé et en conserve"
+GG10,Concombres,Comprends les cornichons
+GG11,Laitue,"Comprends tous les types de laitues (Boston, romaine, iceberg, laitue frisée rouge, mesclun/mélange printanier). Ne comprends aucun autre type de légumes-feuilles"
+GG12,Champignons,"Comprends tous les types de champignons, en conserve, séchés, crus et cuits"
+GG13,Oignons,"Comprends tous les types d’oignons, crus et cuits"
+GG14,Pois,"Comprends les pois verts, les pois mange-tout, les pois frais, surgelés et en conserve"
+GG15,Poivrons,"Comprends les poivrons et les piments forts, frais et marinés"
+GG16,Pommes de terre bouillies,Comprends les pommes de terre bouillies avec ou sans la pelure et les pommes de terre pilées préparées à partir d’un mélange sec
+GG17,Pommes de terre_croustilles,Comprends toutes les variétés de croustilles
+GG18,Rutabaga,"Comprends le rutabaga et le navet frais, surgelé et mariné"
+GG19,Jus de légumes en conserve,"Comprends le jus de tomate, le jus de légumes et le jus de carottes"
+GG20,Tomates,Comprends les tomates fraîches
+GG21,Tomates en conserve et sauces tomate en conserve,"Comprends les sauces tomates et les tomates en conserve. Comprends également la pâte de tomate, la sauce à pizza, la sauce pour pâtes à base de tomates et la sauce marinara"
+GG22,Épinards,"Comprends les épinards en conserve, surgelés, crus et cuits"
+GG23,Asperges,Comprends les asperges surgelées et en conserve
+GG24,Choux de Bruxelles,
+GG26,Pommes de terre au four,Comprends les pommes de terre au four avec ou sans la pelure et les pommes de terre rôties. 
+GG27,Croustilles de maïs,"Comprends les croustilles extrudées à base de maïs, les croustilles de maïs et les coquilles à taco dures"
+Fruits,,
+HH01,Jus de pommes en conserve,"Comprends le jus de pomme pur à 100 %, le jus de pomme en conserve, en bouteille ou concentré et surgelé"
+HH02,Compote de pommes en conserve,Comprends la compote de pommes sucrée et non sucrée ainsi que la compote de pomme avec d’autres fruits
+HH03,Pommes,"Comprends les pommes crues, cuites et en conserve. Ne comprends pas les pommes séchées"
+HH04,Bananes,Ne comprends pas les bananes séchées
+HH05,Bleuets,"Comprends les bleuets crus, cuits, en conserve et surgelés"
+HH06,Cerises,"Comprends les cerises fraîches, surgelées et en conserve"
+HH07,Agrumes crus,"Comprends les clémentines, les mandarines, les oranges, les pamplemousses, la lime, le citron, crus et en conserve. Comprends le jus d’orange, de citron et de lime faits de fruits frais"
+HH08,Jus d’agrumes surgelé,Comprends le jus surgelé d’orange et de pamplemousse 
+HH09,Jus d’agrumes en conserve,"Comprends le jus d’orange, de citron, de lime et de pamplemousse"
+HH10,Jus de raisin embouteillé,Comprends le jus en conserve et en bouteille
+HH11,Raisins,Ne comprends pas les raisins secs
+HH12,Melons,Comprends tous les types de melons
+HH13,Pêches,"Comprends les pêches fraîches, surgelées et en conserve"
+HH14,Poires,Comprends les poires fraîches et en conserve
+HH15,Ananas en conserve,"Comprends les ananas frais, surgelés et en conserve. Ne comprends pas les ananas confits"
+HH16,Prunes et pruneaux,"Comprends les prunes et pruneaux frais, en conserve et séchés"
+HH17,Raisins secs,
+HH18,Framboises,"Comprends les framboises fraîches, surgelées et en conserve"
+HH19,Fraises,"Comprends les fraises fraîches, surgelées et en conserve"
+HH20,Kiwis,
+HH21,Abricots,"Comprends les abricots frais, surgelés, en conserve et séchés"
+HH22,Boisson aux fruits (cocktails),"Comprends les boissons aux fruits, limonades et nectars en conserve, en bouteille, en poudre et en concentré surgelé"
+Matières grasses et sauces,,
+II01,Huiles à friture et huiles à salade,"Comprends les huiles végétales, le saindoux, le shortening et le ghee"
+II02,Margarine,Comprends tous les types de margarine
+II04,Mayonnaise,Comprends la mayonnaise et toutes les sauces de type mayonnaise
+II07,Vinaigrette,Comprends tous les types de vinaigrettes
+Grignotines et tartinades,,
+JJ01,Barres de chocolat,"Comprends tous les types de barres de chocolat et les noix, raisins secs et bonbons enrobés de chocolat"
+JJ03,Dessert à base de gélatine,Comprends les desserts à base de gélatines prêts-à-manger et préparés à partir d’un mélange
+JJ04,Miel en bouteille,
+JJ05,Confitures,"Comprends les confitures, la gelée et la marmelade"
+JJ07,Beurre d’arachide,Comprends tous les types de beurres d’arachides. Ne comprends pas les autres beurres de noix
+JJ08,Pouding,"Comprends tous les types de poudings, incluant ceux prêts-à-manger et préparés à partir d’un mélange"
+JJ09,Sucre blanc,"Comprends le sucre blanc, le sucre brun et le sucre à glacer"
+JJ10,Sirop,"Comprends tous les types de sirops de tables, de sirop de maïs et de sirop d’érable. Ne comprends pas les sirops de chocolat."
+JJ11,Graines écalées,"Comprends toutes les graines. Comprends aussi le tahini, le halva et les croquettes de graines de sésame"
+JJ12,Noix,"Comprends tous les types de noix, incluant les noix givrées ou pralinées et le mélange montagnard"
+JJ13,Gomme à mâcher,
+JJ15,Bonbons (réglisse et bonbons gélifiés),"Comprends tous les types de bonbons comme les bonbons mous et durs, les caramels anglais, les brisures au caramel écossais, les guimauves et la pâte de fruits déshydratée"
+Boissons,,
+KK01,Boissons alcoolisées_bières,"Comprends la bière ordinaire, légère et la bière sans alcool "
+KK02,Boissons alcoolisées_vin,"Comprends le vin blanc et rouge, le vin de dessert, le vin sans alcool et la sangria"
+KK04,Café,"Comprends le café infusé, instantané, ordinaire et décaféiné"
+KK05,Boissons gazeuses en canette,Comprends toutes les boissons gazeuses ordinaires et diètes 
+KK06,Thé,"Comprends le thé instantané, infusé et le thé glacé. Ne comprends pas les tisanes"
+KK07,Boisson au soja enrichie,"Comprends tous les types de boissons à base de plantes (riz, soja, amande, noix de cajou et les boissons à la noix de coco)"
+Aliments pour bébés,,
+LL01,Céréales mélangées,"Comprends les céréales de blé, d’orge, d’avoine, de riz, de soja et de grains mélangés"
+,,Y compris les mélanges de céréales avec des fruits
+LL02,Desserts,Comprends les desserts de types purées de fruits. Ne comprends pas les fruits purs
+LL03,Repas_céréale + légume + viande,"Comprends les repas faits avec des grains, des légumes et de la viande (bœuf, poulet ou dinde)"
+LL04,Repas_viande ou volaille + légumes,"Comprends les repas faits avec de la viande (bœuf, poulet ou dinde) et des légumes"
+LL05,Préparation pour nourrissons à base de lait,Tous les types de préparations pour nourrissons à base de lait
+LL06,Préparation pour nourrissons à base de soja,Tous les types de préparations pour nourrissons à base de soja
+LL07,Fruits_pommes ou pêche,Comprends tous les types de fruits
+LL08,Viande_volaille ou œufs,Comprends tous les types de viande et de volaille
+LL09,Légumes,Comprends tous les types de légumes
+Aliments allant au four à micro-ondes,,
+MM01,Maïs soufflé pour micro-ondes,"Comprend le maïs soufflé allant au four à micro-ondes, le maïs soufflé prêt-à-manger ainsi que le maïs soufflé nature et aromatisé"
+MM02,Repas surgelés,Comprends tous les types de repas surgelés
+Repas-minute,,
+NN01,Pizza,Comprends tous les types de pizzas. Comprends aussi les roulés de pizza/bouchées de pizza et les calzones. 
+NN02,Pommes de terre frites,"Comprends tous les types de pommes de terre frites, surgelées, fraîches ou qui proviennent de restaurants."
+,,Ne comprends pas les frites de patates douces
+NN03,Hamburger,Comprends les hamburgers et les hamburgers au fromage avec tous les types de garnitures 
+NN04,Hamburgers de poulet,Comprends les hamburgers de poulet avec ou sans fromage avec tous les types de garnitures
+NN05,Hot-dogs,"Comprends les hot-dogs sur pain, avec ou sans fromage et condiments"
+NN06,Pépites de poulet,Comprends les pépites de poulet et les filets de poitrine de poulet
+NN07,Chow mein au bœuf pour emporter,"Comprends tous les types de chow meins (crevette, porc, poulet ou bœuf), avec ou sans nouilles."
+NN08,Riz frit (poulet et légumes),"Comprends tous les types de riz frit (porc, poulet, crevette, sans viande)"
+NN09,Sandwichs « petit-déjeuner » préparés ,"Comprends tous les types de sandwichs « petit-déjeuner » sur muffin anglais, biscuits, pains ou croissants. Comprends aussi les burritos « petit-déjeuner »."
+NN10,Sandwichs de restauration rapide,"Comprends tous les types de sandwichs, sous-marins et sandwichs roulés"
+Ingrédients et eaux,,
+PP01,Condiments,"Comprends tous les types de condiments comme le ketchup, la moutarde, la sauce BBQ, la sauce aux arachides, la sauce teriyaki, la sauce cocktail et la sauce aux prunes"
+PP02,Sel,
+PP03,Poudre à pâte,
+PP04,Levure,
+PP05,Extrait de vanille,
+PP06,Fines herbes et épices,Comprends tous les types d’épices et d’herbes séchées
+PP07,Sauce soja,
+PP09,Eau du robinet_zone d’échantillonnage (où les échantillons ont été achetés),
+PP10,Eau de source naturelle,Comprend l’eau minérale et l’eau de source gazéifiée et non gazéifiée. Comprends l’eau aromatisée 
+PP11,Eau minérale naturelle,Cette consommation est prise en compte dans le PP10 et n'est pas présentée séparément.
+PP13,Eau du robinet_le laboratoire de préparation d’aliments d’Ottawa,"Cette consommation est prise en compte dans les composites alimentaires individuels (par exemple, la soupe) et n'est pas présentée séparément."

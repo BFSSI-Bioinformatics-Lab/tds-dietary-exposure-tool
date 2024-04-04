@@ -28,6 +28,7 @@ import {
 } from "./filterComponent.js";
 import { displayDataTable } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
+import { getAgeSexDisplay } from "../util/data.js";
 
 /**
  * Display a graph based on the selected type
@@ -43,13 +44,14 @@ export function displayGraph(data) {
   const foodGroupColorMapping = generateColorMapping(
     Object.keys(data.consumption),
   );
-  const sexGroupColorMapping = generateColorMapping(Object.keys(sexGroups));
+  const sexGroupColorMapping = generateColorMapping(
+    Object.keys(sexGroups).map((s) => getTranslations().tdsData.values[s]),
+  );
 
   const graphMapping = {
     [GraphTypes.RBASG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${
-        filters.chemical
-      }, (${filters.years.join(", ")})`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${filters.chemical
+        }, (${filters.years.join(", ")})`,
       colorLegendData: sexGroupColorMapping,
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
@@ -59,9 +61,10 @@ export function displayGraph(data) {
       hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title} ${
-        filters.chemical
-      }, ${filters.ageSexGroups}, \(${filters.years.join(", ")}\)`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title} ${filters.chemical
+        }, ${getAgeSexDisplay(filters.ageSexGroups[0])}, \(${filters.years.join(
+          ", ",
+        )}\)`,
       colorLegendMapping: foodGroupColorMapping,
       getDataFn: getRbf,
       getGraphDataFn: formatRbfToSunburst,
@@ -71,9 +74,8 @@ export function displayGraph(data) {
       hasReferenceLine: false,
     },
     [GraphTypes.RBFG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${
-        filters.chemical
-      }, \(${filters.years.join(", ")}\)`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${filters.chemical
+        }, \(${filters.years.join(", ")}\)`,
       colorLegendData: foodGroupColorMapping,
       getDataFn: getRbfg,
       getGraphDataFn: formatRbfgToStackedBar,
@@ -104,6 +106,8 @@ export function displayGraph(data) {
     graphData.hr = filters.referenceLine;
   }
   const graphSvg = getSvgFn(graphData);
+
+  el.graphs.container.classList.remove(classs.HIDDEN);
 
   el.graphs.title.innerHTML = graphTitle;
   el.graphs.graph.innerHTML = "";

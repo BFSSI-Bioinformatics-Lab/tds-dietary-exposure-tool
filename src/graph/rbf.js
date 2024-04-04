@@ -8,6 +8,7 @@ import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
   formatPercent,
+  getAgeSexDisplay,
   getConsumptionUnit,
   getExposureUnit,
   getUserModifiedValueText,
@@ -106,7 +107,7 @@ export function formatRbfToDataTable(rbfData, filters) {
 
     return {
       [headers.chemical]: filters.chemical,
-      [headers.ageSexGroup]: row.ageSexGroup,
+      [headers.ageSexGroup]: getAgeSexDisplay(row.ageSexGroup),
       [headers.foodGroup]: row.foodGroup,
       [headers.composite]: compositeInfo,
       [headers.percentExposure]: formatPercent(row.percentExposure),

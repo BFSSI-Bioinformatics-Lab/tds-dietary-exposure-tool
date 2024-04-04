@@ -11,18 +11,32 @@ export let userLanguage =
 export const toggleUserLanguage = () =>
   (userLanguage = userLanguage == language.EN ? language.FR : language.EN);
 
-export const consumptionFiles = Object.assign(
-  {},
-  ...Object.entries({
-    desc: "6.-compositedescription_en_2008-2022tds_fct_cchs2015.csv",
-    perKgBw:
-      "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_en.csv",
-    perPerson:
-      "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_en.csv",
-  }).map(([key, value]) => ({
-    [key]: "./data/consumption/" + value,
-  })),
-);
+const consumptionFiles = {
+  [language.EN]: Object.assign(
+    {},
+    ...Object.entries({
+      desc: "6.-compositedescription_en_2008-2022tds_fct_cchs2015.csv",
+      perKgBw:
+        "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_en.csv",
+      perPerson:
+        "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_en.csv",
+    }).map(([key, value]) => ({
+      [key]: "./data/consumption/en/" + value,
+    })),
+  ),
+  [language.FR]: Object.assign(
+    {},
+    ...Object.entries({
+      desc: "6.-compositedescription_fr_2008-2022tds_fct_cchs2015.csv",
+      perKgBw: "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_fr.csv",
+      perPerson: "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_fr.csv",
+    }).map(([key, value]) => ({
+      [key]: "./data/consumption/fr/" + value,
+    })),
+  ),
+};
+
+export const getConsumptionFiles = () => consumptionFiles[userLanguage];
 
 const contaminentFiles = {
   [language.EN]: [
@@ -36,14 +50,14 @@ const contaminentFiles = {
     "Total Diet Study Trace Elements results 1993-2018.csv",
     "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
     "Total Diet Study PFAS results 2016-2017.csv",
-  ].map((file) => "./data/contaminent/" + file),
+  ].map((file) => "./data/contaminent/en/" + file),
   [language.FR]: [
     "PFAS TDS 2016 public French(Export).csv",
     "PFAS TDS 2017 public French(Export).csv",
     "Radionuclide TDS 2022 public French(Export).csv",
     "Radionuclides TDS 2021 public French(Export).csv",
     "Trace Elements TDS 1993-2018 public French(Les résultats des Micro élément).csv",
-  ].map((file) => "./data/contaminent/" + file),
+  ].map((file) => "./data/contaminent/fr/" + file),
 };
 
 export const getContaminentFiles = () => contaminentFiles[userLanguage];
@@ -57,6 +71,7 @@ export const DataColumns = {
   /* Consumption */
   MAPPING_COMPOSITE_DESC: "MAPPING_COMPOSITE_DESC",
   MAPPING_COMPOSITE_CODE: "MAPPING_COMPOSITE_CODE",
+  MAPPING_COMPOSITE_CONTENT: "MAPPING_COMPOSITE_CONTENT",
   POPULATION: "POPULATION",
   POPULATION_GROUP: "POPULATION_GROUP",
   COMPOSITE_DESC: "COMPOSITE_DESC",

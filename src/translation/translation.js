@@ -7,6 +7,7 @@ import {
   RbfSortByFormat,
   RbfgRangeFormat,
   language,
+  sexGroups,
   userLanguage,
 } from "../config.js";
 
@@ -232,6 +233,8 @@ export function getTranslations() {
           [DataColumns.MAPPING_COMPOSITE_DESC]:
             "Composite Description (TDS_FC_Label)",
           [DataColumns.MAPPING_COMPOSITE_CODE]: "Composite Code (TDS_FC_Code)",
+          [DataColumns.MAPPING_COMPOSITE_CONTENT]:
+            "Description of the content included in composite",
           [DataColumns.POPULATION]: "population",
           [DataColumns.POPULATION_GROUP]: "Population_group",
           [DataColumns.COMPOSITE_DESC]: "TDS_FC_label",
@@ -253,6 +256,9 @@ export function getTranslations() {
           [DataColumns.MDL]: "MDL",
         },
         values: {
+          [sexGroups.F]: "F",
+          [sexGroups.M]: "M",
+          [sexGroups.B]: "B",
           allPeople: "All people",
           radionuclides: "Radionuclides",
         },
@@ -269,35 +275,206 @@ export function getTranslations() {
 
     [language.FR]: {
       header: {
+        title: "<b> Dietary Exposure to Chemicals </b> from Health Canada (fr)",
+        information: {
+          howToUseButton: "? How to Use (fr)",
+          howToUseContent: [],
+          moreInfoButton: "* Data Source (fr)",
+          moreInfoContent: [],
+        },
         language: "Passer à l'anglais",
+        subtitle:
+          "How much of various chemicals is the Canadian population exposed to through their diet? And which foods and food groups contribute the most? (fr)",
       },
+
+      filters: {
+        titles: {
+          title: "Select Graph Type and Chemical: (fr)",
+          chemicalGroup: "Chemical Group (fr)",
+          chemical: "Chemical (fr)",
+          years: "Year(s) (fr)",
+          lod: "Occurrence &ltLOD = (fr)",
+          lodSubtitle: "LOD Range:  (fr)",
+          units: "Units (fr)",
+          ageGroup: "Age Group (fr)",
+          domain: "Domain (fr)",
+          ageSexGroup: "Age-Sex Group (fr)",
+          range: "Range Format (fr)",
+          sortBy: "Sort By (fr)",
+          referenceLine: "Limit (fr)",
+          overrideFood: "Food (fr)",
+          overrideValue: "New Value (fr)",
+        },
+        placeholders: {
+          select: "Select (fr)",
+          none: "None (fr)",
+        },
+        lods: {
+          [LODs[0]]: "0 (fr)",
+          [LODs["1/2 LOD"]]: "1/2 LOD (fr)",
+          [LODs.LOD]: "LOD (fr)",
+          [LODs.Exclude]: "Exclude (fr)",
+        },
+        consumptionUnits: {
+          [ConsumptionUnits.PERSON]: "Per Person per Day (fr)",
+          [ConsumptionUnits.KGBW]: "Per kg Bodyweight per Day (fr)",
+        },
+        rbasgDomainFormat: {
+          [RbasgDomainFormat.AGESEX]: "Age-Sex (fr)",
+          [RbasgDomainFormat.YEAR]: "Year (fr)",
+        },
+        rbfgRangeFormat: {
+          [RbfgRangeFormat.PERCENT]: "Percentages (fr)",
+          [RbfgRangeFormat.ABSOLUTE]: "Absolute (fr)",
+        },
+        rbfSortByFormat: {
+          [RbfSortByFormat.FOOD]: "Food (fr)",
+          [RbfSortByFormat.GROUP]: "Food Group (fr)",
+        },
+        sandbox: {
+          openButton: "Open Sandbox (fr)",
+          closeButton: "Close (fr)",
+          title: "Sandbox Environment (fr)",
+          referenceLineTitle: "Add Reference Line to Graph: (fr)",
+          overrideTitle: "Override Occurrence Value(s): (fr)",
+        },
+      },
+
+      graphs: {
+        info: {
+          exposure: "Dietary Exposure (fr)",
+          percentExposure: "% Dietary Exposure (fr)",
+          occurrence: "Contaminent Occurrence (mean) (fr)",
+          foodConsumption: "Mean Food Composite Consumption (fr)",
+          ageSexGroup: "Age-Sex Group (fr)",
+          ageGroup: "Age Group (fr)",
+          year: "Year (fr)",
+        },
+        legend: {
+          ageGroup: "Age Groups (fr)",
+          foodGroup: "Food Groups (fr)",
+        },
+        [GraphTypes.RBASG]: {
+          title: "Dietary Exposure Estimate by Age-Sex Group for (fr)",
+          range: "Dietary Exposure (fr)",
+          domain: {
+            [RbasgDomainFormat.AGESEX]: "Age Group(s) (fr)",
+            [RbasgDomainFormat.YEAR]: "Year (fr)",
+          },
+        },
+        [GraphTypes.RBF]: {
+          title: "Dietary Exposure Estimate by Food for (fr)",
+        },
+        [GraphTypes.RBFG]: {
+          title: "Dietary Exposure Estimate by Food Group for (fr)",
+          range: {
+            [RbfgRangeFormat.PERCENT]: "% of Total Exposure (fr)",
+            [RbfgRangeFormat.NUMBER]: "Dietary Exposure (fr)",
+          },
+          domain: "Age-Sex Groups (fr)",
+        },
+      },
+
+      dataTable: {
+        title: "Data Tables (fr)",
+        buttons: {
+          downloadContaminentData: "Download Contaminent Data (fr)",
+          downloadConsumptionData: "Download Consumption Data (fr)",
+          downloadDataTable: "Download Calculations (Found Below) (fr)",
+        },
+        exportNames: {
+          [ConsumptionUnits.PERSON]: "Food Consumption per Person per Day (fr)",
+          [ConsumptionUnits.KGBW]:
+            "Food Consumption per kg Bodyweight per Day (fr)",
+          dataExport: "Data Export (fr)",
+          calculations: "Dietary Exposure Calculations (fr)",
+        },
+        headers: {
+          chemical: "Chemical (fr)",
+          ageSexGroup: "Age-sex Group (fr)",
+          foodGroup: "Food Group (fr)",
+          composite: "Food Name and Code (fr)",
+          percentExposure: "Percent Total Exposure (fr)",
+          exposure: "Exposure Estimate (fr)",
+          exposureUnit: "Unit (fr)",
+          years: "Year(s) (fr)",
+          percentUnderLod: "% <LOD (fr)",
+          treatment: "Treatment of <LOD (fr)",
+          modified: "User Modified Values (fr)",
+          flagged: "'E' Flag (fr)",
+          suppressed: "'F' Supressed (fr)",
+        },
+        values: {
+          occurrence: "Occurrence (fr)",
+        },
+      },
+
+      about: {
+        title: "About the Tool (fr)",
+        table: [
+          {
+            header: "First Row Example (fr)",
+            value:
+              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. (fr)",
+          },
+          {
+            header: "More for the Second Row (fr)",
+            value:
+              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. (fr)",
+          },
+          {
+            header: "Third Row with Random Text (fr)",
+            value:
+              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. (fr)",
+          },
+        ],
+      },
+
+      misc: {
+        noDataMsg: "No data available (fr)",
+        na: "NA (fr)",
+        consumptionUnitShort: {
+          [ConsumptionUnits.KGBW]: "/kg BW/day (fr)",
+          [ConsumptionUnits.PERSON]: "/person/day (fr)",
+        },
+        gramsShort: "g (fr)",
+      },
+
       tdsData: {
         headers: {
           /* Consumption */
-          [DataColumns.MAPPING_COMPOSITE_DESC]: "",
-          [DataColumns.MAPPING_COMPOSITE_CODE]: "",
-          [DataColumns.POPULATION]: "",
-          [DataColumns.POPULATION_GROUP]: "",
-          [DataColumns.COMPOSITE_DESC]: "",
-          [DataColumns.COMPOSITE_CODE]: "",
-          [DataColumns.MEAN_FLAG]: "",
-          [DataColumns.MEAN_G_PPPD]: "",
-          [DataColumns.MEAN_G_PKGBWPD]: "",
+          [DataColumns.MAPPING_COMPOSITE_DESC]:
+            "Description du composite alimentaire (EAT_AC_étiquette)",
+          [DataColumns.MAPPING_COMPOSITE_CODE]:
+            "Code de composite (EAT_AC_Code)",
+          [DataColumns.MAPPING_COMPOSITE_CONTENT]:
+            "La description des aliments inclus dans la mise en correspondance des composites",
+          [DataColumns.POPULATION]: "population",
+          [DataColumns.POPULATION_GROUP]: "Groupe_de_population",
+          [DataColumns.COMPOSITE_DESC]: "EAT_AC_étiquette",
+          [DataColumns.COMPOSITE_CODE]: "EAT_AC_Code",
+          [DataColumns.MEAN_FLAG]: "Moy_indicateur",
+          [DataColumns.MEAN_G_PPPD]: "Moy_grammes_par_personne_par_jour",
+          [DataColumns.MEAN_G_PKGBWPD]:
+            "Moy_grammes_par_kilogramme_de_poids_corporel_par_jour ",
           /* Contaminent */
-          [DataColumns.CHEMICAL_GROUP]: "",
-          [DataColumns.CHEMICAL]: "",
-          [DataColumns.COLLECTION_DATE]: "",
-          [DataColumns.PROJECT_CODE]: "",
-          [DataColumns.SAMPLE_CODE]: "",
-          [DataColumns.PRODUCT_DESC]: "",
-          [DataColumns.RESULT_VALUE]: "",
-          [DataColumns.UNIT]: "",
-          [DataColumns.LOD]: "",
-          [DataColumns.MDL]: "",
+          [DataColumns.CHEMICAL_GROUP]: "Groupe de l'analyte",
+          [DataColumns.CHEMICAL]: "Nom de l'analyte",
+          [DataColumns.COLLECTION_DATE]: "Date de l'échantillonnage",
+          [DataColumns.PROJECT_CODE]: "Code du projet",
+          [DataColumns.SAMPLE_CODE]: "Code de l'échantillon",
+          [DataColumns.PRODUCT_DESC]: "Description du produit",
+          [DataColumns.RESULT_VALUE]: "Valeur du résultat",
+          [DataColumns.UNIT]: "Unités de mesure",
+          [DataColumns.LOD]: "Limite de détection",
+          [DataColumns.MDL]: "Limite de détection de la méthode",
         },
         values: {
-          allPeople: "",
-          radionuclides: "",
+          [sexGroups.F]: "F",
+          [sexGroups.M]: "H",
+          [sexGroups.B]: "B",
+          allPeople: "Toutes les personnes",
+          radionuclides: "Radionucléides",
         },
       },
     },

@@ -31,8 +31,11 @@ export const el = {
 
   filters: {
     containers: document.querySelectorAll(".filter"),
-    containersMap:{
-      consumptionUnits: document.getElementById("filter-consumption-units-container")
+    hiddenContainers: document.querySelectorAll(".filter.hidden"),
+    containersMap: {
+      consumptionUnits: document.getElementById(
+        "filter-consumption-units-container",
+      ),
     },
     titles: {
       title: document.getElementById("filters-title"),
@@ -88,6 +91,7 @@ export const el = {
    */
 
   graphs: {
+    container: document.getElementById("graph-content"),
     title: document.getElementById("graph-title"),
     graph: document.getElementById("graph"),
 
