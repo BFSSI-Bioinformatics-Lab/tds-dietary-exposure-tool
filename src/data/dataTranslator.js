@@ -8,6 +8,7 @@ import {
   DataColumns,
   ConsumptionUnits,
   getConsumptionFiles,
+  PFASGroupings,
 } from "../config.js";
 import { readCSV } from "./dataLoader.js";
 import {
@@ -20,9 +21,7 @@ import {
   getUnitForContaminentEntry,
   getYearForContaminentEntry,
 } from "../util/data.js";
-import {
-  getActiveFilters,
-} from "../ui/filterComponent.js";
+import { getActiveFilters } from "../ui/filterComponent.js";
 import { getTranslations } from "../translation/translation.js";
 
 /**
@@ -76,7 +75,7 @@ export async function loadTdsData() {
 
   // Fill contaminent data
   for (const file of getContaminentFiles()) {
-    const raw = (await readCSV(file)).rows;
+    const raw = (await readCSV(file))?.rows;
     const chemicalGroup =
       raw[0][getTranslations().tdsData.headers[DataColumns.CHEMICAL_GROUP]]; // A given file will only be for a specific chemical group
     data.contaminent[chemicalGroup] ??= {};
@@ -103,7 +102,7 @@ export async function loadTdsData() {
         ),
         lod: Number(
           row[getTranslations().tdsData.headers[DataColumns.LOD]] ||
-            row[getTranslations().tdsData.headers[DataColumns.MDL]],
+          row[getTranslations().tdsData.headers[DataColumns.MDL]],
         ),
       });
     });
@@ -115,17 +114,17 @@ export async function loadTdsData() {
   (await readCSV(getConsumptionFiles().desc)).rows.forEach((row) => {
     const compositeDescription =
       row[
-        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_DESC]
+      getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_DESC]
       ];
     const compositeContent =
       row[
-        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CONTENT]
+      getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CONTENT]
       ];
     if (!compositeDescription && !compositeContent) {
       // Entry is a food group if other entrees are empty (the way the data is formatted)
       currentFoodGroup =
         row[
-          getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
+        getTranslations().tdsData.headers[DataColumns.MAPPING_COMPOSITE_CODE]
         ];
       data.consumption[currentFoodGroup] = {};
     } else {
@@ -211,7 +210,7 @@ export async function loadTdsData() {
             r.meanGramsPerKgBWPerDay =
               Number(
                 row[
-                  getTranslations().tdsData.headers[DataColumns.MEAN_G_PKGBWPD]
+                getTranslations().tdsData.headers[DataColumns.MEAN_G_PKGBWPD]
                 ],
               ) || 0;
 
@@ -223,6 +222,54 @@ export async function loadTdsData() {
       }
     }
   });
+
+  // Create additional PFAS groupings
+
+  const pfasData = data.contaminent[getTranslations().tdsData.values.PFAS];
+  if (pfasData) {
+    Object.keys(PFASGroupings).forEach((pfasGrouping) => {
+      pfasData[getTranslations().tdsData.values.PFASGroupings[pfasGrouping]] =
+        {};
+      const pfasGroupingData =
+        pfasData[getTranslations().tdsData.values.PFASGroupings[pfasGrouping]];
+
+      if (pfasGroupingData) {
+        Object.keys(pfasData)
+          .filter((pfas) =>
+            getTranslations().tdsData.values.PFASMapping[pfasGrouping].includes(
+              pfas,
+            ),
+          )
+          .forEach((pfas) => {
+            Object.keys(pfasData[pfas]).forEach((year) => {
+              pfasGroupingData[year] ??= [];
+              pfasData[pfas][year].forEach((pfasContaminent) => {
+                let pfasGroupingDataForContaminent = pfasGroupingData[
+                  year
+                ].find(
+                  (pfasGroupingContaminent) =>
+                    pfasGroupingContaminent.compositeInfo ==
+                    pfasContaminent.compositeInfo,
+                );
+                if (pfasGroupingDataForContaminent) {
+                  pfasGroupingDataForContaminent.occurrence +=
+                    pfasContaminent.occurrence;
+                  pfasGroupingDataForContaminent.lod += pfasContaminent.lod;
+                } else {
+                  pfasGroupingData[year].push({
+                    ...pfasContaminent,
+                    chemicalGroup:
+                      getTranslations().tdsData.values.PFASGroupings[
+                      pfasGrouping
+                      ],
+                  });
+                }
+              });
+            });
+          });
+      }
+    });
+  }
 
   tdsData = data;
 }
@@ -259,7 +306,7 @@ export async function getRawFilteredConsumptionData() {
       );
       return (
         row[getTranslations().tdsData.headers[DataColumns.POPULATION_GROUP]] ==
-          getTranslations().tdsData.values.allPeople &&
+        getTranslations().tdsData.values.allPeople &&
         filters.ageSexGroups.includes(
           filters.ageSexGroupsIsAgeGroups ? age : ageSexGroup,
         )
@@ -299,7 +346,7 @@ export async function getRawFilteredContaminentData() {
     data.rows = rows.filter(
       (row) =>
         row[getTranslations().tdsData.headers[DataColumns.CHEMICAL]] ==
-          filters.chemical &&
+        filters.chemical &&
         filters.years.includes(getYearForContaminentEntry(row)),
     );
     data.filename = filters.chemicalGroup + " - " + filters.chemical;

@@ -28,8 +28,10 @@ const consumptionFiles = {
     {},
     ...Object.entries({
       desc: "6.-compositedescription_fr_2008-2022tds_fct_cchs2015.csv",
-      perKgBw: "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_fr.csv",
-      perPerson: "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_fr.csv",
+      perKgBw:
+        "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_fr.csv",
+      perPerson:
+        "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_fr.csv",
     }).map(([key, value]) => ({
       [key]: "./data/consumption/fr/" + value,
     })),
@@ -56,7 +58,7 @@ const contaminentFiles = {
     "PFAS TDS 2017 public French(Export).csv",
     "Radionuclide TDS 2022 public French(Export).csv",
     "Radionuclides TDS 2021 public French(Export).csv",
-    "Trace Elements TDS 1993-2018 public French(Les résultats des Micro élément).csv",
+    "Trace Elements TDS 1993-2018 public French(Export).csv",
   ].map((file) => "./data/contaminent/fr/" + file),
 };
 
@@ -160,6 +162,17 @@ export const LODs = {
   "1/2 LOD": "1/2 LOD",
   LOD: "LOD",
   Exclude: "Exclude",
+};
+
+export const PFASGroupings = {
+  TOTAL_PFAS: "TOTAL_PFAS",
+  TOTAL_PFCA: "TOTAL_PFCA",
+  TOTAL_PFS: "TOTAL_PFS",
+  TOTAL_PFOSA: "TOTAL_PFOSA",
+  LC_PFCA: "LC_PFCA",
+  LC_PFS: "LC_PFS",
+  SC_PFCA: "SC_PFCA",
+  SC_PFS: "SC_PFS",
 };
 
 // Ingestion Dose Coefficient (used for radionuclides)

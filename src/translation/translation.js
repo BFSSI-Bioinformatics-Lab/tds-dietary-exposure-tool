@@ -3,6 +3,7 @@ import {
   DataColumns,
   GraphTypes,
   LODs,
+  PFASGroupings,
   RbasgDomainFormat,
   RbfSortByFormat,
   RbfgRangeFormat,
@@ -261,6 +262,87 @@ export function getTranslations() {
           [sexGroups.B]: "B",
           allPeople: "All people",
           radionuclides: "Radionuclides",
+          PFAS: "Perfluorinated chemicals (PFCs)",
+          PFASGroupings: {
+            [PFASGroupings.TOTAL_PFAS]: "Total PFAS",
+            [PFASGroupings.TOTAL_PFCA]: "Total PFCA",
+            [PFASGroupings.TOTAL_PFS]: "Total PFS",
+            [PFASGroupings.TOTAL_PFOSA]: "Total PFOSA",
+            [PFASGroupings.LC_PFCA]: "Long-chained PFCA",
+            [PFASGroupings.LC_PFS]: "Long-chained PFS",
+            [PFASGroupings.SC_PFCA]: "Short-chained PFCA",
+            [PFASGroupings.SC_PFS]: "Short-chained PFS",
+          },
+          PFASMapping: {
+            [PFASGroupings.TOTAL_PFAS]: [
+              "2-perfluorodecyl ethanoic acid",
+              "2-perfluorohexyl ethanoic acid",
+              "2-perfluorooctyl ethanoic acid",
+              "2H-perfluoro-2-decenoic acid",
+              "2H-perfluoro-2-dodecenoic acid",
+              "2H-perfluoro-2-octenoic acid",
+              "Perfluoro-1-butanesulfonate",
+              "Perfluoro-n-butanoic acid",
+              "Perfluoro-n-octanoic acid",
+              "perfluoro-1-decanesulfonate",
+              "perfluoro-1-dodecanesulfonate",
+              "perfluoro-1-heptanesulfonate",
+              "perfluoro-1-hexanesulfonate",
+              "perfluoro-1-nonanesulfonate",
+              "perfluoro-1-pentanesulfonate",
+              "perfluoro-n-decanoic acid",
+              "perfluoro-n-dodecanoic acid",
+              "perfluoro-n-heptanoic acid",
+              "perfluoro-n-hexadecanoic acid",
+              "perfluoro-n-hexanoic acid",
+              "perfluoro-n-nonanoic acid",
+              "perfluoro-n-octadecanoic acid",
+              "perfluoro-n-pentanoic acid",
+              "perfluoro-n-tetradecanoic acid",
+              "perfluoro-n-tridecanoic acid",
+              "perfluoro-n-undecanoic acid",
+              "perfluorooctanesulfonate (total)",
+            ],
+            [PFASGroupings.TOTAL_PFCA]: [],
+            // All analogues in categories 5 and 7
+            [PFASGroupings.TOTAL_PFS]: [],
+            // All analogies in categories 6 and 8
+            [PFASGroupings.TOTAL_PFOSA]: [],
+            // Perfluorooctanesulfonamide (PFOSA)
+            // Methylperfluorooctanesulfonamide (MeFOSA)
+            // Ethylperfluorooctanidesulfonamide (EtFOSA)
+            [PFASGroupings.LC_PFCA]: [],
+            // Perfluorooctanoic acid (PFOA)
+            // Perfluorononanoic acid (PFNA)
+            // Perfluorodecanoic acid (PFDA)
+            // Perfluoroundecanoic acid (PFUdA)
+            // Perfluorododecanoic acid (PFDoA)
+            // Perfluorotridecanoic acid (PFTrDA)
+            // Perfluorotetradecanoic acid (PFTeDA)
+            // Perfluorohexadecanoic acid (PFHxDA)
+            // Perfluorooctadecanoic acid (PFODA)
+            // 2-perfluorooctyl ethanoic acid (FOEA)
+            // 2-perfluorodecyl ethanoic acid (FDEA)
+            // 2H-perfluoro-2-decenoic acid (FOUEA)
+            // 2H-perfluoro-2-dodecenoic acid (FDUEA)
+            [PFASGroupings.LC_PFS]: [],
+            // Perfluorohexylsulfonate (PFHxS)
+            // Perfluoroheptylsulfonate (PFHpS)
+            // Perfluorooctylsulfonate (PFOS) – FRD data includes 2 isomers of PFOS
+            // Perfluorononylsulfonate (PFNS)
+            // Perfluorodecylsulfonate (PFDS)
+            // Perfluorododecylsulfonate (PFDoS)
+            [PFASGroupings.SC_PFCA]: [],
+            // Perfluorobutanoic acid (PFBA)
+            // Perfluoropentanoic acid (PFPeA)
+            // Perfluorohexanoic acid (PFHxA)
+            // Perfluoroheptanoic acid (PFHpA)
+            // 2-perfluorohexyl ethanoic acid (FHEA)
+            // 2H-perfluoro-2-octenoic acid (FHUEA)
+            [PFASGroupings.SC_PFS]: [],
+            // Perfluorobutylsulfonate (PFBS)
+            // Perfluoropentylsulfonate (PFPeS)
+          },
         },
       },
     },
@@ -475,6 +557,28 @@ export function getTranslations() {
           [sexGroups.B]: "B",
           allPeople: "Toutes les personnes",
           radionuclides: "Radionucléides",
+          PFAS: "Produits chimiques perfluorés (PFC)",
+          PFASGroupings: {
+            [PFASGroupings.TOTAL_PFAS]: "Total PFAS (fr)",
+            [PFASGroupings.TOTAL_PFCA]: "Total PFCA (fr)",
+            [PFASGroupings.TOTAL_PFS]: "Total PFS (fr)",
+            [PFASGroupings.TOTAL_PFOSA]: "Total PFOSA (fr)",
+            [PFASGroupings.LC_PFCA]: "Long-chained PFCA (fr)",
+            [PFASGroupings.LC_PFS]: "Long-chained PFS (fr)",
+            [PFASGroupings.SC_PFCA]: "Short-chained PFCA (fr)",
+            [PFASGroupings.SC_PFS]: "Short-chained PFS (fr)",
+          },
+          PFASMapping: {
+            [PFASGroupings.TOTAL_PFAS]: [],
+            [PFASGroupings.TOTAL_PFCA]: [],
+            [PFASGroupings.TOTAL_PFS]: [],
+            [PFASGroupings.TOTAL_PFCA]: [],
+            [PFASGroupings.TOTAL_PFOSA]: [],
+            [PFASGroupings.LC_PFCA]: [],
+            [PFASGroupings.LC_PFS]: [],
+            [PFASGroupings.SC_PFCA]: [],
+            [PFASGroupings.SC_PFS]: [],
+          },
         },
       },
     },
