@@ -62,6 +62,7 @@ export function getTranslations() {
           chemicalGroup: "Chemical Group",
           chemical: "Chemical",
           years: "Year(s)",
+          multiSubtitle: "Multi-select with Ctrl",
           lod: "Occurrence &ltLOD =",
           lodSubtitle: "LOD Range: ",
           units: "Units",
@@ -268,10 +269,13 @@ export function getTranslations() {
             [PFASGroupings.TOTAL_PFCA]: "Total PFCA",
             [PFASGroupings.TOTAL_PFS]: "Total PFS",
             [PFASGroupings.TOTAL_PFOSA]: "Total PFOSA",
-            [PFASGroupings.LC_PFCA]: "Long-chained PFCA",
-            [PFASGroupings.LC_PFS]: "Long-chained PFS",
-            [PFASGroupings.SC_PFCA]: "Short-chained PFCA",
-            [PFASGroupings.SC_PFS]: "Short-chained PFS",
+            [PFASGroupings.LC_PFCA]:
+              "Long-chained perfluorocarboxylic acid analogues",
+            [PFASGroupings.LC_PFS]: "Long-chained perflurosulfonate analogues",
+            [PFASGroupings.SC_PFCA]:
+              "Short-chained perfluorocarboxylic acid analogues",
+            [PFASGroupings.SC_PFS]:
+              "Short-chained perfluorosulfonate analogues",
           },
           PFASMapping: {
             [PFASGroupings.TOTAL_PFAS]: [
@@ -303,45 +307,71 @@ export function getTranslations() {
               "perfluoro-n-undecanoic acid",
               "perfluorooctanesulfonate (total)",
             ],
-            [PFASGroupings.TOTAL_PFCA]: [],
-            // All analogues in categories 5 and 7
-            [PFASGroupings.TOTAL_PFS]: [],
-            // All analogies in categories 6 and 8
+            [PFASGroupings.TOTAL_PFCA]: [
+              "2-perfluorodecyl ethanoic acid",
+              "2-perfluorohexyl ethanoic acid",
+              "2h-perfluoro-2-decenoic acid",
+              "2h-perfluoro-2-dodecenoic acid",
+              "perfluoro-n-octanoic acid",
+              "perfluoro-n-decanoic acid",
+              "perfluoro-n-dodecanoic acid",
+              "perfluoro-n-nonanoic acid",
+              "perfluoro-n-octadecanoic acid",
+              "perfluoro-n-tridecanoic acid",
+              "perfluoro-n-undecanoic acid",
+              "2-perfluorooctyl ethanoic acid",
+              "2h-perfluoro-2-octenoic acid",
+              "perfluoro-n-butanoic acid",
+              "perfluoro-n-heptanoic acid",
+              "perfluoro-n-hexadecanoic acid",
+              "perfluoro-n-pentanoic acid",
+              "perfluoro-n-tetradecanoic acid",
+            ],
+            [PFASGroupings.TOTAL_PFS]: [
+              "perfluoro-1-decanesulfonate",
+              "perfluoro-1-dodecanesulfonate",
+              "perfluoro-1-heptanesulfonate",
+              "perfluoro-1-hexanesulfonate",
+              "perfluoro-1-nonanesulfonate",
+              "perfluorooctanesulfonate (total)",
+              "Perfluoro-1-butanesulfonate",
+              "perfluoro-1-pentanesulfonate",
+            ],
             [PFASGroupings.TOTAL_PFOSA]: [],
-            // Perfluorooctanesulfonamide (PFOSA)
-            // Methylperfluorooctanesulfonamide (MeFOSA)
-            // Ethylperfluorooctanidesulfonamide (EtFOSA)
-            [PFASGroupings.LC_PFCA]: [],
-            // Perfluorooctanoic acid (PFOA)
-            // Perfluorononanoic acid (PFNA)
-            // Perfluorodecanoic acid (PFDA)
-            // Perfluoroundecanoic acid (PFUdA)
-            // Perfluorododecanoic acid (PFDoA)
-            // Perfluorotridecanoic acid (PFTrDA)
-            // Perfluorotetradecanoic acid (PFTeDA)
-            // Perfluorohexadecanoic acid (PFHxDA)
-            // Perfluorooctadecanoic acid (PFODA)
-            // 2-perfluorooctyl ethanoic acid (FOEA)
-            // 2-perfluorodecyl ethanoic acid (FDEA)
-            // 2H-perfluoro-2-decenoic acid (FOUEA)
-            // 2H-perfluoro-2-dodecenoic acid (FDUEA)
-            [PFASGroupings.LC_PFS]: [],
-            // Perfluorohexylsulfonate (PFHxS)
-            // Perfluoroheptylsulfonate (PFHpS)
-            // Perfluorooctylsulfonate (PFOS) – FRD data includes 2 isomers of PFOS
-            // Perfluorononylsulfonate (PFNS)
-            // Perfluorodecylsulfonate (PFDS)
-            // Perfluorododecylsulfonate (PFDoS)
-            [PFASGroupings.SC_PFCA]: [],
-            // Perfluorobutanoic acid (PFBA)
-            // Perfluoropentanoic acid (PFPeA)
-            // Perfluorohexanoic acid (PFHxA)
-            // Perfluoroheptanoic acid (PFHpA)
-            // 2-perfluorohexyl ethanoic acid (FHEA)
-            // 2H-perfluoro-2-octenoic acid (FHUEA)
-            [PFASGroupings.SC_PFS]: [],
-            // Perfluorobutylsulfonate (PFBS)
-            // Perfluoropentylsulfonate (PFPeS)
+            [PFASGroupings.LC_PFCA]: [
+              "2-perfluorodecyl ethanoic acid",
+              "2-perfluorohexyl ethanoic acid",
+              "2h-perfluoro-2-decenoic acid",
+              "2h-perfluoro-2-dodecenoic acid",
+              "perfluoro-n-octanoic acid",
+              "perfluoro-n-decanoic acid",
+              "perfluoro-n-dodecanoic acid",
+              "perfluoro-n-nonanoic acid",
+              "perfluoro-n-octadecanoic acid",
+              "perfluoro-n-tridecanoic acid",
+              "perfluoro-n-undecanoic acid",
+            ],
+            [PFASGroupings.LC_PFS]: [
+              "perfluoro-1-decanesulfonate",
+              "perfluoro-1-dodecanesulfonate",
+              "perfluoro-1-heptanesulfonate",
+              "perfluoro-1-hexanesulfonate",
+              "perfluoro-1-nonanesulfonate",
+              "perfluorooctanesulfonate (total)",
+            ],
+            [PFASGroupings.SC_PFCA]: [
+              "2-perfluorooctyl ethanoic acid",
+              "2h-perfluoro-2-octenoic acid",
+              "perfluoro-n-butanoic acid",
+              "perfluoro-n-heptanoic acid",
+              "perfluoro-n-hexadecanoic acid",
+              "perfluoro-n-pentanoic acid",
+              "perfluoro-n-tetradecanoic acid",
+            ],
+            [PFASGroupings.SC_PFS]: [
+              "Perfluoro-1-butanesulfonate",
+              "perfluoro-1-pentanesulfonate",
+            ],
           },
         },
       },
@@ -375,6 +405,7 @@ export function getTranslations() {
           chemicalGroup: "Chemical Group (fr)",
           chemical: "Chemical (fr)",
           years: "Year(s) (fr)",
+          multiSubtitle: "+ctrl (fr)",
           lod: "Occurrence &ltLOD = (fr)",
           lodSubtitle: "LOD Range:  (fr)",
           units: "Units (fr)",

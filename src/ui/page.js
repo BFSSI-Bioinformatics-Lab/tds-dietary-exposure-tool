@@ -1,3 +1,4 @@
+import { GraphTypes, getGraphImgSrcs } from "../config.js";
 import { getTranslations } from "../translation/translation.js";
 import { el } from "./const.js";
 import { displayAboutTable } from "./dataTableComponent.js";
@@ -22,10 +23,21 @@ export async function initializePageText() {
   el.header.languageButton.innerHTML = translations.header.language;
 
   el.filters.titles.title.innerHTML = translations.filters.titles.title;
+
+  Object.keys(GraphTypes).forEach((graphType) => {
+    el.filters.graphSelects[graphType].setAttribute(
+      "src",
+      getGraphImgSrcs()[graphType],
+    );
+  });
+
   el.filters.titles.chemicalGroup.innerHTML =
     translations.filters.titles.chemicalGroup;
   el.filters.titles.chemical.innerHTML = translations.filters.titles.chemical;
   el.filters.titles.years.innerHTML = translations.filters.titles.years;
+  el.filters.titles.multis.forEach(
+    (multi) => (multi.innerHTML = translations.filters.titles.multiSubtitle),
+  );
   el.filters.titles.lod.innerHTML = translations.filters.titles.lod;
   el.filters.titles.lodSubtitle.innerHTML =
     translations.filters.titles.lodSubtitle;

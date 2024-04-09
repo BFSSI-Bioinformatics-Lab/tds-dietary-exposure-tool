@@ -97,7 +97,7 @@ export function displayGraph(data) {
     hasReferenceLine,
   ] = Object.values(graphMapping[graphType]);
 
-  updateLodFilterDescription(data);
+  updateLodFilterDescription(data, filters);
   updateSandbox(data, filters);
 
   const specificData = getDataFn(data, filters);

@@ -24,7 +24,6 @@
 
     -->
 
-
     <div id="title-container">
       <div id="title"></div>
       <button id="language-button"></button>
@@ -40,7 +39,6 @@
         <button id="more-info-button" class="dropdown-button"></button>
         <div id="more-info-content" class="dropdown-content hidden"></div>
       </div>
-
     </div>
 
     <div id="subtitle"></div>
@@ -58,15 +56,24 @@
     <div id="graph-selects-container">
       <div id="rbasg-graph-select" class="graph-select">
         <img
-          src="./img/rbasg.png"
+          id="rbasg-img"
+          src="./img/en/rbasg.png"
           alt="results by age sex group graph preview"
         />
       </div>
-      <div id="rbfg-graph-select" class="graph-select">
-        <img src="./img/rbfg.png" alt="results by food group graph preview" />
-      </div>
       <div id="rbf-graph-select" class="graph-select">
-        <img src="./img/rbf.png" alt="results by food graph preview" />
+        <img
+          id="rbf-img"
+          src="./img/en/rbf.png"
+          alt="results by food graph preview"
+        />
+      </div>
+      <div id="rbfg-graph-select" class="graph-select">
+        <img
+          id="rbfg-img"
+          src="./img/en/rbfg.png"
+          alt="results by food group graph preview"
+        />
       </div>
     </div>
 
@@ -95,6 +102,7 @@
       <div class="filter hidden">
         <label id="filter-year-title" for="filter-year-select"></label>
         <select id="filter-year-select" multiple></select>
+        <div class="small multi-subtitle"></div>
       </div>
 
       <div class="filter hidden">
@@ -113,6 +121,7 @@
           for="filter-rbasg-age-group-select"
         ></label>
         <select id="filter-rbasg-age-group-select" multiple></select>
+        <div class="small multi-subtitle"></div>
       </div>
 
       <div class="filter hidden filter-additional filter-additional-rbf">
@@ -129,6 +138,7 @@
           for="filter-rbfg-age-sex-group-select"
         ></label>
         <select id="filter-rbfg-age-sex-group-select" multiple></select>
+        <div class="small multi-subtitle"></div>
       </div>
 
       <div id="filter-consumption-units-container" class="filter hidden">

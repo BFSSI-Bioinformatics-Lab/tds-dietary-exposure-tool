@@ -180,6 +180,9 @@ body {
     margin: 1rem;
   }
   margin-bottom: 10rem;
+  * {
+    font-family: "Times New Roman", serif;
+  }
 }
 
 /*

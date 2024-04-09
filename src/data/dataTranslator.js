@@ -233,41 +233,37 @@ export async function loadTdsData() {
       const pfasGroupingData =
         pfasData[getTranslations().tdsData.values.PFASGroupings[pfasGrouping]];
 
-      if (pfasGroupingData) {
-        Object.keys(pfasData)
-          .filter((pfas) =>
-            getTranslations().tdsData.values.PFASMapping[pfasGrouping].includes(
-              pfas,
-            ),
-          )
-          .forEach((pfas) => {
-            Object.keys(pfasData[pfas]).forEach((year) => {
-              pfasGroupingData[year] ??= [];
-              pfasData[pfas][year].forEach((pfasContaminent) => {
-                let pfasGroupingDataForContaminent = pfasGroupingData[
-                  year
-                ].find(
-                  (pfasGroupingContaminent) =>
-                    pfasGroupingContaminent.compositeInfo ==
-                    pfasContaminent.compositeInfo,
-                );
-                if (pfasGroupingDataForContaminent) {
-                  pfasGroupingDataForContaminent.occurrence +=
-                    pfasContaminent.occurrence;
-                  pfasGroupingDataForContaminent.lod += pfasContaminent.lod;
-                } else {
-                  pfasGroupingData[year].push({
-                    ...pfasContaminent,
-                    chemicalGroup:
-                      getTranslations().tdsData.values.PFASGroupings[
-                      pfasGrouping
-                      ],
-                  });
-                }
-              });
+      Object.keys(pfasData)
+        .filter((pfas) =>
+          getTranslations().tdsData.values.PFASMapping[pfasGrouping].includes(
+            pfas,
+          ),
+        )
+        .forEach((pfas) => {
+          Object.keys(pfasData[pfas]).forEach((year) => {
+            pfasGroupingData[year] ??= [];
+            pfasData[pfas][year].forEach((pfasContaminent) => {
+              let pfasGroupingDataForContaminent = pfasGroupingData[year].find(
+                (pfasGroupingContaminent) =>
+                  pfasGroupingContaminent.compositeInfo ==
+                  pfasContaminent.compositeInfo,
+              );
+              if (pfasGroupingDataForContaminent) {
+                pfasGroupingDataForContaminent.occurrence +=
+                  pfasContaminent.occurrence;
+                pfasGroupingDataForContaminent.lod += pfasContaminent.lod;
+              } else {
+                pfasGroupingData[year].push({
+                  ...pfasContaminent,
+                  chemicalGroup:
+                    getTranslations().tdsData.values.PFASGroupings[
+                    pfasGrouping
+                    ],
+                });
+              }
             });
           });
-      }
+        });
     });
   }
 

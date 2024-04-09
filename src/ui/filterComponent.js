@@ -15,6 +15,7 @@ import {
 import { downloadDataTable, downloadTDSData } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
 import {
+  formatNumber,
   getAgeAndSex,
   getAgeSex,
   getAgeSexDisplay,
@@ -277,6 +278,8 @@ async function resetPage() {
   el.dataTable.dataContainer.classList.add(classs.HIDDEN);
   el.about.container.classList.add(classs.HIDDEN);
   el.filters.sandbox.container.classList.add(classs.HIDDEN);
+  el.filters.inputs.chemicalGroup.innerHTML = "";
+  el.filters.inputs.chemical.innerHTML = "";
   await loadTdsData();
   displayFilterText();
   el.misc.loader.classList.add(classs.HIDDEN);
@@ -543,7 +546,7 @@ export function getFilteredTdsData() {
   return filteredTdsData;
 }
 
-export function updateLodFilterDescription(filteredTdsData) {
+export function updateLodFilterDescription(filteredTdsData, filters) {
   el.filters.titles.lodSubtitle.innerHTML = "";
   let maxContaminentLod = 0;
   let minContaminentLod = Infinity;
@@ -566,11 +569,11 @@ export function updateLodFilterDescription(filteredTdsData) {
     el.filters.titles.lodSubtitle.innerHTML =
       getTranslations().filters.titles.lodSubtitle +
       " " +
-      minContaminentLod +
+      formatNumber(minContaminentLod, filters) +
       " " +
       minUnits +
       " - " +
-      maxContaminentLod +
+      formatNumber(maxContaminentLod, filters) +
       " " +
       maxUnits;
   }
@@ -580,15 +583,19 @@ export function updateSandbox(filteredTdsData, filters) {
   el.filters.titles.referenceLine.innerHTML =
     getTranslations().filters.titles.referenceLine +
     '<span class="small"> (' +
-    getExposureUnit(
-      Object.values(filteredTdsData.contaminent)[0][0].units,
-      filters,
-    ) +
+    (Object.keys(filteredTdsData.contaminent).length != 0
+      ? getExposureUnit(
+        Object.values(filteredTdsData.contaminent)[0][0].units,
+        filters,
+      )
+      : getTranslations().misc.na) +
     ")</span>";
 
   el.filters.titles.overrideValue.innerHTML =
     getTranslations().filters.titles.overrideValue +
     '<span class="small"> (' +
-    Object.values(filteredTdsData.contaminent)[0][0].units +
+    (Object.keys(filteredTdsData.contaminent).length != 0
+      ? Object.values(filteredTdsData.contaminent)[0][0].units
+      : getTranslations().misc.na) +
     ")</span>";
 }

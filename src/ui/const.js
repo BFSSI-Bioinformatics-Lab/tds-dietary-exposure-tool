@@ -30,6 +30,11 @@ export const el = {
    */
 
   filters: {
+    graphSelects: {
+      [GraphTypes.RBASG]: document.getElementById("rbasg-img"),
+      [GraphTypes.RBF]: document.getElementById("rbf-img"),
+      [GraphTypes.RBFG]: document.getElementById("rbfg-img"),
+    },
     containers: document.querySelectorAll(".filter"),
     hiddenContainers: document.querySelectorAll(".filter.hidden"),
     containersMap: {
@@ -42,6 +47,7 @@ export const el = {
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
       chemical: document.getElementById("filter-chemical-title"),
       years: document.getElementById("filter-year-title"),
+      multis: document.querySelectorAll(".multi-subtitle"),
       lod: document.getElementById("filter-lod-title"),
       lodSubtitle: document.getElementById("filter-lod-subtitle"),
       consumptionUnits: document.getElementById(
