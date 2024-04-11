@@ -74,6 +74,8 @@ export async function initializePageText() {
   el.filters.inputs.overrideValue.placeholder =
     translations.filters.placeholders.none;
 
+  el.graphs.saveGraph.innerHTML = translations.graphs.saveGraph.button;
+
   el.dataTable.title.innerHTML = translations.dataTable.title;
   el.dataTable.buttons.downloadConsumptionData.innerHTML =
     translations.dataTable.buttons.downloadConsumptionData;

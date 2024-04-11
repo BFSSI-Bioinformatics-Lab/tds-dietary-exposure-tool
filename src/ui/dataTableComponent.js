@@ -8,7 +8,7 @@ import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
 import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
 import { getTranslations } from "../translation/translation.js";
-import { el } from "./const.js";
+import { classs, el } from "./const.js";
 import { getActiveFilters } from "./filterComponent.js";
 
 /**
@@ -84,7 +84,7 @@ export async function displayDataTable(data) {
   const columns = Object.keys(data[0]);
 
   const headerRow = document.createElement("tr");
-  headerRow.classList.add("bold");
+  headerRow.classList.add(classs.BOLD);
   columns.forEach((column) => {
     const th = document.createElement("th");
     th.classList.add("data-table-cell");
@@ -120,7 +120,7 @@ export async function displayAboutTable() {
     const row = document.createElement("tr");
     const th = document.createElement("th");
     th.textContent = item.header;
-    th.classList.add("bold");
+    th.classList.add(classs.BOLD);
     row.appendChild(th);
     const td = document.createElement("td");
     td.textContent = item.value;

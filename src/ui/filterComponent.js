@@ -1,5 +1,5 @@
 import { classs, el } from "./const.js";
-import { displayGraph } from "./graphComponent.js";
+import { displayGraph, saveGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
   DataType,
@@ -142,15 +142,15 @@ export function addEventListenersToPage() {
       el.filters.inputs.overrideFood.selectedIndex = 0;
 
       const itemContainer = document.createElement("div");
-      itemContainer.classList.add("override-item-container");
+      itemContainer.classList.add(classs.OVERRIDE_ITEM);
 
       const itemText = document.createElement("div");
       itemText.data = JSON.stringify(override);
       itemText.innerHTML = getOverrideText(override);
-      itemText.classList.add("override-item-value");
+      itemText.classList.add(classs.OVERRIDE_VALUE);
 
       const removeButton = document.createElement("button");
-      removeButton.classList.add("sandbox-button");
+      removeButton.classList.add(classs.SANDBOX_BUTTON);
       removeButton.innerHTML = "-";
       removeButton.addEventListener("click", () => {
         el.filters.sandbox.overridesList.removeChild(itemContainer);
@@ -166,6 +166,10 @@ export function addEventListenersToPage() {
       el.filters.sandbox.overridesList.appendChild(itemContainer);
     }
     displayGraph(getFilteredTdsData());
+  });
+
+  el.graphs.saveGraph.addEventListener("click", () => {
+    saveGraph();
   });
 
   el.dataTable.title.addEventListener("click", () => {
@@ -236,11 +240,11 @@ function addEventListenersToFilters() {
       ].forEach((filter) => {
         filter.classList.remove("filter-additional-active");
       });
-      element.classList.add("active-graph-select");
+      element.classList.add(classs.ACTIVE_GRAPH_SELECT);
       const graphType = getSelectedGraphType();
       el.graphs[graphType].filterContainers.forEach((container) => {
-        if (!container.classList.contains("filter-additional-active")) {
-          container.classList.add("filter-additional-active");
+        if (!container.classList.contains(classs.FILTER_ADDITIONAL_ACTIVE)) {
+          container.classList.add(classs.FILTER_ADDITIONAL_ACTIVE);
         }
       });
       if (selectionsCompleted()) {
@@ -275,6 +279,7 @@ async function resetPage() {
   initializePageText();
   hideFilters();
   el.graphs.container.classList.add(classs.HIDDEN);
+  el.graphs.saveGraph.classList.add(classs.HIDDEN);
   el.dataTable.dataContainer.classList.add(classs.HIDDEN);
   el.about.container.classList.add(classs.HIDDEN);
   el.filters.sandbox.container.classList.add(classs.HIDDEN);
@@ -309,7 +314,7 @@ function addPlaceholderToSelect(select, text) {
   oe.selected = true;
   oe.disabled = true;
   oe.text = text;
-  oe.classList.add("disabled");
+  oe.classList.add(classs.DISABLED);
   select.appendChild(oe);
 }
 

@@ -1,4 +1,4 @@
-import { el } from "../const.js";
+import { classs, el } from "../const.js";
 
 /*
  * Display a color legend on the provided HTML element
@@ -15,11 +15,11 @@ export function displayColorLegend(data, title) {
 
   Object.keys(data).forEach((label) => {
     const itemEl = document.createElement("div");
-    itemEl.classList.add("graph-legend-item");
+    itemEl.classList.add(classs.GRAPH_LEGEND_ITEM);
 
     const colorEl = document.createElement("div");
     const labelEl = document.createElement("div");
-    colorEl.classList.add("graph-legend-item-color");
+    colorEl.classList.add(classs.GRAPH_LEGEND_COLOR);
 
     colorEl.style.backgroundColor = data[label];
     labelEl.innerHTML = label;

@@ -128,6 +128,11 @@ export function getTranslations() {
           ageGroup: "Age Groups",
           foodGroup: "Food Groups",
         },
+        saveGraph: {
+          button: "Save Graph",
+          footer: "Data sources: xxxx",
+          filename: "Graph Export",
+        },
         [GraphTypes.RBASG]: {
           title: "Dietary Exposure Estimate by Age-Sex Group for",
           range: "Dietary Exposure",
@@ -466,6 +471,11 @@ export function getTranslations() {
         legend: {
           ageGroup: "Age Groups (fr)",
           foodGroup: "Food Groups (fr)",
+        },
+        saveGraph: {
+          button: "Save Graph (fr)",
+          footer: "Data sources: xxxx (fr)",
+          filename: "Graph Export (fr)",
         },
         [GraphTypes.RBASG]: {
           title: "Dietary Exposure Estimate by Age-Sex Group for (fr)",

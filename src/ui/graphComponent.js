@@ -115,9 +115,28 @@ export function displayGraph(data) {
 
   displayColorLegend(colorLegendMapping, legendTitle);
 
+  el.graphs.saveGraph.classList.remove(classs.HIDDEN);
   el.dataTable.dataContainer.classList.remove(classs.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);
   displayDataTable(dataTableData);
 
   el.about.container.classList.remove(classs.HIDDEN);
+}
+
+export function saveGraph() {
+  const footer = document.createElement("div");
+  footer.classList.add(classs.RED);
+  footer.innerText = getTranslations().graphs.saveGraph.footer;
+  el.graphs.saveGraphContainer.appendChild(footer);
+
+  html2canvas(el.graphs.saveGraphContainer, { logging: false }).then(
+    function(canvas) {
+      var link = document.createElement("a");
+      link.download = getTranslations().graphs.saveGraph.filename;
+      link.href = canvas.toDataURL();
+      link.click();
+    },
+  );
+
+  el.graphs.saveGraphContainer.removeChild(footer);
 }

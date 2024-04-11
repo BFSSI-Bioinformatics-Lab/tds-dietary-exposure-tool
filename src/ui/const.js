@@ -2,6 +2,17 @@ import { GraphTypes } from "../config.js";
 
 export const classs = {
   HIDDEN: "hidden",
+  DISABLED: "disabled",
+  BOLD: "bold",
+  RED: "red",
+  ACTIVE_GRAPH_SELECT: "active-graph-select",
+  SANDBOX_BUTTON: "sandbox-button",
+  OVERRIDE_ITEM: "override-item-container",
+  OVERRIDE_VALUE: "override-item-value",
+  FILTER_ADDITIONAL_ACTIVE: "filter-additional-active",
+  GRAPH_LEGEND_ITEM: "graph-legend-item",
+  GRAPH_LEGEND_COLOR: "graph-legend-item-color",
+  DATA_TABLE_CELL: "data-table-cell",
 };
 
 export const el = {
@@ -100,6 +111,8 @@ export const el = {
     container: document.getElementById("graph-content"),
     title: document.getElementById("graph-title"),
     graph: document.getElementById("graph"),
+    saveGraph: document.getElementById("save-graph-title"),
+    saveGraphContainer: document.getElementById("save-graph-container"),
 
     [GraphTypes.RBASG]: {
       graphSelect: document.getElementById("rbasg-graph-select"),

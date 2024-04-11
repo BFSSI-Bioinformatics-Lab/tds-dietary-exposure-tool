@@ -9,6 +9,7 @@
 
     <!-- link libraries -->
     <script src="./lib/d3.v7.min.js" defer></script>
+    <script src="./lib/html2canvas.min.js" defer></script>
     <!-- link custom js -->
     <script src="./src/index.js" type="module" defer></script>
   </head>
@@ -244,16 +245,22 @@
 
     -->
 
-    <div id="graph-content" class="hidden">
-      <div id="graph-container">
-        <div id="graph-title" class="bold big"></div>
-        <div id="graph"></div>
-      </div>
+    <div id="save-graph-container">
+      <div id="graph-content" class="hidden">
+        <div id="graph-container">
+          <div id="graph-title" class="bold big"></div>
+          <div id="graph"></div>
+        </div>
 
-      <div id="legend-container">
-        <div id="legend-title" class="bold"></div>
-        <div id="legend-content"></div>
+        <div id="legend-container">
+          <div id="legend-title" class="bold"></div>
+          <div id="legend-content"></div>
+        </div>
       </div>
+    </div>
+
+    <div>
+      <button id="save-graph-title" class="hidden bold"></button>
     </div>
 
     <!--
