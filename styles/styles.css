@@ -305,8 +305,7 @@ Filters
       min-height: 1.6rem;
     }
 
-    select:invalid,
-    input::placeholder {
+    select:invalid {
       color: #8e8e8e;
     }
 
@@ -410,15 +409,12 @@ Graph
   display: flex;
   flex-direction: row;
   gap: 2rem;
-  margin: 4rem 0;
+  margin: 4rem 2rem;
   #graph-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    flex-shrink: 0;
-    flex-grow: 1;
-    flex-basis: 0px;
     #graph-title {
       text-align: center;
     }
@@ -427,8 +423,7 @@ Graph
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    flex-shrink: 1;
-    flex-grow: 0;
+    flex-shrink: 0;
     margin: 2.5rem 2rem;
     #legend-content {
       display: flex;

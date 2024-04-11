@@ -73,7 +73,7 @@ export function getSunburstSvg(data) {
   svg
     .append("text")
     .attr("text-anchor", "middle")
-    .style("font-size", "1.5rem")
+    .style("font-size", data.title.length < 30 ? "1.5rem" : "1rem")
     .text(data.title);
 
   const cell = svg.selectAll("a").data(root.descendants()).join("a");
