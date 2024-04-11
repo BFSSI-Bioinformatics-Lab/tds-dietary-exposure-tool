@@ -174,10 +174,19 @@ export const sexGroups = {
   M: "M",
 };
 
+export const supressedAgeSexGroups = [
+  getAgeSex(ageGroups["1-3"], sexGroups.F),
+  getAgeSex(ageGroups["1-3"], sexGroups.M),
+  getAgeSex(ageGroups["4-8"], sexGroups.F),
+  getAgeSex(ageGroups["4-8"], sexGroups.M),
+];
+
 export const ageSexGroups = Object.keys(ageGroups).reduce((result, ageKey) => {
   Object.keys(sexGroups).forEach((sexKey) => {
     const ageSexGroup = getAgeSex(ageKey, sexKey);
-    result[ageSexGroup] = ageSexGroup;
+    if (!supressedAgeSexGroups.includes(ageSexGroup)) {
+      result[ageSexGroup] = ageSexGroup;
+    }
   });
   return result;
 }, {});
