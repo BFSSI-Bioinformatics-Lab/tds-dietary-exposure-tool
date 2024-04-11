@@ -1,4 +1,4 @@
-import { GraphTypes, getGraphImgSrcs } from "../config.js";
+import { GraphTypes } from "../config.js";
 import { getTranslations } from "../translation/translation.js";
 import { el } from "./const.js";
 import { displayAboutTable } from "./dataTableComponent.js";
@@ -25,10 +25,12 @@ export async function initializePageText() {
   el.filters.titles.title.innerHTML = translations.filters.titles.title;
 
   Object.keys(GraphTypes).forEach((graphType) => {
-    el.filters.graphSelects[graphType].setAttribute(
-      "src",
-      getGraphImgSrcs()[graphType],
+    const caption = document.createElement("figcaption");
+    caption.innerHTML = getTranslations().filters.graphSelects[graphType];
+    el.graphs[graphType].graphSelect.removeChild(
+      el.graphs[graphType].graphSelect.lastChild,
     );
+    el.graphs[graphType].graphSelect.appendChild(caption);
   });
 
   el.filters.titles.chemicalGroup.innerHTML =

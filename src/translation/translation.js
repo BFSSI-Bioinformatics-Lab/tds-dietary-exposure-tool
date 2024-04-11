@@ -57,6 +57,11 @@ export function getTranslations() {
        */
 
       filters: {
+        graphSelects: {
+          [GraphTypes.RBASG]: "Results by Age-Sex Group",
+          [GraphTypes.RBF]: "Results by Food",
+          [GraphTypes.RBFG]: "Results by Food Group",
+        },
         titles: {
           title: "Select Graph Type and Chemical:",
           chemicalGroup: "Chemical Group",
@@ -405,6 +410,11 @@ export function getTranslations() {
       },
 
       filters: {
+        graphSelects: {
+          [GraphTypes.RBASG]: "Result by Age-Sex Group (fr)",
+          [GraphTypes.RBF]: "Result by Food (fr)",
+          [GraphTypes.RBFG]: "Result by Food Group (fr)",
+        },
         titles: {
           title: "Select Graph Type and Chemical: (fr)",
           chemicalGroup: "Chemical Group (fr)",

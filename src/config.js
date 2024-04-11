@@ -120,31 +120,6 @@ export const GraphTypes = {
   RBF: "RBF",
 };
 
-const graphImgSrc = {
-  [language.EN]: Object.assign(
-    {},
-    ...Object.entries({
-      [GraphTypes.RBASG]: "rbasg.png",
-      [GraphTypes.RBF]: "rbf.png",
-      [GraphTypes.RBFG]: "rbfg.png",
-    }).map(([key, value]) => ({
-      [key]: "./img/en/" + value,
-    })),
-  ),
-  [language.FR]: Object.assign(
-    {},
-    ...Object.entries({
-      [GraphTypes.RBASG]: "rbasg.png",
-      [GraphTypes.RBF]: "rbf.png",
-      [GraphTypes.RBFG]: "rbfg.png",
-    }).map(([key, value]) => ({
-      [key]: "./img/fr/" + value,
-    })),
-  ),
-};
-
-export const getGraphImgSrcs = () => graphImgSrc[userLanguage];
-
 export const MeanFlag = {
   NONE: "NONE",
   FLAGGED: "FLAGGED",

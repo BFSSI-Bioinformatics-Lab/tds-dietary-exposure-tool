@@ -41,11 +41,6 @@ export const el = {
    */
 
   filters: {
-    graphSelects: {
-      [GraphTypes.RBASG]: document.getElementById("rbasg-img"),
-      [GraphTypes.RBF]: document.getElementById("rbf-img"),
-      [GraphTypes.RBFG]: document.getElementById("rbfg-img"),
-    },
     containers: document.querySelectorAll(".filter"),
     hiddenContainers: document.querySelectorAll(".filter.hidden"),
     containersMap: {
