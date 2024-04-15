@@ -2,7 +2,7 @@ import { DataType, GraphTypes } from "../config.js";
 import { downloadCSV } from "../data/dataDownloader.js";
 import {
   getRawFilteredConsumptionData,
-  getRawFilteredContaminentData,
+  getRawFilteredContaminantData,
 } from "../data/dataTranslator.js";
 import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
 import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
@@ -14,12 +14,12 @@ import { getActiveFilters } from "./filterComponent.js";
 /**
  * Download raw filtered TDS data
  * Parameters:
- * - dataToDownload: either DataType.CONSUMPTION or DataType.CONTAMINENT
+ * - dataToDownload: either DataType.CONSUMPTION or DataType.CONTAMINANT
  */
 export async function downloadTDSData(dataToDownload) {
   const getData = {
     [DataType.CONSUMPTION]: getRawFilteredConsumptionData,
-    [DataType.CONTAMINENT]: getRawFilteredContaminentData,
+    [DataType.CONTAMINANT]: getRawFilteredContaminantData,
   };
 
   const data = await getData[dataToDownload]();
@@ -70,7 +70,7 @@ export function downloadDataTable(tdsData, graphType) {
  * Parameters:
  * - data: the data to display, in object format where each key is a column with a corresponding value
  */
-export async function displayDataTable(data) {
+export async function displayDataTable(data, filters) {
   const tableContainer = el.dataTable.dataTable;
   tableContainer.innerHTML = "";
 
@@ -87,11 +87,41 @@ export async function displayDataTable(data) {
   headerRow.classList.add(classs.BOLD);
   columns.forEach((column) => {
     const th = document.createElement("th");
-    th.classList.add("data-table-cell");
-    th.textContent = column;
+    th.classList.add(classs.DATA_TABLE_CELL);
+    th.textContent = getTranslations().dataTable.headers[column];
     headerRow.appendChild(th);
   });
   table.appendChild(headerRow);
+
+  const convertToPlainNumber = (value) => {
+    if (!value || typeof value !== "string") return NaN;
+    const strippedValue = value.replace(/[^\d.-]/g, "");
+    if (!strippedValue || isNaN(strippedValue)) return NaN;
+    return Number(strippedValue);
+  };
+
+  data.sort((a, b) => {
+    const sortBy = filters.dataTableSortBy;
+    const valueA = a[sortBy];
+    const valueB = b[sortBy];
+
+    const numValueA = !isNaN(valueA)
+      ? Number(valueA)
+      : convertToPlainNumber(valueA);
+    const numValueB = !isNaN(valueB)
+      ? Number(valueB)
+      : convertToPlainNumber(valueB);
+
+    if (!isNaN(numValueA) && !isNaN(numValueB)) {
+      return numValueA - numValueB;
+    } else {
+      const nameA = String(valueA).toLowerCase();
+      const nameB = String(valueB).toLowerCase();
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    }
+  });
 
   data.forEach((item) => {
     const row = document.createElement("tr");

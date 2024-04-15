@@ -64,6 +64,8 @@ export async function initializePageText() {
     translations.filters.sandbox.referenceLineTitle;
   el.filters.sandbox.overrideTitle.innerHTML =
     translations.filters.sandbox.overrideTitle;
+  el.filters.sandbox.overrideSubtitle.innerHTML =
+    translations.filters.sandbox.overrideSubtitle;
 
   el.filters.titles.referenceLine.innerHTML =
     translations.filters.titles.referenceLine;
@@ -81,8 +83,8 @@ export async function initializePageText() {
   el.dataTable.title.innerHTML = translations.dataTable.title;
   el.dataTable.buttons.downloadConsumptionData.innerHTML =
     translations.dataTable.buttons.downloadConsumptionData;
-  el.dataTable.buttons.downloadContaminentData.innerHTML =
-    translations.dataTable.buttons.downloadContaminentData;
+  el.dataTable.buttons.downloadContaminantData.innerHTML =
+    translations.dataTable.buttons.downloadContaminantData;
   el.dataTable.buttons.downloadDataTable.innerHTML =
     translations.dataTable.buttons.downloadDataTable;
 

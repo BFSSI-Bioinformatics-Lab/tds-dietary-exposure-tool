@@ -40,7 +40,7 @@ const consumptionFiles = {
 
 export const getConsumptionFiles = () => consumptionFiles[userLanguage];
 
-const contaminentFiles = {
+const contaminantFiles = {
   [language.EN]: [
     "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
     "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
@@ -52,21 +52,21 @@ const contaminentFiles = {
     "Total Diet Study Trace Elements results 1993-2018.csv",
     "Total Diet Study Volatile Organic Compounds (VOCs) results 2015.csv",
     "Total Diet Study PFAS results 2016-2017.csv",
-  ].map((file) => "./data/contaminent/en/" + file),
+  ].map((file) => "./data/contaminant/en/" + file),
   [language.FR]: [
     "PFAS TDS 2016 public French(Export).csv",
     "PFAS TDS 2017 public French(Export).csv",
     "Radionuclide TDS 2022 public French(Export).csv",
     "Radionuclides TDS 2021 public French(Export).csv",
     "Trace Elements TDS 1993-2018 public French(Export).csv",
-  ].map((file) => "./data/contaminent/fr/" + file),
+  ].map((file) => "./data/contaminant/fr/" + file),
 };
 
-export const getContaminentFiles = () => contaminentFiles[userLanguage];
+export const getContaminantFiles = () => contaminantFiles[userLanguage];
 
 export const DataType = {
   CONSUMPTION: "CONSUMPTION",
-  CONTAMINENT: "CONTAMINENT",
+  CONTAMINANT: "CONTAMINANT",
 };
 
 export const DataColumns = {
@@ -81,7 +81,7 @@ export const DataColumns = {
   MEAN_FLAG: "MEAN_FLAG",
   MEAN_G_PPPD: "MEAN_G_PPPD",
   MEAN_G_PKGBWPD: "MEAN_G_PKGBWPD",
-  /* Contaminent */
+  /* Contaminant */
   CHEMICAL_GROUP: "CHEMICAL_GROUP",
   CHEMICAL: "CHEMICAL",
   COLLECTION_DATE: "COLLECTION_DATE",
@@ -118,6 +118,22 @@ export const GraphTypes = {
   RBASG: "RBASG",
   RBFG: "RBFG",
   RBF: "RBF",
+};
+
+export const DataTableHeaders = {
+  CHEMICAL: "CHEMICAL",
+  AGE_SEX_GROUP: "AGE_SEX_GROUP",
+  FOOD_GROUP: "FOOD_GROUP",
+  COMPOSITE: "COMPOSITE",
+  PERCENT_EXPOSURE: "PERCENT_EXPOSURE",
+  EXPOSURE: "EXPOSURE",
+  EXPOSURE_UNIT: "EXPOSURE_UNIT",
+  YEARS: "YEARS",
+  PERCENT_UNDER_LOD: "PERCENT_UNDER_LOD",
+  TREATMENT: "TREATMENT",
+  MODIFIED: "MODIFIED",
+  FLAGGED: "FLAGGED",
+  SUPPRESSED: "SUPPRESSED",
 };
 
 export const MeanFlag = {

@@ -116,15 +116,15 @@ export function getUserModifiedValueText(override) {
   );
 }
 
-export function getExposureUnit(contaminentUnit, filters) {
-  if (!contaminentUnit) {
+export function getExposureUnit(contaminantUnit, filters) {
+  if (!contaminantUnit) {
     return getTranslations().misc.na;
   }
   if (filters.chemicalGroup == getTranslations().tdsData.values.radionuclides) {
     return "mSv/year";
   }
   return (
-    contaminentUnit.split("/")[0] +
+    contaminantUnit.split("/")[0] +
     getTranslations().misc.consumptionUnitShort[
     filters.usePerPersonPerDay
       ? ConsumptionUnits.PERSON
@@ -147,9 +147,9 @@ export function getConsumptionUnit(graphEntry, filters) {
 }
 
 /**
- * Return year for raw contaminent entry
+ * Return year for raw contaminant entry
  */
-export function getYearForContaminentEntry(row) {
+export function getYearForContaminantEntry(row) {
   const year =
     "20" +
     row[getTranslations().tdsData.headers[DataColumns.COLLECTION_DATE]].split(
@@ -179,9 +179,9 @@ export function getYearForContaminentEntry(row) {
 }
 
 /**
- * Return composite info for raw contaminent entry
+ * Return composite info for raw contaminant entry
  */
-export function getCompositeInfoForContaminentEntry(row) {
+export function getCompositeInfoForContaminantEntry(row) {
   let info =
     row[getTranslations().tdsData.headers[DataColumns.SAMPLE_CODE]] +
     row[getTranslations().tdsData.headers[DataColumns.PRODUCT_DESC]];
@@ -193,9 +193,9 @@ export function getCompositeInfoForContaminentEntry(row) {
 }
 
 /**
- * Return occurrence for raw contaminent entry
+ * Return occurrence for raw contaminant entry
  */
-export function getOccurrenceForContaminentEntry(row) {
+export function getOccurrenceForContaminantEntry(row) {
   let result = Number(
     row[getTranslations().tdsData.headers[DataColumns.RESULT_VALUE]],
   );
@@ -206,10 +206,10 @@ export function getOccurrenceForContaminentEntry(row) {
 }
 
 /**
- * Return unit for raw contaminent entry unit
+ * Return unit for raw contaminant entry unit
  * Some entries of the phthalate di-(2-ethylhexyl) adipate (DEHA) use µg/g.
  */
-export function getUnitForContaminentEntry(unit) {
+export function getUnitForContaminantEntry(unit) {
   if (unit == "µg/g") {
     unit = "ng/g";
   }

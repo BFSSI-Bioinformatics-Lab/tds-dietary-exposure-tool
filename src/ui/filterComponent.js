@@ -2,6 +2,7 @@ import { classs, el } from "./const.js";
 import { displayGraph, saveGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
+  DataTableHeaders,
   DataType,
   GraphTypes,
   LODs,
@@ -106,7 +107,20 @@ export function getActiveFilters() {
         (item) => JSON.parse(item.data),
       ),
     },
+    dataTableSortBy: DataTableHeaders.EXPOSURE,
   };
+}
+
+function toggleDropdownArrow(arrowDown, arrowRight) {
+  (arrowDown.classList.contains(classs.HIDDEN)
+    ? () => {
+      arrowDown.classList.remove(classs.HIDDEN);
+      arrowRight.classList.add(classs.HIDDEN);
+    }
+    : () => {
+      arrowRight.classList.remove(classs.HIDDEN);
+      arrowDown.classList.add(classs.HIDDEN);
+    })();
 }
 
 export function addEventListenersToPage() {
@@ -116,6 +130,7 @@ export function addEventListenersToPage() {
         dropdown.content.classList.contains(classs.HIDDEN)
           ? dropdown.content.classList.remove(classs.HIDDEN)
           : dropdown.content.classList.add(classs.HIDDEN);
+        toggleDropdownArrow(dropdown.arrowDown, dropdown.arrowRight);
       });
     },
   );
@@ -178,12 +193,13 @@ export function addEventListenersToPage() {
     } else {
       el.dataTable.container.classList.add(classs.HIDDEN);
     }
+    toggleDropdownArrow(el.dataTable.arrowDown, el.dataTable.arrowRight);
   });
   el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
     downloadTDSData(DataType.CONSUMPTION);
   });
-  el.dataTable.buttons.downloadContaminentData.addEventListener("click", () => {
-    downloadTDSData(DataType.CONTAMINENT);
+  el.dataTable.buttons.downloadContaminantData.addEventListener("click", () => {
+    downloadTDSData(DataType.CONTAMINANT);
   });
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
     downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
@@ -195,6 +211,8 @@ export function addEventListenersToPage() {
     } else {
       el.about.tableContainer.classList.add(classs.HIDDEN);
     }
+
+    toggleDropdownArrow(el.about.arrowDown, el.about.arrowRight);
   });
 }
 
@@ -324,7 +342,7 @@ function displayChemicalGroups() {
     el.filters.inputs.chemicalGroup,
     getTranslations().filters.placeholders.select,
   );
-  Object.keys(tdsData.contaminent)
+  Object.keys(tdsData.contaminant)
     .sort()
     .forEach((chemicalGroup) => {
       const oe = document.createElement("option");
@@ -337,7 +355,7 @@ function displayChemicalGroups() {
 function displayChemicals() {
   el.filters.inputs.chemical.innerHTML = "";
   const chemicals = Object.keys(
-    tdsData.contaminent[el.filters.inputs.chemicalGroup.value],
+    tdsData.contaminant[el.filters.inputs.chemicalGroup.value],
   ).sort();
   chemicals.forEach((chemical) => {
     const oe = document.createElement("option");
@@ -376,7 +394,7 @@ function displayYears() {
   const filters = getActiveFilters();
   el.filters.inputs.years.innerHTML = "";
   const years = Object.keys(
-    tdsData.contaminent[filters.chemicalGroup][filters.chemical],
+    tdsData.contaminant[filters.chemicalGroup][filters.chemical],
   ).sort();
   years.forEach((year) => {
     const oe = document.createElement("option");
@@ -518,22 +536,22 @@ export function getFilteredTdsData() {
   const filters = getActiveFilters();
   let filteredTdsData = {
     ...tdsData,
-    contaminent: {},
+    contaminant: {},
   };
 
   Object.keys(
-    tdsData.contaminent[filters.chemicalGroup][filters.chemical],
+    tdsData.contaminant[filters.chemicalGroup][filters.chemical],
   ).forEach((year) => {
     if (filters.years.includes(year)) {
-      filteredTdsData.contaminent[year] =
-        tdsData.contaminent[filters.chemicalGroup][filters.chemical][year];
+      filteredTdsData.contaminant[year] =
+        tdsData.contaminant[filters.chemicalGroup][filters.chemical][year];
     }
   });
 
   filteredTdsData = {
     ...filteredTdsData,
-    contaminent: Object.fromEntries(
-      Object.entries(filteredTdsData.contaminent).map(([year, entries]) => [
+    contaminant: Object.fromEntries(
+      Object.entries(filteredTdsData.contaminant).map(([year, entries]) => [
         year,
         entries.map((entry) => {
           const modifiedEntry = { ...entry };
@@ -553,32 +571,32 @@ export function getFilteredTdsData() {
 
 export function updateLodFilterDescription(filteredTdsData, filters) {
   el.filters.titles.lodSubtitle.innerHTML = "";
-  let maxContaminentLod = 0;
-  let minContaminentLod = Infinity;
+  let maxContaminantLod = 0;
+  let minContaminantLod = Infinity;
   let maxUnits = null;
   let minUnits = null;
-  Object.values(filteredTdsData.contaminent).forEach((value) => {
+  Object.values(filteredTdsData.contaminant).forEach((value) => {
     value.forEach((row) => {
       const currLod = row.lod;
-      if (currLod > maxContaminentLod) {
+      if (currLod > maxContaminantLod) {
         maxUnits = row.units;
-        maxContaminentLod = currLod;
+        maxContaminantLod = currLod;
       }
-      if (currLod < minContaminentLod) {
+      if (currLod < minContaminantLod) {
         minUnits = row.units;
-        minContaminentLod = currLod;
+        minContaminantLod = currLod;
       }
     });
   });
-  if (minContaminentLod != Infinity) {
+  if (minContaminantLod != Infinity) {
     el.filters.titles.lodSubtitle.innerHTML =
       getTranslations().filters.titles.lodSubtitle +
       " " +
-      formatNumber(minContaminentLod, filters) +
+      formatNumber(minContaminantLod, filters) +
       " " +
       minUnits +
       " - " +
-      formatNumber(maxContaminentLod, filters) +
+      formatNumber(maxContaminantLod, filters) +
       " " +
       maxUnits;
   }
@@ -588,9 +606,9 @@ export function updateSandbox(filteredTdsData, filters) {
   el.filters.titles.referenceLine.innerHTML =
     getTranslations().filters.titles.referenceLine +
     '<span class="small"> (' +
-    (Object.keys(filteredTdsData.contaminent).length != 0
+    (Object.keys(filteredTdsData.contaminant).length != 0
       ? getExposureUnit(
-        Object.values(filteredTdsData.contaminent)[0][0].units,
+        Object.values(filteredTdsData.contaminant)[0][0].units,
         filters,
       )
       : getTranslations().misc.na) +
@@ -599,8 +617,8 @@ export function updateSandbox(filteredTdsData, filters) {
   el.filters.titles.overrideValue.innerHTML =
     getTranslations().filters.titles.overrideValue +
     '<span class="small"> (' +
-    (Object.keys(filteredTdsData.contaminent).length != 0
-      ? Object.values(filteredTdsData.contaminent)[0][0].units
+    (Object.keys(filteredTdsData.contaminant).length != 0
+      ? Object.values(filteredTdsData.contaminant)[0][0].units
       : getTranslations().misc.na) +
     ")</span>";
 }

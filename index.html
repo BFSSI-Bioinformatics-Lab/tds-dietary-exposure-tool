@@ -32,13 +32,27 @@
 
     <div id="information-container">
       <div class="dropdown-container hidden">
-        <button id="how-to-use-button" class="dropdown-button"></button>
-        <div id="how-to-use-content" class="dropdown-content hidden"></div>
+        <div>
+          <span id="how-to-use-arrow-right">▸</span>
+          <span id="how-to-use-arrow-down" class="hidden">▾</span>
+          <button id="how-to-use-button" class="dropdown-button"></button>
+        </div>
+        <div
+          id="how-to-use-content"
+          class="dropdown-content-container hidden"
+        ></div>
       </div>
 
       <div class="dropdown-container">
-        <button id="more-info-button" class="dropdown-button"></button>
-        <div id="more-info-content" class="dropdown-content hidden"></div>
+        <div>
+          <span id="more-info-arrow-right">▸</span>
+          <span id="more-info-arrow-down" class="hidden">▾</span>
+          <button id="more-info-button" class="dropdown-button"></button>
+        </div>
+        <div
+          id="more-info-content"
+          class="dropdown-content-container hidden"
+        ></div>
       </div>
     </div>
 
@@ -199,7 +213,7 @@
 
       <div id="sandbox-content">
         <div id="reference-line-container" class="sandbox-item">
-          <div id="reference-line-title"></div>
+          <div id="reference-line-title" class="sandbox-item-title"></div>
           <div class="filters-container">
             <div class="filter hidden">
               <label
@@ -214,7 +228,8 @@
         <div class="border"></div>
 
         <div id="override-container" class="sandbox-item">
-          <div id="override-title"></div>
+          <div id="override-title" class="sandbox-item-title"></div>
+          <div id="override-subtitle" class="small"></div>
           <div class="filters-container">
             <div class="filter hidden">
               <label
@@ -271,13 +286,17 @@
 
     -->
 
-    <div id="data-container" class="hidden">
-      <button id="data-table-title" class="bold"></button>
-      <div id="data-table-container" class="hidden">
+    <div id="data-container" class="hidden dropdown-container">
+      <div>
+        <span id="data-table-arrow-right">▸</span>
+        <span id="data-table-arrow-down" class="hidden">▾</span>
+        <button id="data-table-title" class="bold dropdown-button"></button>
+      </div>
+      <div id="data-table-container" class="hidden dropdown-content-container">
         <div id="data-table-button-container">
           <button id="download-data-table-button"></button>
           <button id="download-consumption-data-button"></button>
-          <button id="download-contaminent-data-button"></button>
+          <button id="download-contaminant-data-button"></button>
         </div>
         <div id="data-table"></div>
       </div>
@@ -291,9 +310,13 @@
 
     -->
 
-    <div id="about-container" class="hidden">
-      <button id="about-title" class="bold"></button>
-      <div id="about-table-container" class="hidden">
+    <div id="about-container" class="hidden dropdown-container">
+      <div>
+        <span id="about-arrow-right">▸</span>
+        <span id="about-arrow-down" class="hidden">▾</span>
+        <button id="about-title" class="bold dropdown-button"></button>
+      </div>
+      <div id="about-table-container" class="hidden dropdown-content-container">
         <div id="about-table"></div>
       </div>
     </div>

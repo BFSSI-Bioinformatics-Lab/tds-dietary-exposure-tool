@@ -4,12 +4,12 @@ import { lodOrMdlIsValid } from "./data.js";
 
 /**
  *
- * Return the occurrence value for a given row in the TDS contaminent data.
+ * Return the occurrence value for a given row in the TDS contaminant data.
  * This value could change from the occurrence value already existing in the data, based upon
  * the current filters and LOD levels.
  *
  */
-export function getOccurrenceForContaminentEntry(row, filters) {
+export function getOccurrenceForContaminantEntry(row, filters) {
   let result = row.occurrence;
 
   if (row.occurrence == 0) {
@@ -36,14 +36,14 @@ export function getOccurrenceForContaminentEntry(row, filters) {
  *
  * Parameters:
  *  - consumption: The mean consumption of a food composite
- *  - occurrence: The contaminent occurrence value
+ *  - occurrence: The contaminant occurrence value
  *  - filters: Currently selected filters. Required to check for and handle special cases.
  *  - age: Age that the consumption value is for. Required for handling special cases.
  *
  */
-export function getContaminentExposure(
+export function getContaminantExposure(
   meanConsumptionOfFoodComposite,
-  meanContaminentOccurrence,
+  meanContaminantOccurrence,
   filters,
   age,
 ) {
@@ -52,13 +52,13 @@ export function getContaminentExposure(
     const IDC = IDCs[filters.chemical][ageGroupToIDCAgeGroup[age]];
     return (
       // Unit: mSv/year
-      ((meanContaminentOccurrence * meanConsumptionOfFoodComposite) / 1000) *
+      ((meanContaminantOccurrence * meanConsumptionOfFoodComposite) / 1000) *
       IDC *
       365
     );
   }
 
-  return meanConsumptionOfFoodComposite * meanContaminentOccurrence;
+  return meanConsumptionOfFoodComposite * meanContaminantOccurrence;
 }
 
 /**

@@ -26,10 +26,14 @@ export const el = {
       howToUse: {
         button: document.getElementById("how-to-use-button"),
         content: document.getElementById("how-to-use-content"),
+        arrowDown: document.getElementById("how-to-use-arrow-down"),
+        arrowRight: document.getElementById("how-to-use-arrow-right"),
       },
       moreInfo: {
         button: document.getElementById("more-info-button"),
         content: document.getElementById("more-info-content"),
+        arrowDown: document.getElementById("more-info-arrow-down"),
+        arrowRight: document.getElementById("more-info-arrow-right"),
       },
     },
     languageButton: document.getElementById("language-button"),
@@ -81,6 +85,7 @@ export const el = {
       title: document.getElementById("sandbox-title"),
       referenceLineTitle: document.getElementById("reference-line-title"),
       overrideTitle: document.getElementById("override-title"),
+      overrideSubtitle: document.getElementById("override-subtitle"),
       addOverrideButton: document.getElementById("override-add-button"),
       overridesList: document.getElementById("overrides-list-container"),
     },
@@ -157,11 +162,13 @@ export const el = {
       downloadConsumptionData: document.getElementById(
         "download-consumption-data-button",
       ),
-      downloadContaminentData: document.getElementById(
-        "download-contaminent-data-button",
+      downloadContaminantData: document.getElementById(
+        "download-contaminant-data-button",
       ),
       downloadDataTable: document.getElementById("download-data-table-button"),
     },
+    arrowDown: document.getElementById("data-table-arrow-right"),
+    arrowRight: document.getElementById("data-table-arrow-down"),
   },
 
   /*
@@ -173,6 +180,8 @@ export const el = {
     title: document.getElementById("about-title"),
     tableContainer: document.getElementById("about-table-container"),
     table: document.getElementById("about-table"),
+    arrowDown: document.getElementById("about-arrow-right"),
+    arrowRight: document.getElementById("about-arrow-down"),
   },
 
   /*

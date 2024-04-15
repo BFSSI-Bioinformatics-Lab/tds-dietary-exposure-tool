@@ -57,7 +57,7 @@ export function displayGraph(data) {
       getGraphDataFn: formatRbasgToGroupedBar,
       getSvgFn: getGroupedBarSvg,
       getDataTableDataFn: formatRbsagToDataTable,
-      legendTitle: getTranslations().graphs.legend.ageGroup,
+      legendTitle: getTranslations().graphs.legend.sexGroup,
       hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
@@ -118,7 +118,7 @@ export function displayGraph(data) {
   el.graphs.saveGraph.classList.remove(classs.HIDDEN);
   el.dataTable.dataContainer.classList.remove(classs.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);
-  displayDataTable(dataTableData);
+  displayDataTable(dataTableData, filters);
 
   el.about.container.classList.remove(classs.HIDDEN);
 }

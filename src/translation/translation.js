@@ -1,6 +1,7 @@
 import {
   ConsumptionUnits,
   DataColumns,
+  DataTableHeaders,
   GraphTypes,
   LODs,
   PFASGroupings,
@@ -28,9 +29,10 @@ export function getTranslations() {
        */
 
       header: {
-        title: "<b> Dietary Exposure to Chemicals </b> from Health Canada",
+        title:
+          "<b> Canadian Total Diet Study 2008-2023 Dietary Exposure Tool </b> from Health Canada",
         information: {
-          howToUseButton: "? How to Use",
+          howToUseButton: "How to Use",
           howToUseContent: [
             "The graph at the top of the page compares how 12 broad food groups contribute to intake among children, youth & adolescents, adult females and adult males and the whole population.",
             "",
@@ -40,16 +42,16 @@ export function getTranslations() {
             "",
             "Each broad food group is represented in a different color and sub-group contribution is shown in the outside layers. Hover over a food group for more information. Click on the label to take a closer look into a food group. Click again to restore the complete graph. To see the level 2 sub-groups results in ascending order, click on the grey circle. Click again on the grey circle to restore the complete graph.",
           ],
-          moreInfoButton: "* Data Source",
+          moreInfoButton: "Data Sources",
           moreInfoContent: [
             "The data used to create this interactive tool are from the following sources:",
-            '- The Canadian Total Diet Study results from the 2008-2022 collection years. Available on the <a href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c" target="_blank">Canadian Laboratory Information Network.</a>',
-            '- <a href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130" target="_blank">The 2008-2022 Total Diet Study Food Consumption Tables (2015 CCHS-Nutrition).</a>',
+            '- The Canadian Total Diet Study results from the 2008-2023 collection years. Available on the <a href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c" target="_blank">Canadian Laboratory Information Network.</a>',
+            '- <a href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130" target="_blank">The 2008-2023 Total Diet Study Food Consumption Tables (2015 CCHS-Nutrition).</a>',
           ],
         },
-        language: "Switch to French",
+        language: "Français",
         subtitle:
-          "How much of various chemicals is the Canadian population exposed to through their diet? And which foods and food groups contribute the most?",
+          "How much of various chemicals are Canadian populations exposed to through their diet? And which foods and food groups contribute the most?",
       },
 
       /**
@@ -71,11 +73,11 @@ export function getTranslations() {
           lod: "Occurrence &ltLOD =",
           lodSubtitle: "LOD Range: ",
           units: "Units",
-          ageGroup: "Age Group",
-          domain: "Domain",
-          ageSexGroup: "Age-Sex Group",
-          range: "Range Format",
-          sortBy: "Sort By",
+          ageGroup: "Age Groups",
+          domain: "View by",
+          ageSexGroup: "Age-Sex Groups",
+          range: "View as",
+          sortBy: "Sort by",
           referenceLine: "Limit",
           overrideFood: "Food",
           overrideValue: "New Value",
@@ -95,12 +97,12 @@ export function getTranslations() {
           [ConsumptionUnits.KGBW]: "Per kg Bodyweight per Day",
         },
         rbasgDomainFormat: {
-          [RbasgDomainFormat.AGESEX]: "Age-Sex",
+          [RbasgDomainFormat.AGESEX]: "Age-Sex Group",
           [RbasgDomainFormat.YEAR]: "Year",
         },
         rbfgRangeFormat: {
           [RbfgRangeFormat.PERCENT]: "Percentages",
-          [RbfgRangeFormat.ABSOLUTE]: "Absolute",
+          [RbfgRangeFormat.ABSOLUTE]: "Absolute Values",
         },
         rbfSortByFormat: {
           [RbfSortByFormat.FOOD]: "Food",
@@ -112,6 +114,8 @@ export function getTranslations() {
           title: "Sandbox Environment",
           referenceLineTitle: "Add Reference Line to Graph:",
           overrideTitle: "Override Occurrence Value(s):",
+          overrideSubtitle:
+            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved.",
         },
       },
 
@@ -123,26 +127,27 @@ export function getTranslations() {
         info: {
           exposure: "Dietary Exposure",
           percentExposure: "% Dietary Exposure",
-          occurrence: "Contaminent Occurrence (mean)",
-          foodConsumption: "Mean Food Composite Consumption",
+          occurrence: "Contaminant Occurrence (mean)",
+          foodConsumption: "Food Composite Consumption (mean)",
           ageSexGroup: "Age-Sex Group",
           ageGroup: "Age Group",
           year: "Year",
         },
         legend: {
-          ageGroup: "Age Groups",
+          sexGroup: "Sex",
           foodGroup: "Food Groups",
         },
         saveGraph: {
           button: "Save Graph",
-          footer: "Data sources: xxxx",
+          footer:
+            "Data Sources: Health Canada, Canadian Total Diet Study, CANLINE and Statistics Canada, 2015 Canadian Community Health Survey – Nutrition, 2015, Share File",
           filename: "Graph Export",
         },
         [GraphTypes.RBASG]: {
           title: "Dietary Exposure Estimate by Age-Sex Group for",
           range: "Dietary Exposure",
           domain: {
-            [RbasgDomainFormat.AGESEX]: "Age Group(s)",
+            [RbasgDomainFormat.AGESEX]: "Age Group",
             [RbasgDomainFormat.YEAR]: "Year",
           },
         },
@@ -155,7 +160,7 @@ export function getTranslations() {
             [RbfgRangeFormat.PERCENT]: "% of Total Exposure",
             [RbfgRangeFormat.NUMBER]: "Dietary Exposure",
           },
-          domain: "Age-Sex Groups",
+          domain: "Age-Sex Group",
         },
       },
 
@@ -164,11 +169,11 @@ export function getTranslations() {
        */
 
       dataTable: {
-        title: "Data Tables",
+        title: "Data Table",
         buttons: {
-          downloadContaminentData: "Download Contaminent Data",
+          downloadContaminantData: "Download Contaminant Data",
           downloadConsumptionData: "Download Consumption Data",
-          downloadDataTable: "Download Calculations (Found Below)",
+          downloadDataTable: "Download Exposure Estimates",
         },
         exportNames: {
           [ConsumptionUnits.PERSON]: "Food Consumption per Person per Day",
@@ -177,19 +182,19 @@ export function getTranslations() {
           calculations: "Dietary Exposure Calculations",
         },
         headers: {
-          chemical: "Chemical",
-          ageSexGroup: "Age-sex Group",
-          foodGroup: "Food Group",
-          composite: "Food Name and Code",
-          percentExposure: "Percent Total Exposure",
-          exposure: "Exposure Estimate",
-          exposureUnit: "Unit",
-          years: "Year(s)",
-          percentUnderLod: "% <LOD",
-          treatment: "Treatment of <LOD",
-          modified: "User Modified Values",
-          flagged: "'E' Flag",
-          suppressed: "'F' Supressed",
+          [DataTableHeaders.CHEMICAL]: "Chemical",
+          [DataTableHeaders.AGE_SEX_GROUP]: "Age-sex Group",
+          [DataTableHeaders.FOOD_GROUP]: "Food Group",
+          [DataTableHeaders.COMPOSITE]: "Food Name and Code",
+          [DataTableHeaders.PERCENT_EXPOSURE]: "Percent Total Exposure",
+          [DataTableHeaders.EXPOSURE]: "Exposure Estimate",
+          [DataTableHeaders.EXPOSURE_UNIT]: "Unit",
+          [DataTableHeaders.YEARS]: "Year(s)",
+          [DataTableHeaders.PERCENT_UNDER_LOD]: "% <LOD",
+          [DataTableHeaders.TREATMENT]: "Treatment of <LOD",
+          [DataTableHeaders.MODIFIED]: "User-modified Values",
+          [DataTableHeaders.FLAGGED]: "'E' Flag",
+          [DataTableHeaders.SUPPRESSED]: "'F' Suppressed",
         },
         values: {
           occurrence: "Occurrence",
@@ -226,7 +231,7 @@ export function getTranslations() {
        */
 
       misc: {
-        noDataMsg: "No data available",
+        noDataMsg: "No results above LOD",
         na: "NA",
         consumptionUnitShort: {
           [ConsumptionUnits.KGBW]: "/kg BW/day",
@@ -255,7 +260,7 @@ export function getTranslations() {
           [DataColumns.MEAN_G_PPPD]: "Mean_grams_per_person_per_day",
           [DataColumns.MEAN_G_PKGBWPD]:
             "Mean_grams_per_kilogrambodyweight_per_day",
-          /* Contaminent */
+          /* Contaminant */
           [DataColumns.CHEMICAL_GROUP]: "Analyte Group",
           [DataColumns.CHEMICAL]: "Analyte Name",
           [DataColumns.COLLECTION_DATE]: "Sample Collection Date",
@@ -399,9 +404,9 @@ export function getTranslations() {
       header: {
         title: "<b> Dietary Exposure to Chemicals </b> from Health Canada (fr)",
         information: {
-          howToUseButton: "? How to Use (fr)",
+          howToUseButton: "How to Use (fr)",
           howToUseContent: [],
-          moreInfoButton: "* Data Source (fr)",
+          moreInfoButton: "Data Source (fr)",
           moreInfoContent: [],
         },
         language: "Passer à l'anglais",
@@ -465,6 +470,8 @@ export function getTranslations() {
           title: "Sandbox Environment (fr)",
           referenceLineTitle: "Add Reference Line to Graph: (fr)",
           overrideTitle: "Override Occurrence Value(s): (fr)",
+          overrideSubtitle:
+            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved. (fr)",
         },
       },
 
@@ -472,7 +479,7 @@ export function getTranslations() {
         info: {
           exposure: "Dietary Exposure (fr)",
           percentExposure: "% Dietary Exposure (fr)",
-          occurrence: "Contaminent Occurrence (mean) (fr)",
+          occurrence: "Contaminant Occurrence (mean) (fr)",
           foodConsumption: "Mean Food Composite Consumption (fr)",
           ageSexGroup: "Age-Sex Group (fr)",
           ageGroup: "Age Group (fr)",
@@ -511,7 +518,7 @@ export function getTranslations() {
       dataTable: {
         title: "Data Tables (fr)",
         buttons: {
-          downloadContaminentData: "Download Contaminent Data (fr)",
+          downloadContaminantData: "Download Contaminant Data (fr)",
           downloadConsumptionData: "Download Consumption Data (fr)",
           downloadDataTable: "Download Calculations (Found Below) (fr)",
         },
@@ -590,7 +597,7 @@ export function getTranslations() {
           [DataColumns.MEAN_G_PPPD]: "Moy_grammes_par_personne_par_jour",
           [DataColumns.MEAN_G_PKGBWPD]:
             "Moy_grammes_par_kilogramme_de_poids_corporel_par_jour ",
-          /* Contaminent */
+          /* Contaminant */
           [DataColumns.CHEMICAL_GROUP]: "Groupe de l'analyte",
           [DataColumns.CHEMICAL]: "Nom de l'analyte",
           [DataColumns.COLLECTION_DATE]: "Date de l'échantillonnage",

@@ -1,9 +1,9 @@
 import {
   getCompositeInfo,
-  getContaminentExposure,
-  getOccurrenceForContaminentEntry as getOccurrenceForContaminentEntry,
+  getContaminantExposure,
+  getOccurrenceForContaminantEntry as getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { ConsumptionUnits, MeanFlag } from "../config.js";
+import { ConsumptionUnits, DataTableHeaders, MeanFlag } from "../config.js";
 import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
@@ -37,27 +37,27 @@ export function getRbf(tdsData, filters) {
         consumptionMeanFlag: filters.usePerPersonPerDay
           ? consumption.meanFlagForPerPersonPerDay
           : consumption.meanFlagForPerKgBWPerDay,
-        contaminentUnit: "",
+        contaminantUnit: "",
         foodGroup,
       };
 
-      let numContaminents = 0;
-      let sumContaminents = 0;
-      let numContaminentUnderLod = 0;
+      let numContaminants = 0;
+      let sumContaminants = 0;
+      let numContaminantUnderLod = 0;
 
       filters.years.forEach((year) => {
-        tdsData.contaminent[year].forEach((contaminent) => {
-          if (contaminent.compositeInfo.includes(composite)) {
-            rbfData[composite].contaminentUnit = contaminent.units;
+        tdsData.contaminant[year].forEach((contaminant) => {
+          if (contaminant.compositeInfo.includes(composite)) {
+            rbfData[composite].contaminantUnit = contaminant.units;
 
-            numContaminents++;
-            sumContaminents += getOccurrenceForContaminentEntry(
-              contaminent,
+            numContaminants++;
+            sumContaminants += getOccurrenceForContaminantEntry(
+              contaminant,
               filters,
             );
 
-            if (contaminent.occurrence < contaminent.lod) {
-              numContaminentUnderLod++;
+            if (contaminant.occurrence < contaminant.lod) {
+              numContaminantUnderLod++;
             }
           }
         });
@@ -66,9 +66,9 @@ export function getRbf(tdsData, filters) {
         ? consumption.meanGramsPerPersonPerDay
         : consumption.meanGramsPerKgBWPerDay;
 
-      const occurrence = sumContaminents / numContaminents || 0;
+      const occurrence = sumContaminants / numContaminants || 0;
 
-      const exposure = getContaminentExposure(
+      const exposure = getContaminantExposure(
         meanConsumption,
         occurrence,
         filters,
@@ -81,7 +81,7 @@ export function getRbf(tdsData, filters) {
         meanOccurrence: occurrence,
         exposure,
         meanConsumption,
-        percentUnderLod: (numContaminentUnderLod / numContaminents) * 100 || 0,
+        percentUnderLod: (numContaminantUnderLod / numContaminants) * 100 || 0,
       };
       foodGroupExposures[foodGroup] += exposure;
     });
@@ -100,28 +100,29 @@ export function getRbf(tdsData, filters) {
  * Take in data formatted for comparing food composites and format it to data table format
  */
 export function formatRbfToDataTable(rbfData, filters) {
-  const headers = getTranslations().dataTable.headers;
-
   const dataTableData = Object.values(rbfData).map((row) => {
     const compositeInfo = getCompositeInfo(row);
 
     return {
-      [headers.chemical]: filters.chemical,
-      [headers.ageSexGroup]: getAgeSexDisplay(row.ageSexGroup),
-      [headers.foodGroup]: row.foodGroup,
-      [headers.composite]: compositeInfo,
-      [headers.percentExposure]: formatPercent(row.percentExposure),
-      [headers.exposure]: formatNumber(row.exposure, filters),
-      [headers.exposureUnit]: getExposureUnit(row.contaminentUnit, filters),
-      [headers.years]: filters.years.join(", "),
-      [headers.percentUnderLod]: formatPercent(row.percentUnderLod),
-      [headers.treatment]: filters.lod,
-      [headers.modified]: filters.override.list
+      [DataTableHeaders.CHEMICAL]: filters.chemical,
+      [DataTableHeaders.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
+      [DataTableHeaders.FOOD_GROUP]: row.foodGroup,
+      [DataTableHeaders.COMPOSITE]: compositeInfo,
+      [DataTableHeaders.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
+      [DataTableHeaders.EXPOSURE]: formatNumber(row.exposure, filters),
+      [DataTableHeaders.EXPOSURE_UNIT]: getExposureUnit(
+        row.contaminantUnit,
+        filters,
+      ),
+      [DataTableHeaders.YEARS``]: filters.years.join(", "),
+      [DataTableHeaders.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
+      [DataTableHeaders.TREATMENT]: filters.lod,
+      [DataTableHeaders.MODIFIED]: filters.override.list
         .filter((override) => override.composite.includes(row.composite))
         .map((override) => getUserModifiedValueText(override)),
-      [headers.flagged]:
+      [DataTableHeaders.FLAGGED]:
         row.consumptionMeanFlag == MeanFlag.FLAGGED ? compositeInfo : "",
-      [headers.suppressed]:
+      [DataTableHeaders.SUPPRESSED]:
         row.consumptionMeanFlag == MeanFlag.SUPPRESSED ? compositeInfo : "",
     };
   });
@@ -153,7 +154,7 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         ": " +
         formatNumber(row.exposure, filters) +
         " " +
-        getExposureUnit(row.contaminentUnit, filters) +
+        getExposureUnit(row.contaminantUnit, filters) +
         "\n" +
         getTranslations().graphs.info.percentExposure +
         ": " +
@@ -163,7 +164,7 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         ": " +
         formatNumber(row.meanOccurrence, filters) +
         " " +
-        row.contaminentUnit +
+        row.contaminantUnit +
         "\n" +
         getTranslations().graphs.info.foodConsumption +
         ": " +

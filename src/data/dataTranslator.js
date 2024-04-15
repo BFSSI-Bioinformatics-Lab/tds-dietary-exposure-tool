@@ -1,5 +1,5 @@
 import {
-  getContaminentFiles,
+  getContaminantFiles,
   YearMin,
   YearMax,
   GraphTypes,
@@ -15,11 +15,11 @@ import {
   getAgeSexGroupInfoForConsumptionEntry,
   getCompositeDescForConsumptionEntry,
   getCompositeForConsumptionEntry,
-  getCompositeInfoForContaminentEntry,
+  getCompositeInfoForContaminantEntry,
   getMeanFlagForConsumptionEntry,
-  getOccurrenceForContaminentEntry,
-  getUnitForContaminentEntry,
-  getYearForContaminentEntry,
+  getOccurrenceForContaminantEntry,
+  getUnitForContaminantEntry,
+  getYearForContaminantEntry,
 } from "../util/data.js";
 import { getActiveFilters } from "../ui/filterComponent.js";
 import { getTranslations } from "../translation/translation.js";
@@ -34,7 +34,7 @@ import { getTranslations } from "../translation/translation.js";
  *           - chemical
  *           - year
  *           - compositeInfo: The sample code and product description could both contain the food composite.
- *                            They should both be checked when linking consumption and contaminent.
+ *                            They should both be checked when linking consumption and contaminant.
  *                            These values will be concatenated and stored in compositeInfo.
  *           - occurrence
  *           - units
@@ -69,18 +69,18 @@ export let tdsData;
  */
 export async function loadTdsData() {
   const data = {
-    contaminent: {},
+    contaminant: {},
     consumption: {},
   };
 
-  // Fill contaminent data
-  for (const file of getContaminentFiles()) {
+  // Fill contaminant data
+  for (const file of getContaminantFiles()) {
     const raw = (await readCSV(file))?.rows;
     const chemicalGroup =
       raw[0][getTranslations().tdsData.headers[DataColumns.CHEMICAL_GROUP]]; // A given file will only be for a specific chemical group
-    data.contaminent[chemicalGroup] ??= {};
+    data.contaminant[chemicalGroup] ??= {};
     raw.forEach((row) => {
-      const year = getYearForContaminentEntry(row);
+      const year = getYearForContaminantEntry(row);
       if (year < YearMin || year > YearMax) {
         return;
       }
@@ -88,16 +88,16 @@ export async function loadTdsData() {
       const chemical =
         row[getTranslations().tdsData.headers[DataColumns.CHEMICAL]];
 
-      data.contaminent[chemicalGroup][chemical] ??= {};
-      data.contaminent[chemicalGroup][chemical][year] ??= [];
+      data.contaminant[chemicalGroup][chemical] ??= {};
+      data.contaminant[chemicalGroup][chemical][year] ??= [];
 
-      data.contaminent[chemicalGroup][chemical][year].push({
+      data.contaminant[chemicalGroup][chemical][year].push({
         chemicalGroup,
         chemical,
         year,
-        compositeInfo: getCompositeInfoForContaminentEntry(row),
-        occurrence: getOccurrenceForContaminentEntry(row),
-        units: getUnitForContaminentEntry(
+        compositeInfo: getCompositeInfoForContaminantEntry(row),
+        occurrence: getOccurrenceForContaminantEntry(row),
+        units: getUnitForContaminantEntry(
           row[getTranslations().tdsData.headers[DataColumns.UNIT]],
         ),
         lod: Number(
@@ -225,7 +225,7 @@ export async function loadTdsData() {
 
   // Create additional PFAS groupings
 
-  const pfasData = data.contaminent[getTranslations().tdsData.values.PFAS];
+  const pfasData = data.contaminant[getTranslations().tdsData.values.PFAS];
   if (pfasData) {
     Object.keys(PFASGroupings).forEach((pfasGrouping) => {
       pfasData[getTranslations().tdsData.values.PFASGroupings[pfasGrouping]] =
@@ -242,19 +242,19 @@ export async function loadTdsData() {
         .forEach((pfas) => {
           Object.keys(pfasData[pfas]).forEach((year) => {
             pfasGroupingData[year] ??= [];
-            pfasData[pfas][year].forEach((pfasContaminent) => {
-              let pfasGroupingDataForContaminent = pfasGroupingData[year].find(
-                (pfasGroupingContaminent) =>
-                  pfasGroupingContaminent.compositeInfo ==
-                  pfasContaminent.compositeInfo,
+            pfasData[pfas][year].forEach((pfasContaminant) => {
+              let pfasGroupingDataForContaminant = pfasGroupingData[year].find(
+                (pfasGroupingContaminant) =>
+                  pfasGroupingContaminant.compositeInfo ==
+                  pfasContaminant.compositeInfo,
               );
-              if (pfasGroupingDataForContaminent) {
-                pfasGroupingDataForContaminent.occurrence +=
-                  pfasContaminent.occurrence;
-                pfasGroupingDataForContaminent.lod += pfasContaminent.lod;
+              if (pfasGroupingDataForContaminant) {
+                pfasGroupingDataForContaminant.occurrence +=
+                  pfasContaminant.occurrence;
+                pfasGroupingDataForContaminant.lod += pfasContaminant.lod;
               } else {
                 pfasGroupingData[year].push({
-                  ...pfasContaminent,
+                  ...pfasContaminant,
                   chemicalGroup:
                     getTranslations().tdsData.values.PFASGroupings[
                     pfasGrouping
@@ -326,12 +326,12 @@ export async function getRawFilteredConsumptionData() {
  *   - rows: Array of raw data for contaminants
  *   - filename: Formatted filename
  */
-export async function getRawFilteredContaminentData() {
+export async function getRawFilteredContaminantData() {
   const filters = getActiveFilters();
 
   let filtered = [];
 
-  for (const file of getContaminentFiles()) {
+  for (const file of getContaminantFiles()) {
     let data = {};
     let rows = (await readCSV(file)).rows;
     const chemicalGroup =
@@ -343,7 +343,7 @@ export async function getRawFilteredContaminentData() {
       (row) =>
         row[getTranslations().tdsData.headers[DataColumns.CHEMICAL]] ==
         filters.chemical &&
-        filters.years.includes(getYearForContaminentEntry(row)),
+        filters.years.includes(getYearForContaminantEntry(row)),
     );
     data.filename = filters.chemicalGroup + " - " + filters.chemical;
     filtered.push(data);
