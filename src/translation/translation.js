@@ -8,6 +8,7 @@ import {
   RbasgDomainFormat,
   RbfSortByFormat,
   RbfgRangeFormat,
+  ageSexGroups,
   language,
   sexGroups,
   userLanguage,
@@ -136,6 +137,11 @@ export function getTranslations() {
         legend: {
           sexGroup: "Sex",
           foodGroup: "Food Groups",
+          sexGroups: {
+            [sexGroups.B]: "Both",
+            [sexGroups.F]: "Female",
+            [sexGroups.M]: "Male",
+          },
         },
         saveGraph: {
           button: "Save Graph",
@@ -488,6 +494,11 @@ export function getTranslations() {
         legend: {
           ageGroup: "Age Groups (fr)",
           foodGroup: "Food Groups (fr)",
+          sexGroups: {
+            [sexGroups.B]: "Les deux",
+            [sexGroups.F]: "Femelle",
+            [sexGroups.M]: "Mâle",
+          },
         },
         saveGraph: {
           button: "Save Graph (fr)",

@@ -162,7 +162,7 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
 
   Object.values(rbfData).forEach((row) => {
     sunburstData.children.push({
-      color: colorMapping[row.foodGroup],
+      color: colorMapping[row.foodGroup].color,
       value: row.percentExposure,
       sortBy: filters.sortByFood
         ? [row.percentExposure]

@@ -44,17 +44,26 @@ export function displayGraph(data) {
   const filters = getActiveFilters();
 
   const foodGroupColorMapping = generateColorMapping(
-    Object.keys(data.consumption),
+    Object.keys(data.consumption).reduce((acc, foodGroup) => {
+      acc[foodGroup] = { label: foodGroup, color: null };
+      return acc;
+    }, {}),
   );
   const sexGroupColorMapping = generateColorMapping(
-    Object.keys(sexGroups).map((s) => getTranslations().tdsData.values[s]),
+    Object.keys(sexGroups).reduce((acc, sex) => {
+      acc[sex] = {
+        label: getTranslations().graphs.legend.sexGroups[sex],
+        color: null,
+      };
+      return acc;
+    }, {}),
   );
 
   const graphMapping = {
     [GraphTypes.RBASG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${filters.chemical
         }, (${filters.years.join(", ")})`,
-      colorLegendData: sexGroupColorMapping,
+      colorLegendMapping: sexGroupColorMapping,
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
       getSvgFn: getGroupedBarSvg,
@@ -78,7 +87,7 @@ export function displayGraph(data) {
     [GraphTypes.RBFG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${filters.chemical
         }, \(${filters.years.join(", ")}\)`,
-      colorLegendData: foodGroupColorMapping,
+      colorLegendMapping: foodGroupColorMapping,
       getDataFn: getRbfg,
       getGraphDataFn: formatRbfgToStackedBar,
       getSvgFn: getStackedBarSvg,

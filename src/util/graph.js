@@ -68,21 +68,20 @@ export function getCompositeInfo(row) {
  * Generates a color mapping for a given set of labels.
  *
  * Parameters:
- * - An array of labels.
+ * - An array of object where each key has a inner text and color fields.
  *
  * Returns:
- * - A mapping from label to color.
+ * - A mapping from key to color and label.
  */
-export function generateColorMapping(labels) {
-  const mapping = {};
-
+export function generateColorMapping(mapping) {
   const colorFunction = d3.scaleOrdinal(
-    d3.quantize(d3.interpolateRainbow, labels.length + 1),
+    d3.quantize(d3.interpolateRainbow, Object.keys(mapping).length + 1),
   );
 
-  labels.forEach((l) => {
-    mapping[l] = colorFunction(l);
-  });
+  mapping = Object.keys(mapping).reduce((acc, key) => {
+    acc[key] = { ...mapping[key], color: colorFunction(key) };
+    return acc;
+  }, {});
 
   return mapping;
 }

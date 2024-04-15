@@ -13,7 +13,7 @@ export function displayColorLegend(data, title) {
   const contentEl = el.graphs.legend.content;
   contentEl.innerHTML = "";
 
-  Object.keys(data).forEach((label) => {
+  Object.values(data).forEach((mapping) => {
     const itemEl = document.createElement("div");
     itemEl.classList.add(classs.GRAPH_LEGEND_ITEM);
 
@@ -21,11 +21,11 @@ export function displayColorLegend(data, title) {
     const labelEl = document.createElement("div");
     colorEl.classList.add(classs.GRAPH_LEGEND_COLOR);
 
-    colorEl.style.backgroundColor = data[label];
-    labelEl.innerHTML = label;
+    colorEl.style.backgroundColor = mapping.color;
+    labelEl.innerHTML = mapping.label;
 
     itemEl.append(colorEl);
-    itemEl.append(label);
+    itemEl.append(labelEl);
     contentEl.appendChild(itemEl);
   });
 }

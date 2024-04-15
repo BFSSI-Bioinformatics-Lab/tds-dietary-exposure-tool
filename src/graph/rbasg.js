@@ -20,9 +20,9 @@ import {
 } from "../util/data.js";
 
 /**
- * Take in filtered TDS data and return data which has been strictly filtered and formatted 
+ * Take in filtered TDS data and return data which has been strictly filtered and formatted
  * for use when comparing results by age-sex group
- * 
+ *
  * Returns:
  * - An object with the following properties:
  *  - Age group
@@ -133,7 +133,7 @@ export function getRbasg(tdsData, filters) {
 
 /**
  * Take in data formatted for comparing results by age-sex group (see function above) and format it to a data table format
- * 
+ *
  * Returns:
  * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
@@ -154,9 +154,7 @@ export function formatRbsagToDataTable(rbasgData, filters) {
           filters,
         ),
         [DataTableHeader.YEARS]: row.years.join(", "),
-        [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(
-          row.percentUnderLod,
-        ),
+        [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
         [DataTableHeader.TREATMENT]: filters.lod,
         [DataTableHeader.MODIFIED]: filters.override.list
           .map((override) => getUserModifiedValueText(override))
@@ -171,7 +169,7 @@ export function formatRbsagToDataTable(rbasgData, filters) {
 
 /**
  * Take in data formatted for comparing results by age-sex group and format it to grouped bar data
- * 
+ *
  * Returns:
  * - An object adhering to the contract specified in groupedBar.js
  */
@@ -199,7 +197,7 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
         entry: entry,
         group: sexDisplay,
         value: row.exposure,
-        color: colorMapping[sexDisplay],
+        color: colorMapping[sex].color,
         info:
           getTranslations().graphs.info.exposure +
           ": " +
