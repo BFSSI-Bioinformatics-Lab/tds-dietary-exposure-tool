@@ -1,10 +1,154 @@
-import { GraphTypes } from "../config.js";
+import { DataType, GraphTypes, toggleUserLanguage } from "../const.js";
 import { getTranslations } from "../translation/translation.js";
-import { el } from "./const.js";
-import { displayAboutTable } from "./dataTableComponent.js";
+import {
+  displayAboutTable,
+  downloadDataTable,
+  downloadTDSData,
+} from "./dataTableComponent.js";
+import { classs, el } from "./const.js";
+import { displayGraph, downloadGraph } from "./graphComponent.js";
+import { getOverrideText } from "../util/data.js";
+import { loadTdsData } from "../data/dataTranslator.js";
+import {
+  displayFilterText,
+  getActiveFilters,
+  getFilteredTdsData,
+  hideFilters,
+} from "./filter.js";
 
 /**
- * Much of the text found on the page is hard-coded. For this reason,
+ * Initialize all the event listeners related to the page: dropdowns, buttons, etc.
+ */
+export function addEventListenersToPage() {
+  [el.header.information.howToUse, el.header.information.moreInfo].forEach(
+    (dropdown) => {
+      dropdown.button.addEventListener("click", () => {
+        dropdown.content.classList.contains(classs.HIDDEN)
+          ? dropdown.content.classList.remove(classs.HIDDEN)
+          : dropdown.content.classList.add(classs.HIDDEN);
+        toggleDropdownArrow(dropdown.arrowDown, dropdown.arrowRight);
+      });
+    },
+  );
+  el.header.languageButton.addEventListener("click", async () => {
+    toggleUserLanguage();
+    await resetPage();
+  });
+
+  el.filters.sandbox.openButton.addEventListener("click", () => {
+    el.filters.sandbox.container.classList.remove(classs.HIDDEN);
+  });
+
+  el.filters.sandbox.closeButton.addEventListener("click", () => {
+    el.filters.sandbox.container.classList.add(classs.HIDDEN);
+  });
+
+  el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
+    const { override } = getActiveFilters();
+    if (override.composite && override.occurrence) {
+      Array.from(el.filters.inputs.overrideFood.options).find(
+        (option) =>
+          JSON.parse(option.value || null)?.composite == override.composite,
+      ).disabled = true;
+      el.filters.inputs.overrideFood.selectedIndex = 0;
+
+      const itemContainer = document.createElement("div");
+      itemContainer.classList.add(classs.OVERRIDE_ITEM);
+
+      const itemText = document.createElement("div");
+      itemText.data = JSON.stringify(override);
+      itemText.innerHTML = getOverrideText(override);
+      itemText.classList.add(classs.OVERRIDE_VALUE);
+
+      const removeButton = document.createElement("button");
+      removeButton.classList.add(classs.SANDBOX_BUTTON);
+      removeButton.innerHTML = "-";
+      removeButton.addEventListener("click", () => {
+        el.filters.sandbox.overridesList.removeChild(itemContainer);
+        Array.from(el.filters.inputs.overrideFood.options).find(
+          (option) =>
+            JSON.parse(option.value || null)?.composite == override.composite,
+        ).disabled = false;
+        displayGraph(getFilteredTdsData());
+      });
+
+      itemContainer.appendChild(itemText);
+      itemContainer.appendChild(removeButton);
+      el.filters.sandbox.overridesList.appendChild(itemContainer);
+    }
+    displayGraph(getFilteredTdsData());
+  });
+
+  el.graphs.saveGraph.addEventListener("click", () => {
+    downloadGraph();
+  });
+
+  el.dataTable.title.addEventListener("click", () => {
+    if (el.dataTable.container.classList.contains(classs.HIDDEN)) {
+      el.dataTable.container.classList.remove(classs.HIDDEN);
+    } else {
+      el.dataTable.container.classList.add(classs.HIDDEN);
+    }
+    toggleDropdownArrow(el.dataTable.arrowDown, el.dataTable.arrowRight);
+  });
+  el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
+    downloadTDSData(DataType.CONSUMPTION);
+  });
+  el.dataTable.buttons.downloadContaminantData.addEventListener("click", () => {
+    downloadTDSData(DataType.CONTAMINANT);
+  });
+  el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
+    downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
+  });
+
+  el.about.title.addEventListener("click", () => {
+    if (el.about.tableContainer.classList.contains(classs.HIDDEN)) {
+      el.about.tableContainer.classList.remove(classs.HIDDEN);
+    } else {
+      el.about.tableContainer.classList.add(classs.HIDDEN);
+    }
+
+    toggleDropdownArrow(el.about.arrowDown, el.about.arrowRight);
+  });
+}
+
+/**
+ * Function used to perform UI changes necessary for a dropdown.
+ */
+function toggleDropdownArrow(arrowDownEl, arrowRightEl) {
+  (arrowDownEl.classList.contains(classs.HIDDEN)
+    ? () => {
+      arrowDownEl.classList.remove(classs.HIDDEN);
+      arrowRightEl.classList.add(classs.HIDDEN);
+    }
+    : () => {
+      arrowRightEl.classList.remove(classs.HIDDEN);
+      arrowDownEl.classList.add(classs.HIDDEN);
+    })();
+}
+
+/**
+ * Function to reset the application: hiding certain elements, redisplay page text, clear and redisplay filters, reload data, etc.
+ * This function is used when switching languages.
+ */
+async function resetPage() {
+  el.misc.loader.classList.remove(classs.HIDDEN);
+  initializePageText();
+  hideFilters();
+  el.graphs.container.classList.add(classs.HIDDEN);
+  el.graphs.saveGraph.classList.add(classs.HIDDEN);
+  el.dataTable.dataContainer.classList.add(classs.HIDDEN);
+  el.about.container.classList.add(classs.HIDDEN);
+  el.filters.sandbox.container.classList.add(classs.HIDDEN);
+  el.filters.inputs.chemicalGroup.innerHTML = "";
+  el.filters.inputs.chemical.innerHTML = "";
+  await loadTdsData();
+  displayFilterText();
+  el.misc.loader.classList.add(classs.HIDDEN);
+}
+
+/**
+ * Much of the text found on the page is stored in a translation file. For this reason,
  * this function exists to dynamically load that text into the page.
  */
 export async function initializePageText() {

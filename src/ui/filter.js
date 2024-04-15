@@ -1,9 +1,8 @@
 import { classs, el } from "./const.js";
-import { displayGraph, saveGraph } from "./graphComponent.js";
+import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
-  DataTableHeaders,
-  DataType,
+  DataTableHeader,
   GraphTypes,
   LODs,
   RbasgDomainFormat,
@@ -11,22 +10,19 @@ import {
   RbfgRangeFormat,
   ageGroups,
   ageSexGroups,
-  toggleUserLanguage,
-} from "../config.js";
-import { downloadDataTable, downloadTDSData } from "./dataTableComponent.js";
+} from "../const.js";
 import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
-  getAgeAndSex,
-  getAgeSex,
   getAgeSexDisplay,
   getExposureUnit,
-  getOverrideText,
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
-import { initializePageText } from "./page.js";
-import { loadTdsData, tdsData } from "../data/dataTranslator.js";
+import { tdsData } from "../data/dataTranslator.js";
 
+/**
+ * Return the graph-type selected by the user
+ */
 export function getSelectedGraphType() {
   const id = document.querySelector(".active-graph-select")?.id.split("-")[0];
 
@@ -53,6 +49,10 @@ function selectionsCompleted() {
   );
 }
 
+/**
+ * Get all the currently selected filters from the user.
+ * Used throughout the application for displaying other filters, executing calculations, displaying/updating graphs, etc.
+ */
 export function getActiveFilters() {
   let graphType;
   try {
@@ -107,115 +107,13 @@ export function getActiveFilters() {
         (item) => JSON.parse(item.data),
       ),
     },
-    dataTableSortBy: DataTableHeaders.EXPOSURE,
+    dataTableSortBy: DataTableHeader.AGE_SEX_GROUP,
   };
 }
 
-function toggleDropdownArrow(arrowDown, arrowRight) {
-  (arrowDown.classList.contains(classs.HIDDEN)
-    ? () => {
-      arrowDown.classList.remove(classs.HIDDEN);
-      arrowRight.classList.add(classs.HIDDEN);
-    }
-    : () => {
-      arrowRight.classList.remove(classs.HIDDEN);
-      arrowDown.classList.add(classs.HIDDEN);
-    })();
-}
-
-export function addEventListenersToPage() {
-  [el.header.information.howToUse, el.header.information.moreInfo].forEach(
-    (dropdown) => {
-      dropdown.button.addEventListener("click", () => {
-        dropdown.content.classList.contains(classs.HIDDEN)
-          ? dropdown.content.classList.remove(classs.HIDDEN)
-          : dropdown.content.classList.add(classs.HIDDEN);
-        toggleDropdownArrow(dropdown.arrowDown, dropdown.arrowRight);
-      });
-    },
-  );
-  el.header.languageButton.addEventListener("click", async () => {
-    toggleUserLanguage();
-    await resetPage();
-  });
-
-  el.filters.sandbox.openButton.addEventListener("click", () => {
-    el.filters.sandbox.container.classList.remove(classs.HIDDEN);
-  });
-
-  el.filters.sandbox.closeButton.addEventListener("click", () => {
-    el.filters.sandbox.container.classList.add(classs.HIDDEN);
-  });
-
-  el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
-    const { override } = getActiveFilters();
-    if (override.composite && override.occurrence) {
-      Array.from(el.filters.inputs.overrideFood.options).find(
-        (option) =>
-          JSON.parse(option.value || null)?.composite == override.composite,
-      ).disabled = true;
-      el.filters.inputs.overrideFood.selectedIndex = 0;
-
-      const itemContainer = document.createElement("div");
-      itemContainer.classList.add(classs.OVERRIDE_ITEM);
-
-      const itemText = document.createElement("div");
-      itemText.data = JSON.stringify(override);
-      itemText.innerHTML = getOverrideText(override);
-      itemText.classList.add(classs.OVERRIDE_VALUE);
-
-      const removeButton = document.createElement("button");
-      removeButton.classList.add(classs.SANDBOX_BUTTON);
-      removeButton.innerHTML = "-";
-      removeButton.addEventListener("click", () => {
-        el.filters.sandbox.overridesList.removeChild(itemContainer);
-        Array.from(el.filters.inputs.overrideFood.options).find(
-          (option) =>
-            JSON.parse(option.value || null)?.composite == override.composite,
-        ).disabled = false;
-        displayGraph(getFilteredTdsData());
-      });
-
-      itemContainer.appendChild(itemText);
-      itemContainer.appendChild(removeButton);
-      el.filters.sandbox.overridesList.appendChild(itemContainer);
-    }
-    displayGraph(getFilteredTdsData());
-  });
-
-  el.graphs.saveGraph.addEventListener("click", () => {
-    saveGraph();
-  });
-
-  el.dataTable.title.addEventListener("click", () => {
-    if (el.dataTable.container.classList.contains(classs.HIDDEN)) {
-      el.dataTable.container.classList.remove(classs.HIDDEN);
-    } else {
-      el.dataTable.container.classList.add(classs.HIDDEN);
-    }
-    toggleDropdownArrow(el.dataTable.arrowDown, el.dataTable.arrowRight);
-  });
-  el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
-    downloadTDSData(DataType.CONSUMPTION);
-  });
-  el.dataTable.buttons.downloadContaminantData.addEventListener("click", () => {
-    downloadTDSData(DataType.CONTAMINANT);
-  });
-  el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
-    downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
-  });
-
-  el.about.title.addEventListener("click", () => {
-    if (el.about.tableContainer.classList.contains(classs.HIDDEN)) {
-      el.about.tableContainer.classList.remove(classs.HIDDEN);
-    } else {
-      el.about.tableContainer.classList.add(classs.HIDDEN);
-    }
-
-    toggleDropdownArrow(el.about.arrowDown, el.about.arrowRight);
-  });
-}
-
+/**
+ * Initialize all the event listeners related to the filters.
+ */
 function addEventListenersToFilters() {
   el.filters.inputs.chemicalGroup.addEventListener("change", () => {
     displayChemicals();
@@ -266,7 +164,7 @@ function addEventListenersToFilters() {
         }
       });
       if (selectionsCompleted()) {
-        displayFilters();
+        showFilters();
         displayGraph(getFilteredTdsData());
       }
     });
@@ -280,7 +178,7 @@ function addEventListenersToFilters() {
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
       if (selectionsCompleted()) {
-        displayFilters();
+        showFilters();
         displayGraph(getFilteredTdsData());
       }
     });
@@ -292,23 +190,7 @@ export function initializeFilters() {
   displayFilterText();
 }
 
-async function resetPage() {
-  el.misc.loader.classList.remove(classs.HIDDEN);
-  initializePageText();
-  hideFilters();
-  el.graphs.container.classList.add(classs.HIDDEN);
-  el.graphs.saveGraph.classList.add(classs.HIDDEN);
-  el.dataTable.dataContainer.classList.add(classs.HIDDEN);
-  el.about.container.classList.add(classs.HIDDEN);
-  el.filters.sandbox.container.classList.add(classs.HIDDEN);
-  el.filters.inputs.chemicalGroup.innerHTML = "";
-  el.filters.inputs.chemical.innerHTML = "";
-  await loadTdsData();
-  displayFilterText();
-  el.misc.loader.classList.add(classs.HIDDEN);
-}
-
-function displayFilterText() {
+export function displayFilterText() {
   displayChemicalGroups();
   addPlaceholderToSelect(el.filters.inputs.chemical, "...");
   displayLods();
@@ -324,6 +206,31 @@ function displayFilterText() {
     getTranslations().filters.placeholders.select,
   );
   displayOverrideFood();
+}
+
+export function hideFilters() {
+  el.filters.hiddenContainers.forEach((container) => {
+    container.classList.add(classs.HIDDEN);
+  });
+  el.filters.borders.forEach((border) => {
+    border.classList.add(classs.HIDDEN);
+  });
+}
+
+function showFilters() {
+  el.filters.hiddenContainers.forEach((container) => {
+    container.classList.remove(classs.HIDDEN);
+  });
+  el.filters.borders.forEach((border) => {
+    border.classList.remove(classs.HIDDEN);
+  });
+
+  if (
+    el.filters.inputs.chemicalGroup.value ==
+    getTranslations().tdsData.values.radionuclides
+  ) {
+    el.filters.containersMap.consumptionUnits.classList.add(classs.HIDDEN);
+  }
 }
 
 function addPlaceholderToSelect(select, text) {
@@ -363,31 +270,6 @@ function displayChemicals() {
     oe.text = chemical;
     el.filters.inputs.chemical.appendChild(oe);
   });
-}
-
-function hideFilters() {
-  el.filters.hiddenContainers.forEach((container) => {
-    container.classList.add(classs.HIDDEN);
-  });
-  el.filters.borders.forEach((border) => {
-    border.classList.add(classs.HIDDEN);
-  });
-}
-
-function displayFilters() {
-  el.filters.hiddenContainers.forEach((container) => {
-    container.classList.remove(classs.HIDDEN);
-  });
-  el.filters.borders.forEach((border) => {
-    border.classList.remove(classs.HIDDEN);
-  });
-
-  if (
-    el.filters.inputs.chemicalGroup.value ==
-    getTranslations().tdsData.values.radionuclides
-  ) {
-    el.filters.containersMap.consumptionUnits.classList.add(classs.HIDDEN);
-  }
 }
 
 function displayYears() {
@@ -473,6 +355,7 @@ function displayRbfgAgeSexGroupFilter() {
     ageSexGroupEl.appendChild(oe);
   });
 }
+
 function displayRbfgRangeFilter() {
   const rangeEl = el.graphs[GraphTypes.RBFG].filters.range;
   rangeEl.innerHTML = "";
@@ -532,6 +415,101 @@ function displayOverrideFood() {
   });
 }
 
+/**
+ * Depending on the user-selected filters, different LOD values / contamination units may need to be
+ * displayed in the LOD descripton
+ */
+export function updateLodFilterDescription(filteredTdsData, filters) {
+  el.filters.titles.lodSubtitle.innerHTML = "";
+  let maxContaminantLod = 0;
+  let minContaminantLod = Infinity;
+  let maxUnits = null;
+  let minUnits = null;
+  Object.values(filteredTdsData.contaminant).forEach((value) => {
+    value.forEach((row) => {
+      const currLod = row.lod;
+      if (currLod > maxContaminantLod) {
+        maxUnits = row.units;
+        maxContaminantLod = currLod;
+      }
+      if (currLod < minContaminantLod) {
+        minUnits = row.units;
+        minContaminantLod = currLod;
+      }
+    });
+  });
+  if (minContaminantLod != Infinity) {
+    el.filters.titles.lodSubtitle.innerHTML =
+      getTranslations().filters.titles.lodSubtitle +
+      " " +
+      formatNumber(minContaminantLod, filters) +
+      " " +
+      minUnits +
+      " - " +
+      formatNumber(maxContaminantLod, filters) +
+      " " +
+      maxUnits;
+  }
+}
+
+/**
+ * Depending on the user-selected filters, different consumption/contaminations units may need to be
+ * displayed in the sandbox
+ */
+export function updateSandbox(filteredTdsData, filters) {
+  el.filters.titles.referenceLine.innerHTML =
+    getTranslations().filters.titles.referenceLine +
+    '<span class="small"> (' +
+    (Object.keys(filteredTdsData.contaminant).length != 0
+      ? getExposureUnit(
+        Object.values(filteredTdsData.contaminant)[0][0].units,
+        filters,
+      )
+      : getTranslations().misc.na) +
+    ")</span>";
+
+  el.filters.titles.overrideValue.innerHTML =
+    getTranslations().filters.titles.overrideValue +
+    '<span class="small"> (' +
+    (Object.keys(filteredTdsData.contaminant).length != 0
+      ? Object.values(filteredTdsData.contaminant)[0][0].units
+      : getTranslations().misc.na) +
+    ")</span>";
+}
+
+/**
+ * A function that retrieves the current user-selected filters, and filters the contaminant data from the global
+ * TDS data for the currently-selected chemical group, chemical, and years. This function is called before passing
+ * data off to calculation/graph functions. See the global TDS data object for description of the returned fields.
+ *
+ * Returns:
+ * - An object containing filtered TDS data in a structured format with the following properties:
+ *   - contaminant
+ *     - chemicalGroup
+ *     - chemical
+ *     - year:
+ *       - chemicalGroup
+ *       - chemical
+ *       - year
+ *       - compositeInfo:
+ *       - occurrence
+ *       - units
+ *       - lod
+ *   - consumption
+ *     - foodGroup
+ *       - composite
+ *         - age
+ *         - ageSexGroup
+ *         - composite
+ *         - compositeDesc
+ *         - foodGroup
+ *         - meanFlag
+ *         - meanGramsPerKgBWPerDay
+ *         - meanGramsPerPersonPerDay
+ *         - sex
+ *       // ... (more composites)
+ *     // ... (more food groups)
+ */
 export function getFilteredTdsData() {
   const filters = getActiveFilters();
   let filteredTdsData = {
@@ -567,58 +545,4 @@ export function getFilteredTdsData() {
   };
 
   return filteredTdsData;
-}
-
-export function updateLodFilterDescription(filteredTdsData, filters) {
-  el.filters.titles.lodSubtitle.innerHTML = "";
-  let maxContaminantLod = 0;
-  let minContaminantLod = Infinity;
-  let maxUnits = null;
-  let minUnits = null;
-  Object.values(filteredTdsData.contaminant).forEach((value) => {
-    value.forEach((row) => {
-      const currLod = row.lod;
-      if (currLod > maxContaminantLod) {
-        maxUnits = row.units;
-        maxContaminantLod = currLod;
-      }
-      if (currLod < minContaminantLod) {
-        minUnits = row.units;
-        minContaminantLod = currLod;
-      }
-    });
-  });
-  if (minContaminantLod != Infinity) {
-    el.filters.titles.lodSubtitle.innerHTML =
-      getTranslations().filters.titles.lodSubtitle +
-      " " +
-      formatNumber(minContaminantLod, filters) +
-      " " +
-      minUnits +
-      " - " +
-      formatNumber(maxContaminantLod, filters) +
-      " " +
-      maxUnits;
-  }
-}
-
-export function updateSandbox(filteredTdsData, filters) {
-  el.filters.titles.referenceLine.innerHTML =
-    getTranslations().filters.titles.referenceLine +
-    '<span class="small"> (' +
-    (Object.keys(filteredTdsData.contaminant).length != 0
-      ? getExposureUnit(
-        Object.values(filteredTdsData.contaminant)[0][0].units,
-        filters,
-      )
-      : getTranslations().misc.na) +
-    ")</span>";
-
-  el.filters.titles.overrideValue.innerHTML =
-    getTranslations().filters.titles.overrideValue +
-    '<span class="small"> (' +
-    (Object.keys(filteredTdsData.contaminant).length != 0
-      ? Object.values(filteredTdsData.contaminant)[0][0].units
-      : getTranslations().misc.na) +
-    ")</span>";
 }

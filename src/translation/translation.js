@@ -1,7 +1,7 @@
 import {
   ConsumptionUnits,
-  DataColumns,
-  DataTableHeaders,
+  DataColumn,
+  DataTableHeader,
   GraphTypes,
   LODs,
   PFASGroupings,
@@ -11,7 +11,7 @@ import {
   language,
   sexGroups,
   userLanguage,
-} from "../config.js";
+} from "../const.js";
 
 export function getTranslations() {
   const translations = {
@@ -182,19 +182,19 @@ export function getTranslations() {
           calculations: "Dietary Exposure Calculations",
         },
         headers: {
-          [DataTableHeaders.CHEMICAL]: "Chemical",
-          [DataTableHeaders.AGE_SEX_GROUP]: "Age-sex Group",
-          [DataTableHeaders.FOOD_GROUP]: "Food Group",
-          [DataTableHeaders.COMPOSITE]: "Food Name and Code",
-          [DataTableHeaders.PERCENT_EXPOSURE]: "Percent Total Exposure",
-          [DataTableHeaders.EXPOSURE]: "Exposure Estimate",
-          [DataTableHeaders.EXPOSURE_UNIT]: "Unit",
-          [DataTableHeaders.YEARS]: "Year(s)",
-          [DataTableHeaders.PERCENT_UNDER_LOD]: "% <LOD",
-          [DataTableHeaders.TREATMENT]: "Treatment of <LOD",
-          [DataTableHeaders.MODIFIED]: "User-modified Values",
-          [DataTableHeaders.FLAGGED]: "'E' Flag",
-          [DataTableHeaders.SUPPRESSED]: "'F' Suppressed",
+          [DataTableHeader.CHEMICAL]: "Chemical",
+          [DataTableHeader.AGE_SEX_GROUP]: "Age-sex Group",
+          [DataTableHeader.FOOD_GROUP]: "Food Group",
+          [DataTableHeader.COMPOSITE]: "Food Name and Code",
+          [DataTableHeader.PERCENT_EXPOSURE]: "Percent Total Exposure",
+          [DataTableHeader.EXPOSURE]: "Exposure Estimate",
+          [DataTableHeader.EXPOSURE_UNIT]: "Unit",
+          [DataTableHeader.YEARS]: "Year(s)",
+          [DataTableHeader.PERCENT_UNDER_LOD]: "% <LOD",
+          [DataTableHeader.TREATMENT]: "Treatment of <LOD",
+          [DataTableHeader.MODIFIED]: "User-modified Values",
+          [DataTableHeader.FLAGGED]: "'E' Flag",
+          [DataTableHeader.SUPPRESSED]: "'F' Suppressed",
         },
         values: {
           occurrence: "Occurrence",
@@ -247,30 +247,30 @@ export function getTranslations() {
       tdsData: {
         headers: {
           /* Consumption */
-          [DataColumns.MAPPING_COMPOSITE_DESC]:
+          [DataColumn.MAPPING_COMPOSITE_DESC]:
             "Composite Description (TDS_FC_Label)",
-          [DataColumns.MAPPING_COMPOSITE_CODE]: "Composite Code (TDS_FC_Code)",
-          [DataColumns.MAPPING_COMPOSITE_CONTENT]:
+          [DataColumn.MAPPING_COMPOSITE_CODE]: "Composite Code (TDS_FC_Code)",
+          [DataColumn.MAPPING_COMPOSITE_CONTENT]:
             "Description of the content included in composite",
-          [DataColumns.POPULATION]: "population",
-          [DataColumns.POPULATION_GROUP]: "Population_group",
-          [DataColumns.COMPOSITE_DESC]: "TDS_FC_label",
-          [DataColumns.COMPOSITE_CODE]: "TDS_FC_Code",
-          [DataColumns.MEAN_FLAG]: "Mean_flag",
-          [DataColumns.MEAN_G_PPPD]: "Mean_grams_per_person_per_day",
-          [DataColumns.MEAN_G_PKGBWPD]:
+          [DataColumn.POPULATION]: "population",
+          [DataColumn.POPULATION_GROUP]: "Population_group",
+          [DataColumn.COMPOSITE_DESC]: "TDS_FC_label",
+          [DataColumn.COMPOSITE_CODE]: "TDS_FC_Code",
+          [DataColumn.MEAN_FLAG]: "Mean_flag",
+          [DataColumn.MEAN_G_PPPD]: "Mean_grams_per_person_per_day",
+          [DataColumn.MEAN_G_PKGBWPD]:
             "Mean_grams_per_kilogrambodyweight_per_day",
           /* Contaminant */
-          [DataColumns.CHEMICAL_GROUP]: "Analyte Group",
-          [DataColumns.CHEMICAL]: "Analyte Name",
-          [DataColumns.COLLECTION_DATE]: "Sample Collection Date",
-          [DataColumns.PROJECT_CODE]: "Project Code",
-          [DataColumns.SAMPLE_CODE]: "Sample Code",
-          [DataColumns.PRODUCT_DESC]: "Product Description",
-          [DataColumns.RESULT_VALUE]: "Result Value",
-          [DataColumns.UNIT]: "Units of measurement",
-          [DataColumns.LOD]: "LOD",
-          [DataColumns.MDL]: "MDL",
+          [DataColumn.CHEMICAL_GROUP]: "Analyte Group",
+          [DataColumn.CHEMICAL]: "Analyte Name",
+          [DataColumn.COLLECTION_DATE]: "Sample Collection Date",
+          [DataColumn.PROJECT_CODE]: "Project Code",
+          [DataColumn.SAMPLE_CODE]: "Sample Code",
+          [DataColumn.PRODUCT_DESC]: "Product Description",
+          [DataColumn.RESULT_VALUE]: "Result Value",
+          [DataColumn.UNIT]: "Units of measurement",
+          [DataColumn.LOD]: "LOD",
+          [DataColumn.MDL]: "MDL",
         },
         values: {
           [sexGroups.F]: "F",
@@ -583,31 +583,31 @@ export function getTranslations() {
       tdsData: {
         headers: {
           /* Consumption */
-          [DataColumns.MAPPING_COMPOSITE_DESC]:
+          [DataColumn.MAPPING_COMPOSITE_DESC]:
             "Description du composite alimentaire (EAT_AC_étiquette)",
-          [DataColumns.MAPPING_COMPOSITE_CODE]:
+          [DataColumn.MAPPING_COMPOSITE_CODE]:
             "Code de composite (EAT_AC_Code)",
-          [DataColumns.MAPPING_COMPOSITE_CONTENT]:
+          [DataColumn.MAPPING_COMPOSITE_CONTENT]:
             "La description des aliments inclus dans la mise en correspondance des composites",
-          [DataColumns.POPULATION]: "population",
-          [DataColumns.POPULATION_GROUP]: "Groupe_de_population",
-          [DataColumns.COMPOSITE_DESC]: "EAT_AC_étiquette",
-          [DataColumns.COMPOSITE_CODE]: "EAT_AC_Code",
-          [DataColumns.MEAN_FLAG]: "Moy_indicateur",
-          [DataColumns.MEAN_G_PPPD]: "Moy_grammes_par_personne_par_jour",
-          [DataColumns.MEAN_G_PKGBWPD]:
+          [DataColumn.POPULATION]: "population",
+          [DataColumn.POPULATION_GROUP]: "Groupe_de_population",
+          [DataColumn.COMPOSITE_DESC]: "EAT_AC_étiquette",
+          [DataColumn.COMPOSITE_CODE]: "EAT_AC_Code",
+          [DataColumn.MEAN_FLAG]: "Moy_indicateur",
+          [DataColumn.MEAN_G_PPPD]: "Moy_grammes_par_personne_par_jour",
+          [DataColumn.MEAN_G_PKGBWPD]:
             "Moy_grammes_par_kilogramme_de_poids_corporel_par_jour ",
           /* Contaminant */
-          [DataColumns.CHEMICAL_GROUP]: "Groupe de l'analyte",
-          [DataColumns.CHEMICAL]: "Nom de l'analyte",
-          [DataColumns.COLLECTION_DATE]: "Date de l'échantillonnage",
-          [DataColumns.PROJECT_CODE]: "Code du projet",
-          [DataColumns.SAMPLE_CODE]: "Code de l'échantillon",
-          [DataColumns.PRODUCT_DESC]: "Description du produit",
-          [DataColumns.RESULT_VALUE]: "Valeur du résultat",
-          [DataColumns.UNIT]: "Unités de mesure",
-          [DataColumns.LOD]: "Limite de détection",
-          [DataColumns.MDL]: "Limite de détection de la méthode",
+          [DataColumn.CHEMICAL_GROUP]: "Groupe de l'analyte",
+          [DataColumn.CHEMICAL]: "Nom de l'analyte",
+          [DataColumn.COLLECTION_DATE]: "Date de l'échantillonnage",
+          [DataColumn.PROJECT_CODE]: "Code du projet",
+          [DataColumn.SAMPLE_CODE]: "Code de l'échantillon",
+          [DataColumn.PRODUCT_DESC]: "Description du produit",
+          [DataColumn.RESULT_VALUE]: "Valeur du résultat",
+          [DataColumn.UNIT]: "Unités de mesure",
+          [DataColumn.LOD]: "Limite de détection",
+          [DataColumn.MDL]: "Limite de détection de la méthode",
         },
         values: {
           [sexGroups.F]: "F",

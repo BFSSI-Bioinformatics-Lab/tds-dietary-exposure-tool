@@ -1,10 +1,7 @@
 import { loadTdsData } from "./data/dataTranslator.js";
 import { classs, el } from "./ui/const.js";
-import {
-  addEventListenersToPage,
-  initializeFilters,
-} from "./ui/filterComponent.js";
-import { initializePageText } from "./ui/page.js";
+import { initializeFilters } from "./ui/filter.js";
+import { addEventListenersToPage, initializePageText } from "./ui/page.js";
 
 async function main() {
   el.misc.loader.classList.remove(classs.HIDDEN);

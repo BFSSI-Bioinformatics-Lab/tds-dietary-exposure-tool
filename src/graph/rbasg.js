@@ -1,10 +1,10 @@
 import {
-  DataTableHeaders,
+  DataTableHeader,
   GraphTypes,
   MeanFlag,
   RbasgDomainFormat,
   sexGroups,
-} from "../config.js";
+} from "../const.js";
 import {
   getCompositeInfo,
   getContaminantExposure,
@@ -20,7 +20,24 @@ import {
 } from "../util/data.js";
 
 /**
- * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing age-sex groups
+ * Take in filtered TDS data and return data which has been strictly filtered and formatted 
+ * for use when comparing results by age-sex group
+ * 
+ * Returns:
+ * - An object with the following properties:
+ *  - Age group
+ *    - Sex group
+ *      - ageSexGroup
+ *      - consumptionsFlagged: array of food composite descriptons
+ *      - consumptionsSuppressed: array of food composite descriptons
+ *      - contaminantUnit
+ *      - exposure
+ *      - numContaminants
+ *      - numContaminantsUnderLod
+ *      - percentUnderLod
+ *      - years: array of years the calculations are for
+ *    // Other sexes
+ *  // Other age groups
  */
 export function getRbasg(tdsData, filters) {
   const rbasgData = {};
@@ -115,7 +132,10 @@ export function getRbasg(tdsData, filters) {
 }
 
 /**
- * Take in data formatted for comparing age-sex groups and format it to data table format
+ * Take in data formatted for comparing results by age-sex group (see function above) and format it to a data table format
+ * 
+ * Returns:
+ * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
 export function formatRbsagToDataTable(rbasgData, filters) {
   const dataTableData = [];
@@ -126,23 +146,23 @@ export function formatRbsagToDataTable(rbasgData, filters) {
         return;
       }
       dataTableData.push({
-        [DataTableHeaders.CHEMICAL]: filters.chemical,
-        [DataTableHeaders.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
-        [DataTableHeaders.EXPOSURE]: formatNumber(row.exposure, filters),
-        [DataTableHeaders.EXPOSURE_UNIT]: getExposureUnit(
+        [DataTableHeader.CHEMICAL]: filters.chemical,
+        [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
+        [DataTableHeader.EXPOSURE]: formatNumber(row.exposure, filters),
+        [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(
           row.contaminantUnit,
           filters,
         ),
-        [DataTableHeaders.YEARS]: row.years.join(", "),
-        [DataTableHeaders.PERCENT_UNDER_LOD]: formatPercent(
+        [DataTableHeader.YEARS]: row.years.join(", "),
+        [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(
           row.percentUnderLod,
         ),
-        [DataTableHeaders.TREATMENT]: filters.lod,
-        [DataTableHeaders.MODIFIED]: filters.override.list
+        [DataTableHeader.TREATMENT]: filters.lod,
+        [DataTableHeader.MODIFIED]: filters.override.list
           .map((override) => getUserModifiedValueText(override))
           .join("; "),
-        [DataTableHeaders.FLAGGED]: row.consumptionsFlagged.join("; "),
-        [DataTableHeaders.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
+        [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
+        [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
       });
     });
   });
@@ -150,7 +170,10 @@ export function formatRbsagToDataTable(rbasgData, filters) {
 }
 
 /**
- * Take in data formatted for comparing age-sex groups and format it to grouped bar data
+ * Take in data formatted for comparing results by age-sex group and format it to grouped bar data
+ * 
+ * Returns:
+ * - An object adhering to the contract specified in groupedBar.js
  */
 export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
   const contaminantUnit = Object.values(Object.values(rbasgData)[0])[0]

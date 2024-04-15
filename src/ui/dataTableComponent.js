@@ -1,4 +1,4 @@
-import { DataType, GraphTypes } from "../config.js";
+import { DataType, GraphTypes } from "../const.js";
 import { downloadCSV } from "../data/dataDownloader.js";
 import {
   getRawFilteredConsumptionData,
@@ -9,7 +9,7 @@ import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
 import { getTranslations } from "../translation/translation.js";
 import { classs, el } from "./const.js";
-import { getActiveFilters } from "./filterComponent.js";
+import { getActiveFilters } from "./filter.js";
 
 /**
  * Download raw filtered TDS data
@@ -68,7 +68,7 @@ export function downloadDataTable(tdsData, graphType) {
  * Display calculations and other important TDS data for a current graph
  *
  * Parameters:
- * - data: the data to display, in object format where each key is a column with a corresponding value
+ * - data: the data to display, in object format where each key is a column (a DataTableHeader) with a corresponding value
  */
 export async function displayDataTable(data, filters) {
   const tableContainer = el.dataTable.dataTable;

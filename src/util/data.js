@@ -1,10 +1,10 @@
 import {
   ConsumptionUnits,
-  DataColumns,
+  DataColumn,
   MeanFlag,
   ageGroups,
   sexGroups,
-} from "../config.js";
+} from "../const.js";
 import { getTranslations } from "../translation/translation.js";
 
 /**
@@ -116,6 +116,9 @@ export function getUserModifiedValueText(override) {
   );
 }
 
+/**
+ * Return contaminant unit for display
+ */
 export function getExposureUnit(contaminantUnit, filters) {
   if (!contaminantUnit) {
     return getTranslations().misc.na;
@@ -133,9 +136,12 @@ export function getExposureUnit(contaminantUnit, filters) {
   );
 }
 
-export function getConsumptionUnit(graphEntry, filters) {
+/**
+ * Return consumption unit for a given mean consumption for display
+ */
+export function getConsumptionUnit(meanConsumption, filters) {
   return (
-    formatNumber(graphEntry.meanConsumption) +
+    formatNumber(meanConsumption) +
     " " +
     getTranslations().misc.gramsShort +
     getTranslations().misc.consumptionUnitShort[
@@ -152,25 +158,25 @@ export function getConsumptionUnit(graphEntry, filters) {
 export function getYearForContaminantEntry(row) {
   const year =
     "20" +
-    row[getTranslations().tdsData.headers[DataColumns.COLLECTION_DATE]].split(
+    row[getTranslations().tdsData.headers[DataColumn.COLLECTION_DATE]].split(
       "/",
     )[2];
   // Edge-cases discovered in data...
   if (
-    row[getTranslations().tdsData.headers[DataColumns.PROJECT_CODE]].includes(
+    row[getTranslations().tdsData.headers[DataColumn.PROJECT_CODE]].includes(
       "2015A",
     )
   ) {
     return "2014";
   }
   if (
-    row[getTranslations().tdsData.headers[DataColumns.PROJECT_CODE]] ==
+    row[getTranslations().tdsData.headers[DataColumn.PROJECT_CODE]] ==
     "BCS.TDS2014.DEHP"
   ) {
     return "2014";
   }
   if (
-    row[getTranslations().tdsData.headers[DataColumns.PROJECT_CODE]] ==
+    row[getTranslations().tdsData.headers[DataColumn.PROJECT_CODE]] ==
     "BCS.TDS2011.Radionuclides"
   ) {
     return "2011";
@@ -183,8 +189,8 @@ export function getYearForContaminantEntry(row) {
  */
 export function getCompositeInfoForContaminantEntry(row) {
   let info =
-    row[getTranslations().tdsData.headers[DataColumns.SAMPLE_CODE]] +
-    row[getTranslations().tdsData.headers[DataColumns.PRODUCT_DESC]];
+    row[getTranslations().tdsData.headers[DataColumn.SAMPLE_CODE]] +
+    row[getTranslations().tdsData.headers[DataColumn.PRODUCT_DESC]];
   if (info.includes("JJ02")) {
     // Edge-case with data that was discovered
     info = "JJ15";
@@ -197,9 +203,9 @@ export function getCompositeInfoForContaminantEntry(row) {
  */
 export function getOccurrenceForContaminantEntry(row) {
   let result = Number(
-    row[getTranslations().tdsData.headers[DataColumns.RESULT_VALUE]],
+    row[getTranslations().tdsData.headers[DataColumn.RESULT_VALUE]],
   );
-  if (row[getTranslations().tdsData.headers[DataColumns.UNIT]] == "µg/g") {
+  if (row[getTranslations().tdsData.headers[DataColumn.UNIT]] == "µg/g") {
     return result * 1000; // Convert to ng
   }
   return result;
@@ -249,5 +255,5 @@ export function getMeanFlagForConsumptionEntry(meanFlag) {
  * Return composite (code) for raw consumption entry
  */
 export function getCompositeForConsumptionEntry(row) {
-  return row[getTranslations().tdsData.headers[DataColumns.COMPOSITE_CODE]];
+  return row[getTranslations().tdsData.headers[DataColumn.COMPOSITE_CODE]];
 }

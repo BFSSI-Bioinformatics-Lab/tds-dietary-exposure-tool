@@ -1,15 +1,14 @@
 import {
-  DataTableHeaders,
+  DataTableHeader,
   GraphTypes,
   MeanFlag,
   RbfgRangeFormat,
   ageGroups,
-} from "../config.js";
+} from "../const.js";
 import {
   formatNumber,
   formatPercent,
   getAgeAndSex,
-  getAgeSex,
   getAgeSexDisplay,
   getExposureUnit,
   getUserModifiedValueText,
@@ -22,7 +21,25 @@ import {
 import { getTranslations } from "../translation/translation.js";
 
 /**
- * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing food groups
+ * Take in TDS data and return data which has been strictly filtered and formatted 
+ * for use when comparing results by food group
+ * 
+ * Returns:
+ * - An object with following properties:
+ *  - Age-sex group
+ *    - Food group
+ *      - ageSexGroup
+ *      - consumptionsFlagged: array of food composite descriptons
+ *      - consumptionsSuppressed: array of food composite descriptons
+ *      - contaminantUnit
+ *      - exposure
+ *      - foodGroup
+ *      - numContaminants
+ *      - numContaminantsUnderLod
+ *      - percentExposure
+ *      - percentUnderLod
+ *    // other food groups
+ *  // other age-sex groups
  */
 export function getRbfg(tdsData, filters) {
   const rbfgData = {};
@@ -116,7 +133,10 @@ export function getRbfg(tdsData, filters) {
 }
 
 /**
- * Take in data formatted for comparing food groups and format it to data table format
+ * Take in data formatted for comparing results by food group (see function above) and format it to a data table format
+ * 
+ * Returns:
+ * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js 
  */
 export function formatRbfgToDataTable(rbfgData, filters) {
   const dataTableData = [];
@@ -124,26 +144,26 @@ export function formatRbfgToDataTable(rbfgData, filters) {
   Object.values(rbfgData).forEach((ageSexGroup) => {
     Object.values(ageSexGroup).forEach((row) => {
       dataTableData.push({
-        [DataTableHeaders.CHEMICAL]: filters.chemical,
-        [DataTableHeaders.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
-        [DataTableHeaders.FOOD_GROUP]: row.foodGroup,
-        [DataTableHeaders.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
-        [DataTableHeaders.EXPOSURE]: formatNumber(row.exposure, filters),
-        [DataTableHeaders.EXPOSURE_UNIT]: getExposureUnit(
+        [DataTableHeader.CHEMICAL]: filters.chemical,
+        [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
+        [DataTableHeader.FOOD_GROUP]: row.foodGroup,
+        [DataTableHeader.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
+        [DataTableHeader.EXPOSURE]: formatNumber(row.exposure, filters),
+        [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(
           row.contaminantUnit,
           filters,
         ),
-        [DataTableHeaders.YEARS]: filters.years.join(", "),
-        [DataTableHeaders.PERCENT_UNDER_LOD]: formatPercent(
+        [DataTableHeader.YEARS]: filters.years.join(", "),
+        [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(
           row.percentUnderLod,
         ),
-        [DataTableHeaders.TREATMENT]: filters.lod,
-        [DataTableHeaders.MODIFIED]: filters.override.list
+        [DataTableHeader.TREATMENT]: filters.lod,
+        [DataTableHeader.MODIFIED]: filters.override.list
           .filter((override) => override.foodGroup == row.foodGroup)
           .map((override) => getUserModifiedValueText(override))
           .join("; "),
-        [DataTableHeaders.FLAGGED]: row.consumptionsFlagged.join("; "),
-        [DataTableHeaders.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
+        [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
+        [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
       });
     });
   });
@@ -151,7 +171,10 @@ export function formatRbfgToDataTable(rbfgData, filters) {
 }
 
 /**
- * Take in data formatted for comparing food groups and format it to stacked bar data
+ * Take in data formatted for comparing results by food group and format it to stacked bar data
+ * 
+ * Returns:
+ * - An object adhering to the contract specified in stackedBar.js 
  */
 export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
   const contaminantUnit = Object.values(Object.values(rbfgData)[0])[0]

@@ -1,13 +1,11 @@
-import { IDCs, LODs, ageGroupToIDCAgeGroup } from "../config.js";
+import { IDCs, LODs, ageGroupToIDCAgeGroup } from "../const.js";
 import { getTranslations } from "../translation/translation.js";
 import { lodOrMdlIsValid } from "./data.js";
 
 /**
- *
  * Return the occurrence value for a given row in the TDS contaminant data.
  * This value could change from the occurrence value already existing in the data, based upon
  * the current filters and LOD levels.
- *
  */
 export function getOccurrenceForContaminantEntry(row, filters) {
   let result = row.occurrence;
@@ -31,7 +29,6 @@ export function getOccurrenceForContaminantEntry(row, filters) {
 }
 
 /**
- *
  * Calculate the exposure to a contaminet for a given food composite.
  *
  * Parameters:
@@ -39,7 +36,6 @@ export function getOccurrenceForContaminantEntry(row, filters) {
  *  - occurrence: The contaminant occurrence value
  *  - filters: Currently selected filters. Required to check for and handle special cases.
  *  - age: Age that the consumption value is for. Required for handling special cases.
- *
  */
 export function getContaminantExposure(
   meanConsumptionOfFoodComposite,
@@ -62,10 +58,31 @@ export function getContaminantExposure(
 }
 
 /**
- *
  * Get composite info for a given TDS consumption row
- *
  */
 export function getCompositeInfo(row) {
   return row.compositeDesc + " (" + row.composite + ")";
+}
+
+/*
+ * Generates a color mapping for a given set of labels.
+ *
+ * Parameters:
+ * - An array of labels.
+ *
+ * Returns:
+ * - A mapping from label to color.
+ */
+export function generateColorMapping(labels) {
+  const mapping = {};
+
+  const colorFunction = d3.scaleOrdinal(
+    d3.quantize(d3.interpolateRainbow, labels.length + 1),
+  );
+
+  labels.forEach((l) => {
+    mapping[l] = colorFunction(l);
+  });
+
+  return mapping;
 }

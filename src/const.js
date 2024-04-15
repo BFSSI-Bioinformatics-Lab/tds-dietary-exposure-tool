@@ -11,7 +11,7 @@ export let userLanguage =
 export const toggleUserLanguage = () =>
   (userLanguage = userLanguage == language.EN ? language.FR : language.EN);
 
-const consumptionFiles = {
+const consumptionFile = {
   [language.EN]: Object.assign(
     {},
     ...Object.entries({
@@ -38,9 +38,9 @@ const consumptionFiles = {
   ),
 };
 
-export const getConsumptionFiles = () => consumptionFiles[userLanguage];
+export const getConsumptionFiles = () => consumptionFile[userLanguage];
 
-const contaminantFiles = {
+const contaminantFile = {
   [language.EN]: [
     "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
     "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
@@ -62,14 +62,14 @@ const contaminantFiles = {
   ].map((file) => "./data/contaminant/fr/" + file),
 };
 
-export const getContaminantFiles = () => contaminantFiles[userLanguage];
+export const getContaminantFiles = () => contaminantFile[userLanguage];
 
 export const DataType = {
   CONSUMPTION: "CONSUMPTION",
   CONTAMINANT: "CONTAMINANT",
 };
 
-export const DataColumns = {
+export const DataColumn = {
   /* Consumption */
   MAPPING_COMPOSITE_DESC: "MAPPING_COMPOSITE_DESC",
   MAPPING_COMPOSITE_CODE: "MAPPING_COMPOSITE_CODE",
@@ -120,7 +120,7 @@ export const GraphTypes = {
   RBF: "RBF",
 };
 
-export const DataTableHeaders = {
+export const DataTableHeader = {
   CHEMICAL: "CHEMICAL",
   AGE_SEX_GROUP: "AGE_SEX_GROUP",
   FOOD_GROUP: "FOOD_GROUP",
@@ -181,6 +181,7 @@ export const ageSexGroups = Object.keys(ageGroups).reduce((result, ageKey) => {
   });
   return result;
 }, {});
+
 
 export const LODs = {
   0: "0",

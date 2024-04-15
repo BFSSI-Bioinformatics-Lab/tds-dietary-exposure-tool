@@ -1,4 +1,4 @@
-import { GraphTypes } from "../config.js";
+import { GraphTypes } from "../const.js";
 
 export const classs = {
   HIDDEN: "hidden",

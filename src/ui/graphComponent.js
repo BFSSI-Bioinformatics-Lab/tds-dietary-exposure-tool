@@ -1,4 +1,4 @@
-import { GraphTypes, sexGroups } from "../config.js";
+import { GraphTypes, sexGroups } from "../const.js";
 import { classs, el } from "./const.js";
 import {
   formatRbasgToGroupedBar,
@@ -15,7 +15,7 @@ import {
   formatRbfgToStackedBar,
   getRbfg,
 } from "../graph/rbfg.js";
-import { generateColorMapping } from "../util/color.js";
+import { generateColorMapping } from "../util/graph.js";
 import { displayColorLegend } from "./graph/colorLegend.js";
 import { getGroupedBarSvg } from "./graph/groupedBar.js";
 import { getStackedBarSvg } from "./graph/stackedBar.js";
@@ -25,16 +25,18 @@ import {
   getSelectedGraphType,
   updateLodFilterDescription,
   updateSandbox,
-} from "./filterComponent.js";
+} from "./filter.js";
 import { displayDataTable } from "./dataTableComponent.js";
 import { getTranslations } from "../translation/translation.js";
 import { getAgeSexDisplay } from "../util/data.js";
 
 /**
+ *
  * Display a graph based on the selected type
  *
  * Parameters:
- * - data: The TDS data for the graph
+ * - data: The filtered TDS data for the graph
+ *
  */
 export function displayGraph(data) {
   const graphType = getSelectedGraphType();
@@ -123,7 +125,12 @@ export function displayGraph(data) {
   el.about.container.classList.remove(classs.HIDDEN);
 }
 
-export function saveGraph() {
+/**
+ *
+ * Capturing and downloading the currently displayed graph
+ *
+ */
+export function downloadGraph() {
   const footer = document.createElement("div");
   footer.classList.add(classs.RED);
   footer.innerText = getTranslations().graphs.saveGraph.footer;

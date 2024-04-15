@@ -3,7 +3,7 @@ import {
   getContaminantExposure,
   getOccurrenceForContaminantEntry as getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { ConsumptionUnits, DataTableHeaders, MeanFlag } from "../config.js";
+import { DataTableHeader, MeanFlag } from "../const.js";
 import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
@@ -15,7 +15,25 @@ import {
 } from "../util/data.js";
 
 /**
- * Take in TDS data and return data which has been strictly filtered and formatted for use when comparing food composites
+ * Take in TDS data and return data which has been strictly filtered and formatted 
+ * for use when comparing results by food
+ * 
+ * Returns:
+ * - An object with the following properties:
+ *  - Food composite code
+ *    - ageSexGroup
+ *    - composite
+ *    - compositeDesc
+ *    - consumptionMeanFlag
+ *    - contaminantUnit
+ *    - exposure
+ *    - foodGroup
+ *    - meanConsumption
+ *    - meanOccurence
+ *    - percentExposure
+ *    - percentExposureForFoodGroup
+ *    - percentUnderLod
+ *  // other food-composite codes
  */
 export function getRbf(tdsData, filters) {
   const foodGroupExposures = {};
@@ -97,32 +115,35 @@ export function getRbf(tdsData, filters) {
 }
 
 /**
- * Take in data formatted for comparing food composites and format it to data table format
+ * Take in data formatted for comparing results by food (see function above) and format it to a data table format
+ * 
+ * Returns:
+ * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js 
  */
 export function formatRbfToDataTable(rbfData, filters) {
   const dataTableData = Object.values(rbfData).map((row) => {
     const compositeInfo = getCompositeInfo(row);
 
     return {
-      [DataTableHeaders.CHEMICAL]: filters.chemical,
-      [DataTableHeaders.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
-      [DataTableHeaders.FOOD_GROUP]: row.foodGroup,
-      [DataTableHeaders.COMPOSITE]: compositeInfo,
-      [DataTableHeaders.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
-      [DataTableHeaders.EXPOSURE]: formatNumber(row.exposure, filters),
-      [DataTableHeaders.EXPOSURE_UNIT]: getExposureUnit(
+      [DataTableHeader.CHEMICAL]: filters.chemical,
+      [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
+      [DataTableHeader.FOOD_GROUP]: row.foodGroup,
+      [DataTableHeader.COMPOSITE]: compositeInfo,
+      [DataTableHeader.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
+      [DataTableHeader.EXPOSURE]: formatNumber(row.exposure, filters),
+      [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(
         row.contaminantUnit,
         filters,
       ),
-      [DataTableHeaders.YEARS``]: filters.years.join(", "),
-      [DataTableHeaders.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
-      [DataTableHeaders.TREATMENT]: filters.lod,
-      [DataTableHeaders.MODIFIED]: filters.override.list
+      [DataTableHeader.YEARS]: filters.years.join(", "),
+      [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
+      [DataTableHeader.TREATMENT]: filters.lod,
+      [DataTableHeader.MODIFIED]: filters.override.list
         .filter((override) => override.composite.includes(row.composite))
         .map((override) => getUserModifiedValueText(override)),
-      [DataTableHeaders.FLAGGED]:
+      [DataTableHeader.FLAGGED]:
         row.consumptionMeanFlag == MeanFlag.FLAGGED ? compositeInfo : "",
-      [DataTableHeaders.SUPPRESSED]:
+      [DataTableHeader.SUPPRESSED]:
         row.consumptionMeanFlag == MeanFlag.SUPPRESSED ? compositeInfo : "",
     };
   });
@@ -131,7 +152,10 @@ export function formatRbfToDataTable(rbfData, filters) {
 }
 
 /**
- * Take in data formatted for comparing food composites and format it to sunburst data
+ * Take in data formatted for comparing results by food and format it to sunburst data
+ * 
+ * Returns:
+ * - An object adhering to the contract specified in sunburst.js 
  */
 export function formatRbfToSunburst(rbfData, filters, colorMapping) {
   const sunburstData = { title: filters.chemical, children: [] };
@@ -168,7 +192,7 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         "\n" +
         getTranslations().graphs.info.foodConsumption +
         ": " +
-        getConsumptionUnit(row, filters),
+        getConsumptionUnit(row.meanConsumption, filters),
     });
   });
 
