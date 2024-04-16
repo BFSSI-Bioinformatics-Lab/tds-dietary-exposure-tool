@@ -45,7 +45,15 @@ export function getGroupedBarSvg(data) {
   // Y encodes the height of the bar.
   const y = d3
     .scaleLinear()
-    .domain([0, d3.max(data.children, (d) => d.value)])
+    .domain(
+      (() => {
+        let max = d3.max(data.children, (d) => d.value);
+        if (data.hr && data.hr > max) {
+          max = data.hr;
+        }
+        return [0, max];
+      })(),
+    )
     .nice()
     .rangeRound([height - marginBottom, marginTop]);
 
@@ -94,7 +102,7 @@ export function getGroupedBarSvg(data) {
   svg
     .append("line")
     .attr("x1", marginLeft)
-    .attr("y1", height-marginBottom+1)
+    .attr("y1", height - marginBottom + 1)
     .attr("x2", marginLeft)
     .attr("y2", marginTop)
     .attr("stroke", "black")
@@ -110,9 +118,9 @@ export function getGroupedBarSvg(data) {
   svg
     .append("line")
     .attr("x1", marginLeft)
-    .attr("y1", height-marginBottom)
+    .attr("y1", height - marginBottom)
     .attr("x2", width)
-    .attr("y2", height-marginBottom)
+    .attr("y2", height - marginBottom)
     .attr("stroke", "black")
     .attr("stroke-width", 2);
 

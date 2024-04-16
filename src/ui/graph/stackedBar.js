@@ -40,12 +40,12 @@ export function getStackedBarSvg(data) {
       ),
     )
     .value(([, D], key) => D.get(key).value)(
-    d3.index(
-      data.children,
-      (d) => d.entry,
-      (d) => d.stack,
-    ),
-  );
+      d3.index(
+        data.children,
+        (d) => d.entry,
+        (d) => d.stack,
+      ),
+    );
 
   if (!dataExists) {
     return;
@@ -65,7 +65,16 @@ export function getStackedBarSvg(data) {
 
   const y = d3
     .scaleLinear()
-    .domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))])
+
+    .domain(
+      (() => {
+        let max = d3.max(series, (d) => d3.max(d, (d) => d[1]));
+        if (data.hr && data.hr > max) {
+          max = data.hr;
+        }
+        return [0, max];
+      })(),
+    )
     .rangeRound([height - marginBottom, marginTop]);
 
   const svg = d3
