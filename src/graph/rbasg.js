@@ -32,7 +32,7 @@ import {
  *      - consumptionsSuppressed: array of food composite descriptons
  *      - contaminantUnit
  *      - exposure
- *      - numContaminants
+ *      - numContaminantsTested
  *      - numContaminantsUnderLod
  *      - percentUnderLod
  *      - years: array of years the calculations are for
@@ -58,7 +58,7 @@ export function getRbasg(tdsData, filters) {
         consumptionsSuppressed: [],
         consumptionsFlagged: [],
         percentUnderLod: 0,
-        numContaminants: 0,
+        numContaminantsTested: 0,
         numContaminantsUnderLod: 0,
       };
       Object.keys(tdsData.consumption).forEach((foodGroup) => {
@@ -85,7 +85,7 @@ export function getRbasg(tdsData, filters) {
               rbasgData[entry][sex].consumptionsFlagged.push(compositeInfo);
             }
 
-            let numContaminants = 0;
+            let numContaminantsTested = 0;
             let sumContaminants = 0;
 
             const years = filters.showByAgeSexGroup ? filters.years : [entry];
@@ -93,20 +93,20 @@ export function getRbasg(tdsData, filters) {
               tdsData.contaminant[year].forEach((contaminant) => {
                 if (contaminant.compositeInfo.includes(composite)) {
                   rbasgData[entry][sex].contaminantUnit = contaminant.units;
-                  numContaminants++;
+                  numContaminantsTested++;
                   sumContaminants += getOccurrenceForContaminantEntry(
                     contaminant,
                     filters,
                     entry,
                   );
-                  rbasgData[entry][sex].numContaminants++;
+                  rbasgData[entry][sex].numContaminantsTested++;
                   if (contaminant.occurrence < contaminant.lod) {
                     rbasgData[entry][sex].numContaminantsUnderLod++;
                   }
                 }
               });
             });
-            const meanOccurrence = sumContaminants / numContaminants || 0;
+            const meanOccurrence = sumContaminants / numContaminantsTested || 0;
             const exposure = getContaminantExposure(
               filters.usePerPersonPerDay
                 ? consumption.meanGramsPerPersonPerDay
@@ -123,8 +123,20 @@ export function getRbasg(tdsData, filters) {
 
       rbasgData[entry][sex].percentUnderLod =
         (rbasgData[entry][sex].numContaminantsUnderLod /
-          rbasgData[entry][sex].numContaminants) *
+          rbasgData[entry][sex].numContaminantsTested) *
         100 || 0;
+
+      const numComposites = Object.values(tdsData.consumption).reduce(
+        (acc, row) => {
+          return acc + Object.values(row).length * filters.years.length;
+        },
+        0,
+      );
+
+      rbasgData[entry][sex].percentNotTested =
+        ((numComposites - rbasgData[entry][sex].numContaminantsTested) /
+          numComposites) *
+        100;
     });
   });
 
@@ -154,14 +166,14 @@ export function formatRbsagToDataTable(rbasgData, filters) {
           filters,
         ),
         [DataTableHeader.YEARS]: row.years.join(", "),
+        [DataTableHeader.PERCENT_NOT_TESTED]: formatPercent(
+          row.percentNotTested,
+        ),
         [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
         [DataTableHeader.TREATMENT]: filters.lod,
         [DataTableHeader.MODIFIED]: filters.override.list
           .map((override) =>
-            getUserModifiedValueText(
-              override,
-              row.contaminantUnit,
-            ),
+            getUserModifiedValueText(override, row.contaminantUnit),
           )
           .join("; "),
         [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),

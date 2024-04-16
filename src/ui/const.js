@@ -61,7 +61,7 @@ export const el = {
   filters: {
     containers: document.querySelectorAll("." + classs.FILTER),
     hiddenContainers: document.querySelectorAll(
-      "." + classs.FILTER + "." + classs.FILTER,
+      "." + classs.FILTER + "." + classs.HIDDEN,
     ),
     containersMap: {
       consumptionUnits: document.getElementById(

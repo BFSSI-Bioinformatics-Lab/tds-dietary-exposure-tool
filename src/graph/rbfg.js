@@ -34,9 +34,10 @@ import { getTranslations } from "../translation/translation.js";
  *      - contaminantUnit
  *      - exposure
  *      - foodGroup
- *      - numContaminants
+ *      - numContaminantsTested
  *      - numContaminantsUnderLod
  *      - percentExposure
+        - percentNotTested
  *      - percentUnderLod
  *    // other food groups
  *  // other age-sex groups
@@ -56,7 +57,7 @@ export function getRbfg(tdsData, filters) {
         exposure: 0,
         foodGroup,
         percentUnderLod: 0,
-        numContaminants: 0,
+        numContaminantsTested: 0,
         numContaminantsUnderLod: 0,
       }),
     );
@@ -82,14 +83,14 @@ export function getRbfg(tdsData, filters) {
           );
         }
 
-        let numContaminants = 0;
-        let sumContaminants = 0;
+        let numContaminantsTested = 0;
+        let sumContaminantsTested = 0;
 
         filters.years.forEach((year) => {
           tdsData.contaminant[year].forEach((contaminant) => {
             if (contaminant.compositeInfo.includes(composite)) {
-              numContaminants++;
-              sumContaminants += getOccurrenceForContaminantEntry(
+              numContaminantsTested++;
+              sumContaminantsTested += getOccurrenceForContaminantEntry(
                 contaminant,
                 filters,
               );
@@ -100,7 +101,8 @@ export function getRbfg(tdsData, filters) {
             }
           });
         });
-        const occurrence = sumContaminants / numContaminants || 0;
+
+        const occurrence = sumContaminantsTested / numContaminantsTested || 0;
         const exposure = getContaminantExposure(
           filters.usePerPersonPerDay
             ? consumption.meanGramsPerPersonPerDay
@@ -111,21 +113,26 @@ export function getRbfg(tdsData, filters) {
         );
 
         rbfgData[consumption.ageSexGroup][foodGroup].exposure += exposure;
-        rbfgData[consumption.ageSexGroup][foodGroup].numContaminants +=
-          numContaminants;
+        rbfgData[consumption.ageSexGroup][foodGroup].numContaminantsTested +=
+          numContaminantsTested;
       });
     });
   });
 
   Object.keys(rbfgData).forEach((ageSexGroup) => {
     const sumExposures = Object.values(rbfgData[ageSexGroup]).reduce(
-      (a, b) => a + b.exposure,
+      (acc, b) => acc + b.exposure,
       0,
     );
     Object.values(rbfgData[ageSexGroup]).forEach((row) => {
       row.percentExposure = (row.exposure / sumExposures) * 100 || 0;
       row.percentUnderLod =
-        (row.numContaminantsUnderLod / row.numContaminants) * 100 || 0;
+        (row.numContaminantsUnderLod / row.numContaminantsTested) * 100 || 0;
+      const numComposites =
+        Object.values(tdsData.consumption[row.foodGroup]).length *
+        filters.years.length;
+      row.percentNotTested =
+        ((numComposites - row.numContaminantsTested) / numComposites) * 100;
     });
   });
 
@@ -154,6 +161,9 @@ export function formatRbfgToDataTable(rbfgData, filters) {
           filters,
         ),
         [DataTableHeader.YEARS]: filters.years.join(", "),
+        [DataTableHeader.PERCENT_NOT_TESTED]: formatPercent(
+          row.percentNotTested,
+        ),
         [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
         [DataTableHeader.TREATMENT]: filters.lod,
         [DataTableHeader.MODIFIED]: filters.override.list
