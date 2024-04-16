@@ -44,55 +44,15 @@ export function addEventListenersToPage() {
     toggleUserLanguage();
     await resetPage();
   });
-
   el.filters.sandbox.openButton.addEventListener("click", () => {
     el.filters.sandbox.container.classList.remove(classs.HIDDEN);
   });
-
   el.filters.sandbox.closeButton.addEventListener("click", () => {
     el.filters.sandbox.container.classList.add(classs.HIDDEN);
   });
-
-  el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
-    const { override } = getActiveFilters();
-    if (override.composite && override.occurrence) {
-      Array.from(el.filters.inputs.overrideFood.options).find(
-        (option) =>
-          JSON.parse(option.value || null)?.composite == override.composite,
-      ).disabled = true;
-      el.filters.inputs.overrideFood.selectedIndex = 0;
-
-      const itemContainer = document.createElement("div");
-      itemContainer.classList.add(classs.OVERRIDE_ITEM);
-
-      const itemText = document.createElement("div");
-      itemText.data = JSON.stringify(override);
-      itemText.innerHTML = getOverrideText(override);
-      itemText.classList.add(classs.OVERRIDE_VALUE);
-
-      const removeButton = document.createElement("button");
-      removeButton.classList.add(classs.SANDBOX_BUTTON);
-      removeButton.innerHTML = "-";
-      removeButton.addEventListener("click", () => {
-        el.filters.sandbox.overridesList.removeChild(itemContainer);
-        Array.from(el.filters.inputs.overrideFood.options).find(
-          (option) =>
-            JSON.parse(option.value || null)?.composite == override.composite,
-        ).disabled = false;
-        displayGraph(getFilteredTdsData());
-      });
-
-      itemContainer.appendChild(itemText);
-      itemContainer.appendChild(removeButton);
-      el.filters.sandbox.overridesList.appendChild(itemContainer);
-    }
-    displayGraph(getFilteredTdsData());
-  });
-
   el.graphs.saveGraph.addEventListener("click", () => {
     downloadGraph();
   });
-
   el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
     downloadTDSData(DataType.CONSUMPTION);
   });

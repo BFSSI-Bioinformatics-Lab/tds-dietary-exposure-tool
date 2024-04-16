@@ -17,6 +17,7 @@ import {
   formatNumber,
   getAgeSexDisplay,
   getExposureUnit,
+  getOverrideText,
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
 import { tdsData } from "../data/dataTranslator.js";
@@ -187,6 +188,42 @@ function addEventListenersToFilters() {
       }
     });
   });
+
+  el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
+    const { override } = getActiveFilters();
+    if (override.composite && override.occurrence) {
+      Array.from(el.filters.inputs.overrideFood.options).find(
+        (option) =>
+          JSON.parse(option.value || null)?.composite == override.composite,
+      ).disabled = true;
+      el.filters.inputs.overrideFood.selectedIndex = 0;
+
+      const itemContainer = document.createElement("div");
+      itemContainer.classList.add(classs.OVERRIDE_ITEM);
+
+      const itemText = document.createElement("div");
+      itemText.data = JSON.stringify(override);
+      itemText.innerHTML = getOverrideText(override);
+      itemText.classList.add(classs.OVERRIDE_VALUE);
+
+      const removeButton = document.createElement("button");
+      removeButton.classList.add(classs.SANDBOX_BUTTON);
+      removeButton.innerHTML = "-";
+      removeButton.addEventListener("click", () => {
+        el.filters.sandbox.overridesList.removeChild(itemContainer);
+        Array.from(el.filters.inputs.overrideFood.options).find(
+          (option) =>
+            JSON.parse(option.value || null)?.composite == override.composite,
+        ).disabled = false;
+        displayGraph(getFilteredTdsData());
+      });
+
+      itemContainer.appendChild(itemText);
+      itemContainer.appendChild(removeButton);
+      el.filters.sandbox.overridesList.appendChild(itemContainer);
+    }
+    displayGraph(getFilteredTdsData());
+  });
 }
 
 export function initializeFilters() {
@@ -209,7 +246,7 @@ export function displayFilterText() {
     el.filters.inputs.overrideFood,
     getTranslations().filters.placeholders.select,
   );
-  displayOverrideFood();
+  displayOverrideFoodFilter();
 }
 
 export function hideFilters() {
@@ -405,7 +442,7 @@ function displayRbfSortByFilter() {
   });
 }
 
-function displayOverrideFood() {
+function displayOverrideFoodFilter() {
   const overrideFoodEl = el.filters.inputs.overrideFood;
   overrideFoodEl.innerHTML = "";
   addPlaceholderToSelect(
@@ -436,8 +473,8 @@ export function updateLodFilterDescription(filteredTdsData, filters) {
   el.filters.titles.lodSubtitle.innerHTML = "";
   let maxContaminantLod = 0;
   let minContaminantLod = Infinity;
-  let maxUnits = null;
-  let minUnits = null;
+  let maxUnits = getTranslations().misc.na;
+  let minUnits = getTranslations().misc.na;
   Object.values(filteredTdsData.contaminant).forEach((value) => {
     value.forEach((row) => {
       const currLod = row.lod;
@@ -455,13 +492,15 @@ export function updateLodFilterDescription(filteredTdsData, filters) {
     el.filters.titles.lodSubtitle.innerHTML =
       getTranslations().filters.titles.lodSubtitle +
       " " +
-      formatNumber(minContaminantLod, filters) +
-      " " +
-      minUnits +
-      " - " +
-      formatNumber(maxContaminantLod, filters) +
-      " " +
-      maxUnits;
+      (minContaminantLod == 0 && maxContaminantLod == 0
+        ? "0 - 0"
+        : formatNumber(minContaminantLod, filters) +
+        " " +
+        minUnits +
+        " - " +
+        formatNumber(maxContaminantLod, filters) +
+        " " +
+        maxUnits);
   }
 }
 

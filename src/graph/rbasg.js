@@ -157,7 +157,12 @@ export function formatRbsagToDataTable(rbasgData, filters) {
         [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
         [DataTableHeader.TREATMENT]: filters.lod,
         [DataTableHeader.MODIFIED]: filters.override.list
-          .map((override) => getUserModifiedValueText(override))
+          .map((override) =>
+            getUserModifiedValueText(
+              override,
+              row.contaminantUnit,
+            ),
+          )
           .join("; "),
         [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
         [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),

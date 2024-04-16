@@ -21,9 +21,9 @@ import {
 import { getTranslations } from "../translation/translation.js";
 
 /**
- * Take in TDS data and return data which has been strictly filtered and formatted 
+ * Take in TDS data and return data which has been strictly filtered and formatted
  * for use when comparing results by food group
- * 
+ *
  * Returns:
  * - An object with following properties:
  *  - Age-sex group
@@ -134,9 +134,9 @@ export function getRbfg(tdsData, filters) {
 
 /**
  * Take in data formatted for comparing results by food group (see function above) and format it to a data table format
- * 
+ *
  * Returns:
- * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js 
+ * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
 export function formatRbfgToDataTable(rbfgData, filters) {
   const dataTableData = [];
@@ -154,13 +154,13 @@ export function formatRbfgToDataTable(rbfgData, filters) {
           filters,
         ),
         [DataTableHeader.YEARS]: filters.years.join(", "),
-        [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(
-          row.percentUnderLod,
-        ),
+        [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
         [DataTableHeader.TREATMENT]: filters.lod,
         [DataTableHeader.MODIFIED]: filters.override.list
           .filter((override) => override.foodGroup == row.foodGroup)
-          .map((override) => getUserModifiedValueText(override))
+          .map((override) =>
+            getUserModifiedValueText(override, row.contaminantUnit),
+          )
           .join("; "),
         [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
         [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
@@ -172,9 +172,9 @@ export function formatRbfgToDataTable(rbfgData, filters) {
 
 /**
  * Take in data formatted for comparing results by food group and format it to stacked bar data
- * 
+ *
  * Returns:
- * - An object adhering to the contract specified in stackedBar.js 
+ * - An object adhering to the contract specified in stackedBar.js
  */
 export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
   const contaminantUnit = Object.values(Object.values(rbfgData)[0])[0]

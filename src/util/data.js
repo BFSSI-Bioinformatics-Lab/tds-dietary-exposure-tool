@@ -106,18 +106,20 @@ export function getOverrideText(override) {
 /**
  * Function used to get text to display in data table for user modifications
  */
-export function getUserModifiedValueText(override) {
+export function getUserModifiedValueText(override, contaminantUnit) {
   return (
     override.composite +
     "-" +
     getTranslations().dataTable.values.occurrence +
     "=" +
-    formatNumber(override.occurrence)
+    formatNumber(override.occurrence) +
+    " " +
+    contaminantUnit
   );
 }
 
 /**
- * Return contaminant unit for display
+ * Return contaminant exposure unit for display
  */
 export function getExposureUnit(contaminantUnit, filters) {
   if (!contaminantUnit) {

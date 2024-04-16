@@ -15,9 +15,9 @@ import {
 } from "../util/data.js";
 
 /**
- * Take in TDS data and return data which has been strictly filtered and formatted 
+ * Take in TDS data and return data which has been strictly filtered and formatted
  * for use when comparing results by food
- * 
+ *
  * Returns:
  * - An object with the following properties:
  *  - Food composite code
@@ -116,9 +116,9 @@ export function getRbf(tdsData, filters) {
 
 /**
  * Take in data formatted for comparing results by food (see function above) and format it to a data table format
- * 
+ *
  * Returns:
- * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js 
+ * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
 export function formatRbfToDataTable(rbfData, filters) {
   const dataTableData = Object.values(rbfData).map((row) => {
@@ -140,7 +140,10 @@ export function formatRbfToDataTable(rbfData, filters) {
       [DataTableHeader.TREATMENT]: filters.lod,
       [DataTableHeader.MODIFIED]: filters.override.list
         .filter((override) => override.composite.includes(row.composite))
-        .map((override) => getUserModifiedValueText(override)).join("; "),
+        .map((override) =>
+          getUserModifiedValueText(override, row.contaminantUnit),
+        )
+        .join("; "),
       [DataTableHeader.FLAGGED]:
         row.consumptionMeanFlag == MeanFlag.FLAGGED ? compositeInfo : "",
       [DataTableHeader.SUPPRESSED]:
@@ -153,9 +156,9 @@ export function formatRbfToDataTable(rbfData, filters) {
 
 /**
  * Take in data formatted for comparing results by food and format it to sunburst data
- * 
+ *
  * Returns:
- * - An object adhering to the contract specified in sunburst.js 
+ * - An object adhering to the contract specified in sunburst.js
  */
 export function formatRbfToSunburst(rbfData, filters, colorMapping) {
   const sunburstData = { title: filters.chemical, children: [] };
