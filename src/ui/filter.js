@@ -264,10 +264,19 @@ function displayChemicalGroups() {
 }
 
 function displayChemicals() {
+  const filters = getActiveFilters();
   el.filters.inputs.chemical.innerHTML = "";
-  const chemicals = Object.keys(
+  let chemicals = Object.keys(
     tdsData.contaminant[el.filters.inputs.chemicalGroup.value],
   ).sort();
+
+  if (filters.chemicalGroup == getTranslations().tdsData.values.PFAS) {
+    const first = Object.values(getTranslations().tdsData.values.PFASGroupings);
+    chemicals = first.concat(
+      chemicals.filter((chemical) => !first.includes(chemical)),
+    );
+  }
+
   chemicals.forEach((chemical) => {
     const oe = document.createElement("option");
     oe.value = chemical;
