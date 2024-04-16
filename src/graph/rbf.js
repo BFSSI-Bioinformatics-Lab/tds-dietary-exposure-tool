@@ -140,7 +140,7 @@ export function formatRbfToDataTable(rbfData, filters) {
       [DataTableHeader.TREATMENT]: filters.lod,
       [DataTableHeader.MODIFIED]: filters.override.list
         .filter((override) => override.composite.includes(row.composite))
-        .map((override) => getUserModifiedValueText(override)),
+        .map((override) => getUserModifiedValueText(override)).join("; "),
       [DataTableHeader.FLAGGED]:
         row.consumptionMeanFlag == MeanFlag.FLAGGED ? compositeInfo : "",
       [DataTableHeader.SUPPRESSED]:

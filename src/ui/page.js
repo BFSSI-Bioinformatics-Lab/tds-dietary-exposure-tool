@@ -1,11 +1,17 @@
-import { DataType, GraphTypes, toggleUserLanguage } from "../const.js";
+import {
+  DataType,
+  GraphTypes,
+  SortByDir,
+  toggleUserLanguage,
+} from "../const.js";
 import { getTranslations } from "../translation/translation.js";
 import {
   displayAboutTable,
+  displayDataTable,
   downloadDataTable,
   downloadTDSData,
 } from "./dataTableComponent.js";
-import { classs, el } from "./const.js";
+import { classs, el, text } from "./const.js";
 import { displayGraph, downloadGraph } from "./graphComponent.js";
 import { getOverrideText } from "../util/data.js";
 import { loadTdsData } from "../data/dataTranslator.js";
@@ -20,16 +26,19 @@ import {
  * Initialize all the event listeners related to the page: dropdowns, buttons, etc.
  */
 export function addEventListenersToPage() {
-  [el.header.information.howToUse, el.header.information.moreInfo].forEach(
-    (dropdown) => {
-      dropdown.button.addEventListener("click", () => {
-        dropdown.content.classList.contains(classs.HIDDEN)
-          ? dropdown.content.classList.remove(classs.HIDDEN)
-          : dropdown.content.classList.add(classs.HIDDEN);
-        toggleDropdownArrow(dropdown.arrowDown, dropdown.arrowRight);
-      });
-    },
-  );
+  /* Dropdowns */
+
+  [
+    el.header.information.howToUse,
+    el.header.information.moreInfo,
+    el.dataTable.dropdown,
+    el.about.dropdown,
+  ].forEach((dropdown) => {
+    addEventListenersToDropdown(dropdown);
+  });
+
+  /* Buttons */
+
   el.header.languageButton.addEventListener("click", async () => {
     toggleUserLanguage();
     await resetPage();
@@ -83,14 +92,6 @@ export function addEventListenersToPage() {
     downloadGraph();
   });
 
-  el.dataTable.title.addEventListener("click", () => {
-    if (el.dataTable.container.classList.contains(classs.HIDDEN)) {
-      el.dataTable.container.classList.remove(classs.HIDDEN);
-    } else {
-      el.dataTable.container.classList.add(classs.HIDDEN);
-    }
-    toggleDropdownArrow(el.dataTable.arrowDown, el.dataTable.arrowRight);
-  });
   el.dataTable.buttons.downloadConsumptionData.addEventListener("click", () => {
     downloadTDSData(DataType.CONSUMPTION);
   });
@@ -100,31 +101,56 @@ export function addEventListenersToPage() {
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
     downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
   });
-
-  el.about.title.addEventListener("click", () => {
-    if (el.about.tableContainer.classList.contains(classs.HIDDEN)) {
-      el.about.tableContainer.classList.remove(classs.HIDDEN);
-    } else {
-      el.about.tableContainer.classList.add(classs.HIDDEN);
-    }
-
-    toggleDropdownArrow(el.about.arrowDown, el.about.arrowRight);
-  });
 }
 
 /**
  * Function used to perform UI changes necessary for a dropdown.
  */
-function toggleDropdownArrow(arrowDownEl, arrowRightEl) {
-  (arrowDownEl.classList.contains(classs.HIDDEN)
-    ? () => {
-      arrowDownEl.classList.remove(classs.HIDDEN);
-      arrowRightEl.classList.add(classs.HIDDEN);
-    }
-    : () => {
-      arrowRightEl.classList.remove(classs.HIDDEN);
-      arrowDownEl.classList.add(classs.HIDDEN);
-    })();
+function addEventListenersToDropdown(dropdown) {
+  const { button, content, arrowDown, arrowRight } = dropdown;
+  button.addEventListener("click", () => {
+    content.classList.contains(classs.HIDDEN)
+      ? content.classList.remove(classs.HIDDEN)
+      : content.classList.add(classs.HIDDEN);
+
+    (arrowDown.classList.contains(classs.HIDDEN)
+      ? () => {
+        arrowDown.classList.remove(classs.HIDDEN);
+        arrowRight.classList.add(classs.HIDDEN);
+      }
+      : () => {
+        arrowRight.classList.remove(classs.HIDDEN);
+        arrowDown.classList.add(classs.HIDDEN);
+      })();
+  });
+}
+
+/**
+ * Parameters:
+ * - arrowUp: element to use when sorting
+ * - arrowDown: element to use when sorting
+ * - key: the DataTableHeader key that the sorting is taking place on
+ * - data: the data to display in a data table, in object format where each key is a column (a DataTableHeader) with a corresponding value
+ * - filters: currently applied filters
+ */
+export function addEventListernToDataTableHeader(
+  arrowUp,
+  arrowDown,
+  key,
+  data,
+  filters,
+) {
+  [arrowUp, arrowDown].forEach((arrow) => {
+    arrow.addEventListener("click", () => {
+      displayDataTable(data, {
+        ...filters,
+        dataTableSortBy: {
+          column: key,
+          dir: arrow == arrowUp ? SortByDir.DESC : SortByDir.ASC,
+        },
+      });
+    });
+  });
 }
 
 /**

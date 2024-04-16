@@ -1,4 +1,4 @@
-import { DataType, GraphTypes } from "../const.js";
+import { DataType, GraphTypes, SortByDir } from "../const.js";
 import { downloadCSV } from "../data/dataDownloader.js";
 import {
   getRawFilteredConsumptionData,
@@ -8,8 +8,9 @@ import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
 import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
 import { getTranslations } from "../translation/translation.js";
-import { classs, el } from "./const.js";
+import { classs, el, text } from "./const.js";
 import { getActiveFilters } from "./filter.js";
+import { addEventListernToDataTableHeader } from "./page.js";
 
 /**
  * Download raw filtered TDS data
@@ -83,46 +84,57 @@ export async function displayDataTable(data, filters) {
 
   const columns = Object.keys(data[0]);
 
-  const headerRow = document.createElement("tr");
-  headerRow.classList.add(classs.BOLD);
+  const tableHeader = document.createElement("thead");
+  const tableHeaderRow = document.createElement("tr");
+  tableHeaderRow.classList.add(classs.BOLD);
   columns.forEach((column) => {
     const th = document.createElement("th");
     th.classList.add(classs.DATA_TABLE_CELL);
-    th.textContent = getTranslations().dataTable.headers[column];
-    headerRow.appendChild(th);
-  });
-  table.appendChild(headerRow);
+    const header = document.createElement("div");
+    header.classList.add(classs.DATA_TABLE_HEADER);
+    header.textContent = getTranslations().dataTable.headers[column];
+    const arrows = document.createElement("span");
+    arrows.classList.add(classs.DATA_TABLE_HEADER_ARROWS);
+    const arrowUp = document.createElement("span");
+    arrowUp.innerHTML = text.arrowUp;
+    const arrowDown = document.createElement("span");
+    arrowDown.innerHTML = text.arrowDown;
 
-  const convertToPlainNumber = (value) => {
-    if (!value || typeof value !== "string") return NaN;
-    const strippedValue = value.replace(/[^\d.-]/g, "");
-    if (!strippedValue || isNaN(strippedValue)) return NaN;
-    return Number(strippedValue);
-  };
+    [arrowUp, arrowDown].forEach((arrow) => {
+      arrows.appendChild(arrow);
+      arrow.classList.add(classs.DATA_TABLE_HEADER_ARROWS_INACTIVE);
+    });
+
+    if (filters.dataTableSortBy.column == column) {
+      if (filters.dataTableSortBy.dir == SortByDir.ASC) {
+        arrowDown.classList.remove(classs.DATA_TABLE_HEADER_ARROWS_INACTIVE);
+      } else {
+        arrowUp.classList.remove(classs.DATA_TABLE_HEADER_ARROWS_INACTIVE);
+      }
+    }
+
+    addEventListernToDataTableHeader(arrowUp, arrowDown, column, data, filters);
+    header.appendChild(arrows);
+    th.appendChild(header);
+    tableHeaderRow.appendChild(th);
+  });
+  tableHeader.appendChild(tableHeaderRow);
+  table.appendChild(tableHeader);
 
   data.sort((a, b) => {
     const sortBy = filters.dataTableSortBy;
-    const valueA = a[sortBy];
-    const valueB = b[sortBy];
-
-    const numValueA = !isNaN(valueA)
-      ? Number(valueA)
-      : convertToPlainNumber(valueA);
-    const numValueB = !isNaN(valueB)
-      ? Number(valueB)
-      : convertToPlainNumber(valueB);
-
-    if (!isNaN(numValueA) && !isNaN(numValueB)) {
-      return numValueA - numValueB;
-    } else {
-      const nameA = String(valueA).toLowerCase();
-      const nameB = String(valueB).toLowerCase();
-      if (nameA < nameB) return -1;
-      if (nameA > nameB) return 1;
-      return 0;
+    let valueA = a[sortBy.column]?.replace(/,/g, "").replace(/%/g, "");
+    let valueB = b[sortBy.column]?.replace(/,/g, "").replace(/%/g, "");
+    if (!isNaN(parseFloat(valueA))) {
+      valueA = parseFloat(valueA);
+      valueB = parseFloat(valueB);
     }
+    if (valueA < valueB) return sortBy.dir == SortByDir.ASC ? -1 : 1;
+    if (valueA > valueB) return sortBy.dir == SortByDir.ASC ? 1 : -1;
+    return 0;
   });
 
+  const body = document.createElement("tbody");
   data.forEach((item) => {
     const row = document.createElement("tr");
     columns.forEach((column) => {
@@ -130,8 +142,9 @@ export async function displayDataTable(data, filters) {
       td.textContent = item[column];
       row.appendChild(td);
     });
-    table.appendChild(row);
+    body.append(row);
   });
+  table.appendChild(body);
   tableContainer.appendChild(table);
 }
 

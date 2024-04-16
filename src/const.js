@@ -136,6 +136,11 @@ export const DataTableHeader = {
   SUPPRESSED: "SUPPRESSED",
 };
 
+export const SortByDir = {
+  DESC: "DESC",
+  ASC: "ASC",
+};
+
 export const MeanFlag = {
   NONE: "NONE",
   FLAGGED: "FLAGGED",
@@ -181,7 +186,6 @@ export const ageSexGroups = Object.keys(ageGroups).reduce((result, ageKey) => {
   });
   return result;
 }, {});
-
 
 export const LODs = {
   0: "0",

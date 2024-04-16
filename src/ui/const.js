@@ -5,14 +5,28 @@ export const classs = {
   DISABLED: "disabled",
   BOLD: "bold",
   RED: "red",
+  FILTER: "filter",
+  FILTER_BORDER: "filter-border",
   ACTIVE_GRAPH_SELECT: "active-graph-select",
   SANDBOX_BUTTON: "sandbox-button",
   OVERRIDE_ITEM: "override-item-container",
   OVERRIDE_VALUE: "override-item-value",
   FILTER_ADDITIONAL_ACTIVE: "filter-additional-active",
+  FILTER_ADDITIONAL_RBASG: "filter-additional-rbasg",
+  FILTER_ADDITIONAL_RBF: "filter-additional-rbf",
+  FILTER_ADDITIONAL_RBFG: "filter-additional-rbfg",
   GRAPH_LEGEND_ITEM: "graph-legend-item",
   GRAPH_LEGEND_COLOR: "graph-legend-item-color",
   DATA_TABLE_CELL: "data-table-cell",
+  DATA_TABLE_HEADER: "data-table-header",
+  DATA_TABLE_HEADER_ARROWS: "data-table-header-arrows",
+  DATA_TABLE_HEADER_ARROWS_INACTIVE: "data-table-header-arrows-inactive",
+  MULTI_SUBTITLE: "multi-subtitle",
+};
+
+export const text = {
+  arrowDown: "&darr;",
+  arrowUp: "&uarr;",
 };
 
 export const el = {
@@ -45,8 +59,10 @@ export const el = {
    */
 
   filters: {
-    containers: document.querySelectorAll(".filter"),
-    hiddenContainers: document.querySelectorAll(".filter.hidden"),
+    containers: document.querySelectorAll("." + classs.FILTER),
+    hiddenContainers: document.querySelectorAll(
+      "." + classs.FILTER + "." + classs.FILTER,
+    ),
     containersMap: {
       consumptionUnits: document.getElementById(
         "filter-consumption-units-container",
@@ -57,7 +73,7 @@ export const el = {
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
       chemical: document.getElementById("filter-chemical-title"),
       years: document.getElementById("filter-year-title"),
-      multis: document.querySelectorAll(".multi-subtitle"),
+      multis: document.querySelectorAll("." + classs.MULTI_SUBTITLE),
       lod: document.getElementById("filter-lod-title"),
       lodSubtitle: document.getElementById("filter-lod-subtitle"),
       consumptionUnits: document.getElementById(
@@ -77,7 +93,7 @@ export const el = {
       overrideFood: document.getElementById("filter-override-food-title"),
       overrideValue: document.getElementById("filter-override-value-title"),
     },
-    borders: document.querySelectorAll(".filter-border"),
+    borders: document.querySelectorAll("." + classs.FILTER_BORDER),
     sandbox: {
       openButton: document.getElementById("sandbox-open-button"),
       closeButton: document.getElementById("sandbox-close-button"),
@@ -116,7 +132,9 @@ export const el = {
 
     [GraphTypes.RBASG]: {
       graphSelect: document.getElementById("rbasg-graph-select"),
-      filterContainers: document.querySelectorAll(".filter-additional-rbasg"),
+      filterContainers: document.querySelectorAll(
+        "." + classs.FILTER_ADDITIONAL_RBASG,
+      ),
       filters: {
         ageSexGroup: document.getElementById("filter-rbasg-age-group-select"),
         domain: document.getElementById("filter-rbasg-domain-select"),
@@ -125,7 +143,7 @@ export const el = {
 
     [GraphTypes.RBF]: {
       graphSelect: document.getElementById("rbf-graph-select"),
-      filterContainers: document.querySelectorAll(".filter-additional-rbf"),
+      filterContainers: document.querySelectorAll("." + classs.RBF),
       filters: {
         sortBy: document.getElementById("filter-rbf-sort-by-select"),
         ageSexGroup: document.getElementById("filter-rbf-age-sex-group-select"),
@@ -134,7 +152,9 @@ export const el = {
 
     [GraphTypes.RBFG]: {
       graphSelect: document.getElementById("rbfg-graph-select"),
-      filterContainers: document.querySelectorAll(".filter-additional-rbfg"),
+      filterContainers: document.querySelectorAll(
+        "." + classs.FILTER_ADDITIONAL_RBFG,
+      ),
       filters: {
         range: document.getElementById("filter-rbfg-range-select"),
         ageSexGroup: document.getElementById(
@@ -154,6 +174,12 @@ export const el = {
    */
 
   dataTable: {
+    dropdown: {
+      button: document.getElementById("data-table-title"),
+      content: document.getElementById("data-table-container"),
+      arrowDown: document.getElementById("data-table-arrow-right"),
+      arrowRight: document.getElementById("data-table-arrow-down"),
+    },
     dataContainer: document.getElementById("data-container"),
     title: document.getElementById("data-table-title"),
     container: document.getElementById("data-table-container"),
@@ -167,8 +193,6 @@ export const el = {
       ),
       downloadDataTable: document.getElementById("download-data-table-button"),
     },
-    arrowDown: document.getElementById("data-table-arrow-right"),
-    arrowRight: document.getElementById("data-table-arrow-down"),
   },
 
   /*
@@ -176,12 +200,16 @@ export const el = {
    */
 
   about: {
+    dropdown: {
+      button: document.getElementById("about-title"),
+      content: document.getElementById("about-table-container"),
+      arrowDown: document.getElementById("about-arrow-right"),
+      arrowRight: document.getElementById("about-arrow-down"),
+    },
     container: document.getElementById("about-container"),
     title: document.getElementById("about-title"),
     tableContainer: document.getElementById("about-table-container"),
     table: document.getElementById("about-table"),
-    arrowDown: document.getElementById("about-arrow-right"),
-    arrowRight: document.getElementById("about-arrow-down"),
   },
 
   /*

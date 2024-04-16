@@ -8,6 +8,7 @@ import {
   RbasgDomainFormat,
   RbfSortByFormat,
   RbfgRangeFormat,
+  SortByDir,
   ageGroups,
   ageSexGroups,
 } from "../const.js";
@@ -107,7 +108,10 @@ export function getActiveFilters() {
         (item) => JSON.parse(item.data),
       ),
     },
-    dataTableSortBy: DataTableHeader.AGE_SEX_GROUP,
+    dataTableSortBy: {
+      column: DataTableHeader.AGE_SEX_GROUP,
+      dir: SortByDir.ASC,
+    },
   };
 }
 
