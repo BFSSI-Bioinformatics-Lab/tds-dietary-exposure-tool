@@ -19,6 +19,7 @@ import {
   displayFilterText,
   getActiveFilters,
   getFilteredTdsData,
+  getSelectedGraphType,
   hideFilters,
 } from "./filter.js";
 

@@ -113,9 +113,7 @@ export async function loadTdsData() {
   // Prepare consumption data with food groups and relative composites
   (await readCSV(getConsumptionFiles().desc)).rows.forEach((row) => {
     const compositeDescription =
-      row[
-      getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_DESC]
-      ];
+      row[getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_DESC]];
     const compositeContent =
       row[
       getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CONTENT]
@@ -339,12 +337,30 @@ export async function getRawFilteredContaminantData() {
     if (chemicalGroup != filters.chemicalGroup) {
       continue;
     }
-    data.rows = rows.filter(
-      (row) =>
-        row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]] ==
-        filters.chemical &&
-        filters.years.includes(getYearForContaminantEntry(row)),
-    );
+    data.rows = rows.filter((row) => {
+      const chemical =
+        row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]];
+
+      const pfasGrouping = Object.keys(PFASGroupings).find(
+        (grouping) =>
+          getTranslations().tdsData.values.PFASGroupings[grouping] ==
+          filters.chemical,
+      );
+
+      if (pfasGrouping) {
+        return (
+          getTranslations().tdsData.values.PFASMapping[pfasGrouping].includes(
+            chemical,
+          ) && filters.years.includes(getYearForContaminantEntry(row))
+        );
+      } else {
+        return (
+          row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]] ==
+          filters.chemical &&
+          filters.years.includes(getYearForContaminantEntry(row))
+        );
+      }
+    });
     data.filename = filters.chemicalGroup + " - " + filters.chemical;
     filtered.push(data);
     break;
