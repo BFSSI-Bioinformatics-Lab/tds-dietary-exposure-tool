@@ -143,7 +143,7 @@ export const el = {
 
     [GraphTypes.RBF]: {
       graphSelect: document.getElementById("rbf-graph-select"),
-      filterContainers: document.querySelectorAll("." + classs.RBF),
+      filterContainers: document.querySelectorAll("." + classs.FILTER_ADDITIONAL_RBF),
       filters: {
         sortBy: document.getElementById("filter-rbf-sort-by-select"),
         ageSexGroup: document.getElementById("filter-rbf-age-sex-group-select"),
