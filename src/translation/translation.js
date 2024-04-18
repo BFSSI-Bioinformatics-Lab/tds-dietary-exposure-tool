@@ -636,7 +636,7 @@ export function getTranslations() {
           [sexGroups.B]: "B",
           allPeople: "Toutes les personnes",
           radionuclides: "Radionucléides",
-          PFAS: "Produits chimiques perfluorés (PFC)",
+          PFAS: "Produits chimiques perfluorés (PFC) ",
           PFASGroupings: {
             [PFASGroupings.TOTAL_PFAS]:
               "SPFA Totale (Substances perfluoroalkyliques et polyfluoroalkyliques)",
