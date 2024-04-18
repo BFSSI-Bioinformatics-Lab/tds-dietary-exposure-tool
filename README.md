@@ -21,7 +21,7 @@ The source code is organized in the following way:
 - Utility/helper methods related to data or graphs can be found in the `util` folder. These methods range from obtaining domain-specific values from raw TDS data to formatting values for display and generating color mappings.
 The file `const.js` is a central location for all domain-specific constants and objects.
 
-One of the primary objectives throughout the application development is to achieve loose coupling, enhancing resilience to change. For instance, the loading, translation, and display of visualizations are each encapsulated within distinct files, adhering to strict contracts. Additionally, the core logic of the application remains independent of any specific language, making it easier to change or introduce new features in the future.
+One of the primary objectives throughout the application development is to achieve loose coupling, enhancing resilience to change. For instance, the loading, translation, and display of visualizations are each encapsulated within distinct files, adhering to strict contracts, making it easier to change or add new features in the future. Additionally, the core logic of the application remains independent of any specific language, enabling effortless text changes and easier upload of new data.
 
 ### Data
 
@@ -65,4 +65,4 @@ GitHub Pages is used to seamlessly host the static application. With each push t
 
 For local development, execute `./bin/run-local.sh` to initiate the application on localhost:8888. This script is essential for correctly serving static data files (CSVs).
 
-If protected data is added to the application, the hosting of the application must be moved over to HRE. In such case a GitHub repository should still be maintained for local development, and its code and can be pulled down to a HC laptop, and pushed to a new repository on a HC GitLab server for deployment.
+If protected data is added to the application, the hosting of the application must be moved over to a protected environment such as HRE. In such case a GitHub repository should still be maintained (made private) for local development, and its code and can be pulled down to a HC laptop, and pushed to a new repository on a HC GitLab server for deployment.

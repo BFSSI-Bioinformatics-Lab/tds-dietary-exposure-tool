@@ -53,7 +53,10 @@ export function getRbfg(tdsData, filters) {
         ageSexGroup,
         consumptionsSuppressed: [],
         consumptionsFlagged: [],
-        contaminantUnit: Object.values(tdsData.contaminant)[0][0].units, // All occurrences use the same value for a given chemical group
+        contaminantUnit:
+          Object.values(tdsData.contaminant).length != 0
+            ? Object.values(tdsData.contaminant)[0][0].units
+            : null, // All occurrences use the same value for a given chemical group
         exposure: 0,
         foodGroup,
         percentUnderLod: 0,
