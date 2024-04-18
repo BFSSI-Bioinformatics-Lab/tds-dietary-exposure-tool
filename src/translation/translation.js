@@ -117,6 +117,8 @@ export function getTranslations() {
           overrideTitle: "Override Occurrence Value(s):",
           overrideSubtitle:
             "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved.",
+          addOverrideButton: "Apply",
+          removeOverrideButton: "-",
         },
       },
 
@@ -479,6 +481,8 @@ export function getTranslations() {
           overrideTitle: "Override Occurrence Value(s): (fr)",
           overrideSubtitle:
             "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved. (fr)",
+          addOverrideButton: "Apply (fr)",
+          removeOverrideButton: "-",
         },
       },
 

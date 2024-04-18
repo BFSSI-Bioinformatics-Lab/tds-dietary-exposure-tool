@@ -11,13 +11,12 @@ import {
   downloadDataTable,
   downloadTDSData,
 } from "./dataTableComponent.js";
-import { classs, el, text } from "./const.js";
-import { displayGraph, downloadGraph } from "./graphComponent.js";
-import { getOverrideText } from "../util/data.js";
+import { classs, el } from "./const.js";
+import { downloadGraph } from "./graphComponent.js";
 import { loadTdsData } from "../data/dataTranslator.js";
 import {
+  clearSandbox,
   displayFilterText,
-  getActiveFilters,
   getFilteredTdsData,
   getSelectedGraphType,
   hideFilters,
@@ -129,6 +128,7 @@ async function resetPage() {
   el.filters.sandbox.container.classList.add(classs.HIDDEN);
   el.filters.inputs.chemicalGroup.innerHTML = "";
   el.filters.inputs.chemical.innerHTML = "";
+  clearSandbox();
   await loadTdsData();
   displayFilterText();
   el.misc.loader.classList.add(classs.HIDDEN);
@@ -197,6 +197,8 @@ export async function initializePageText() {
     translations.filters.sandbox.overrideTitle;
   el.filters.sandbox.overrideSubtitle.innerHTML =
     translations.filters.sandbox.overrideSubtitle;
+  el.filters.sandbox.addOverrideButton.innerHTML =
+    translations.filters.sandbox.addOverrideButton;
 
   el.filters.titles.referenceLine.innerHTML =
     translations.filters.titles.referenceLine;

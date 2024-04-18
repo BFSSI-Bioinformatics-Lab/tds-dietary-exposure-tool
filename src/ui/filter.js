@@ -127,6 +127,7 @@ function addEventListenersToFilters() {
   [el.filters.inputs.chemicalGroup, el.filters.inputs.chemical].forEach(
     (select) =>
       select.addEventListener("change", () => {
+        clearSandbox();
         displayYears();
         if (selectionsCompleted()) {
           el.filters.containers.forEach((container) => {
@@ -208,7 +209,8 @@ function addEventListenersToFilters() {
 
       const removeButton = document.createElement("button");
       removeButton.classList.add(classs.SANDBOX_BUTTON);
-      removeButton.innerHTML = "-";
+      removeButton.innerHTML =
+        getTranslations().filters.sandbox.removeOverrideButton;
       removeButton.addEventListener("click", () => {
         el.filters.sandbox.overridesList.removeChild(itemContainer);
         Array.from(el.filters.inputs.overrideFood.options).find(
@@ -443,6 +445,8 @@ function displayRbfSortByFilter() {
 }
 
 function displayOverrideFoodFilter() {
+  el.filters.inputs.overrideValue.value = "";
+  el.filters.sandbox.overridesList.innerHTML = "";
   const overrideFoodEl = el.filters.inputs.overrideFood;
   overrideFoodEl.innerHTML = "";
   addPlaceholderToSelect(
@@ -527,6 +531,14 @@ export function updateSandbox(filteredTdsData, filters) {
       ? Object.values(filteredTdsData.contaminant)[0][0].units
       : getTranslations().misc.na) +
     ")</span>";
+}
+
+/**
+ * Clear sandbox values whenever the chemical has been changed
+ */
+export function clearSandbox() {
+  el.filters.inputs.referenceLine.value = "";
+  displayOverrideFoodFilter();
 }
 
 /**
