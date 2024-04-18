@@ -65,7 +65,7 @@ export function downloadDataTable(tdsData, graphType) {
   downloadCSV(data);
 }
 
-/*
+/**
  * Display calculations and other important TDS data for a current graph
  *
  * Parameters:

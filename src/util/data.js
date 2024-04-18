@@ -158,11 +158,37 @@ export function getConsumptionUnit(meanConsumption, filters) {
  * Return year for raw contaminant entry
  */
 export function getYearForContaminantEntry(row) {
-  const year =
-    "20" +
-    row[getTranslations().tdsData.headers[DataColumn.COLLECTION_DATE]].split(
-      "/",
-    )[2];
+  const rowYear =
+    row[getTranslations().tdsData.headers[DataColumn.COLLECTION_DATE]];
+  let year = null;
+
+  const formats = [
+    { pattern: /(\d{4})-(\d{2})-(\d{2})/, parts: ["year", "month", "day"] }, // YYYY-MM-DD
+    {
+      pattern: /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/,
+      parts: ["month", "day", "year"],
+    }, // MM/DD/YYYY, MM/DD/YY, M/DD/YY, MM/D/YY
+    { pattern: /(\d{2})-(\d{2})-(\d{2})/, parts: ["month", "day", "year"] }, // MM-DD-YY
+  ];
+
+  for (let format of formats) {
+    let match = rowYear.match(format.pattern);
+    if (match) {
+      let yearIndex = format.parts.indexOf("year");
+      if (yearIndex != -1) {
+        year = parseInt(match[yearIndex + 1]);
+        if (year < 100) {
+          year += 2000;
+        }
+      }
+      break;
+    }
+  }
+
+  if (!year) {
+    console.error("Invalid year found in data: " + rowYear);
+  }
+
   // Edge-cases discovered in data...
   if (
     row[getTranslations().tdsData.headers[DataColumn.PROJECT_CODE]].includes(
@@ -183,7 +209,7 @@ export function getYearForContaminantEntry(row) {
   ) {
     return "2011";
   }
-  return year;
+  return year.toString();
 }
 
 /**

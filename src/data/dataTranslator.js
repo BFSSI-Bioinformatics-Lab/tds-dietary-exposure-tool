@@ -2,9 +2,7 @@ import {
   getContaminantFiles,
   YearMin,
   YearMax,
-  GraphTypes,
   MeanFlag,
-  DataType,
   DataColumn,
   ConsumptionUnits,
   getConsumptionFiles,
@@ -337,15 +335,16 @@ export async function getRawFilteredContaminantData() {
     if (chemicalGroup != filters.chemicalGroup) {
       continue;
     }
+
+    const pfasGrouping = Object.keys(PFASGroupings).find(
+      (grouping) =>
+        getTranslations().tdsData.values.PFASGroupings[grouping] ==
+        filters.chemical,
+    );
+
     data.rows = rows.filter((row) => {
       const chemical =
         row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]];
-
-      const pfasGrouping = Object.keys(PFASGroupings).find(
-        (grouping) =>
-          getTranslations().tdsData.values.PFASGroupings[grouping] ==
-          filters.chemical,
-      );
 
       if (pfasGrouping) {
         return (
