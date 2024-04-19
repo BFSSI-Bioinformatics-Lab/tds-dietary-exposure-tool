@@ -29,7 +29,7 @@ import {
  *    - exposure
  *    - foodGroup
  *    - meanConsumption
- *    - meanOccurence
+ *    - meanOccurrence
  *    - percentExposure
  *    - percentExposureForFoodGroup
  *    - percentUnderLod

@@ -31,18 +31,10 @@ export function getTranslations() {
 
       header: {
         title:
-          "<b> Canadian Total Diet Study 2008-2023 Dietary Exposure Tool </b> from Health Canada",
+          "<b> Canadian Total Diet Study 2008-2023 Dietary Exposure Tool </b> from Health Canada’s Food and Nutrition Directorate",
         information: {
-          howToUseButton: "How to Use",
-          howToUseContent: [
-            "The graph at the top of the page compares how 12 broad food groups contribute to intake among children, youth & adolescents, adult females and adult males and the whole population.",
-            "",
-            "1) Choose a Nutrient by selecting from the dropdown menu at the top left hand side of the screen To display a detailed description of what is included in each food group, hover over or tab to any specific food group in the graph or the legend. Click to isolate a food group, click again to restore the complete graph. Use the “Switch to” button to toggle between number and percentage of contribution. Download the raw data in csv format by clicking on the download button.",
-            "",
-            "2) Select an age-sex group to take a deeper look at how more specific food sub-groups contribute to intakes in the graph at the bottom of the page.",
-            "",
-            "Each broad food group is represented in a different color and sub-group contribution is shown in the outside layers. Hover over a food group for more information. Click on the label to take a closer look into a food group. Click again to restore the complete graph. To see the level 2 sub-groups results in ascending order, click on the grey circle. Click again on the grey circle to restore the complete graph.",
-          ],
+          howToUseButton: "",
+          howToUseContent: [],
           moreInfoButton: "Data Sources",
           moreInfoContent: [
             "The data used to create this interactive tool are from the following sources:",
@@ -52,7 +44,7 @@ export function getTranslations() {
         },
         language: "Français",
         subtitle:
-          "How much of various chemicals are Canadian populations exposed to through their diet? And which foods and food groups contribute the most?",
+          "What is the estimated dietary exposure of Canadian populations to various chemicals? And which foods and food groups contribute the most to total dietary exposure?",
       },
 
       /**
@@ -71,7 +63,7 @@ export function getTranslations() {
           chemical: "Chemical",
           years: "Year(s)",
           multiSubtitle: "Multi-select with Ctrl",
-          lod: "Occurrence &ltLOD =",
+          lod: "Treatment of Values &ltLOD",
           lodSubtitle: "LOD Range: ",
           units: "Units",
           ageGroup: "Age Groups",
@@ -94,8 +86,8 @@ export function getTranslations() {
           [LODs.Exclude]: "Exclude",
         },
         consumptionUnits: {
-          [ConsumptionUnits.PERSON]: "Per Person per Day",
-          [ConsumptionUnits.KGBW]: "Per kg Bodyweight per Day",
+          [ConsumptionUnits.PERSON]: "ng/day",
+          [ConsumptionUnits.KGBW]: "ng/kg bw per day",
         },
         rbasgDomainFormat: {
           [RbasgDomainFormat.AGESEX]: "Age-Sex Group",
@@ -110,13 +102,13 @@ export function getTranslations() {
           [RbfSortByFormat.GROUP]: "Food Group",
         },
         sandbox: {
-          openButton: "Open Sandbox",
+          openButton: "Modify Graph/Values",
           closeButton: "Close",
-          title: "Sandbox Environment",
+          title: "Modify Graph/Values",
           referenceLineTitle: "Add Reference Line to Graph:",
           overrideTitle: "Override Occurrence Value(s):",
           overrideSubtitle:
-            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved.",
+            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios.",
           addOverrideButton: "Apply",
           removeOverrideButton: "-",
         },
@@ -179,7 +171,7 @@ export function getTranslations() {
       dataTable: {
         title: "Data Table",
         buttons: {
-          downloadContaminantData: "Download Contaminant Data",
+          downloadContaminantData: "Download Occurrence Data",
           downloadConsumptionData: "Download Consumption Data",
           downloadDataTable: "Download Exposure Estimates",
         },
@@ -194,12 +186,12 @@ export function getTranslations() {
           [DataTableHeader.AGE_SEX_GROUP]: "Age-sex Group",
           [DataTableHeader.FOOD_GROUP]: "Food Group",
           [DataTableHeader.COMPOSITE]: "Food Name and Code",
-          [DataTableHeader.PERCENT_EXPOSURE]: "Percent Total Exposure",
+          [DataTableHeader.PERCENT_EXPOSURE]: "% of Total Exposure",
           [DataTableHeader.EXPOSURE]: "Exposure Estimate",
           [DataTableHeader.EXPOSURE_UNIT]: "Unit",
           [DataTableHeader.YEARS]: "Year(s)",
-          [DataTableHeader.PERCENT_NOT_TESTED]: "Percent Not Tested",
-          [DataTableHeader.PERCENT_UNDER_LOD]: "% <LOD",
+          [DataTableHeader.PERCENT_NOT_TESTED]: "% Foods Not Tested",
+          [DataTableHeader.PERCENT_UNDER_LOD]: "% Occurrence Values <LOD",
           [DataTableHeader.TREATMENT]: "Treatment of <LOD",
           [DataTableHeader.MODIFIED]: "User-modified Values",
           [DataTableHeader.FLAGGED]: "'E' Flag",

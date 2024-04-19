@@ -31,7 +31,7 @@ The CSV files used by the application are from the following sources:
 
 ### Graphs
 
-For each graph, similiar steps for calculations are performed. The data is filtered and/or grouped by chemical group, chemical, age-sex group, etc. The dietary exposure estimate is calculated for each grouping by calculating the mean of all contaminant occurence values in the grouping, and multiplying by the mean consumption for a given age-sex group $\frac{ng}{g} * \frac{g}{person/day} = \frac{ng}{person/day}$.
+For each graph, similiar steps for calculations are performed. The data is filtered and/or grouped by chemical group, chemical, age-sex group, etc. The dietary exposure estimate is calculated for each grouping by calculating the mean of all contaminant occurrence values in the grouping, and multiplying by the mean consumption for a given age-sex group $\frac{ng}{g} * \frac{g}{person/day} = \frac{ng}{person/day}$.
 
 #### Results by Age-Sex Group (RBASG)
 
