@@ -61,8 +61,9 @@ export function displayGraph(data) {
 
   const graphMapping = {
     [GraphTypes.RBASG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title} ${filters.chemical
-        }, (${filters.years.join(", ")})`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title}, ${
+        filters.chemical
+      }`,
       colorLegendMapping: sexGroupColorMapping,
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
@@ -72,10 +73,9 @@ export function displayGraph(data) {
       hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title} ${filters.chemical
-        }, ${getAgeSexDisplay(filters.ageSexGroups[0])}, \(${filters.years.join(
-          ", ",
-        )}\)`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title}, ${
+        filters.chemical
+      }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
       colorLegendMapping: foodGroupColorMapping,
       getDataFn: getRbf,
       getGraphDataFn: formatRbfToSunburst,
@@ -85,8 +85,9 @@ export function displayGraph(data) {
       hasReferenceLine: false,
     },
     [GraphTypes.RBFG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title} ${filters.chemical
-        }, \(${filters.years.join(", ")}\)`,
+      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title}, ${
+        filters.chemical
+      }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
       colorLegendMapping: foodGroupColorMapping,
       getDataFn: getRbfg,
       getGraphDataFn: formatRbfgToStackedBar,
@@ -146,7 +147,7 @@ export function downloadGraph() {
   el.graphs.saveGraphContainer.appendChild(footer);
 
   html2canvas(el.graphs.saveGraphContainer, { logging: false }).then(
-    function(canvas) {
+    function (canvas) {
       var link = document.createElement("a");
       link.download = getTranslations().graphs.saveGraph.filename;
       link.href = canvas.toDataURL();

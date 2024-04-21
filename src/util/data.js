@@ -36,10 +36,10 @@ export function getAgeSexGroupInfoForConsumptionEntry(ageSexGroup) {
   // Sex
   let sex = "";
   for (let i = 0; i < ageSexGroup.length; i++) {
-    if (ageSexGroup[i] == getTranslations().tdsData.values[sexGroups.F]) {
+    if (ageSexGroup[i] == getTranslations().misc.sexGroups[sexGroups.F]) {
       sex = sexGroups.F;
     }
-    if (ageSexGroup[i] == getTranslations().tdsData.values[sexGroups.M]) {
+    if (ageSexGroup[i] == getTranslations().misc.sexGroups[sexGroups.M]) {
       sex = sexGroups.M;
     }
   }
@@ -69,7 +69,7 @@ export function getAgeAndSex(ageSexGroup) {
  */
 export function getAgeSexDisplay(ageSexGroup) {
   let [age, sex] = getAgeAndSex(ageSexGroup);
-  return getAgeSex(age, getTranslations().tdsData.values[sex]);
+  return getAgeSex(age, getTranslations().misc.sexGroups[sex]);
 }
 
 /**

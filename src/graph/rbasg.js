@@ -236,7 +236,7 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
   Object.keys(rbasgData).forEach((entry) => {
     Object.keys(rbasgData[entry]).forEach((sex) => {
       const row = rbasgData[entry][sex];
-      const sexDisplay = getTranslations().tdsData.values[sex];
+      const sexDisplay = getTranslations().misc.sexGroups[sex];
       groupedBarData.children.push({
         entry: entry,
         group: sexDisplay,

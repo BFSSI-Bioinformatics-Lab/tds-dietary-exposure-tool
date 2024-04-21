@@ -204,16 +204,16 @@ export async function loadTdsData() {
     // Find which entry in the consumption data has the composite
     for (const foodGroup of Object.keys(data.consumption)) {
       if (data.consumption[foodGroup][composite]) {
-        data.consumption[foodGroup][composite].forEach((row) => {
-          if (row.ageSexGroup == ageSexGroup) {
+        data.consumption[foodGroup][composite].forEach((consumptionRow) => {
+          if (consumptionRow.ageSexGroup == ageSexGroup) {
             const meanGramsPerKgBWPerDay =
               Number(
                 row[
                   getTranslations().tdsData.headers[DataColumn.MEAN_G_PKGBWPD]
                 ],
               ) || 0;
-            row.meanGramsPerKgBWPerDay = meanGramsPerKgBWPerDay;
-            row.meanFlagForPerKgBWPerDay = getMeanFlagForConsumptionEntry(
+            consumptionRow.meanGramsPerKgBWPerDay = meanGramsPerKgBWPerDay;
+            consumptionRow.meanFlagForPerKgBWPerDay = getMeanFlagForConsumptionEntry(
               row[getTranslations().tdsData.headers[DataColumn.MEAN_FLAG]],
               meanGramsPerKgBWPerDay,
             );

@@ -118,6 +118,7 @@ export function addEventListernToDataTableHeader(
  * This function is used when switching languages.
  */
 async function resetPage() {
+  el.header.languageButton.disabled = true;
   el.misc.loader.classList.remove(classs.HIDDEN);
   initializePageText();
   hideFilters();
@@ -132,6 +133,7 @@ async function resetPage() {
   await loadTdsData();
   displayFilterText();
   el.misc.loader.classList.add(classs.HIDDEN);
+  el.header.languageButton.disabled = false;
 }
 
 /**
@@ -143,10 +145,6 @@ export async function initializePageText() {
 
   el.header.title.innerHTML = translations.header.title;
   el.header.subtitle.innerHTML = translations.header.subtitle;
-  el.header.information.howToUse.button.innerHTML =
-    translations.header.information.howToUseButton;
-  el.header.information.howToUse.content.innerHTML =
-    translations.header.information.howToUseContent.join("<br/>");
   el.header.information.moreInfo.button.innerHTML =
     translations.header.information.moreInfoButton;
   el.header.information.moreInfo.content.innerHTML =

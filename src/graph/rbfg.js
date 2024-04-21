@@ -239,7 +239,7 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
           ? rbfgData[ageSexGroup][foodGroup].percentExposure || 0
           : rbfgData[ageSexGroup][foodGroup].exposure) || 0;
       stackedBarData.children.push({
-        entry: age + sexGroup[0],
+        entry: age + sexGroup,
         sortBy: Object.keys(ageGroups).indexOf(ageSexGroup),
         color: colorMapping[foodGroup].color,
         stack: foodGroup,

@@ -32,8 +32,6 @@ export function getTranslations() {
         title:
           "<b> Canadian Total Diet Study 2008-2023 Dietary Exposure Tool </b> from Health Canada’s Food and Nutrition Directorate",
         information: {
-          howToUseButton: "",
-          howToUseContent: [],
           moreInfoButton: "Data Sources",
           moreInfoContent: [
             "The data used to create this interactive tool are from the following sources:",
@@ -152,7 +150,7 @@ export function getTranslations() {
           filename: "Graph Export",
         },
         [GraphTypes.RBASG]: {
-          title: "Dietary Exposure Estimate by Age-Sex Group for",
+          title: "Dietary Exposure Estimate by Age-Sex Group",
           range: "Dietary Exposure",
           domain: {
             [RbasgDomainFormat.AGESEX]: "Age Group",
@@ -160,10 +158,10 @@ export function getTranslations() {
           },
         },
         [GraphTypes.RBF]: {
-          title: "Dietary Exposure Estimate by Food for",
+          title: "Dietary Exposure Estimate by Food",
         },
         [GraphTypes.RBFG]: {
-          title: "Dietary Exposure Estimate by Food Group for",
+          title: "Dietary Exposure Estimate by Food Group",
           range: {
             [RbfgRangeFormat.PERCENT]: "% of Total Exposure",
             [RbfgRangeFormat.NUMBER]: "Dietary Exposure",
@@ -243,6 +241,11 @@ export function getTranslations() {
        */
 
       misc: {
+        sexGroups: {
+          [sexGroups.F]: "F",
+          [sexGroups.M]: "M",
+          [sexGroups.B]: "FM",
+        },
         noDataMsg: "No results above LOD",
         na: "NA",
         consumptionUnitShort: {
@@ -285,9 +288,6 @@ export function getTranslations() {
           [DataColumn.MDL]: "MDL",
         },
         values: {
-          [sexGroups.F]: "F",
-          [sexGroups.M]: "M",
-          [sexGroups.B]: "B",
           allPeople: "All people",
           radionuclides: "Radionuclides",
           PFAS: "Perfluorinated chemicals (PFCs)",
@@ -418,199 +418,214 @@ export function getTranslations() {
 
     [language.FR]: {
       header: {
-        title: "<b> Dietary Exposure to Chemicals </b> from Health Canada (fr)",
+        title:
+          "<b>Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023</b> de la Direction de l'alimentation et de la nutrition de Santé Canada",
         information: {
-          howToUseButton: "How to Use (fr)",
-          howToUseContent: [],
-          moreInfoButton: "Data Source (fr)",
-          moreInfoContent: [],
+          moreInfoButton: "Sources de données",
+          moreInfoContent: [
+            "Les données utilisées pour créer cet outil interactif proviennent des sources suivantes :",
+            '- Résultats de l\'Étude canadienne sur l\'alimentation totale pour les années de collecte 2008-2023. Disponible sur le <a href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c" target="_blank">Réseau canadien d\'information sur les laboratoires</a>',
+            '- <a href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130" target="_blank">Les tableaux de consommation alimentaire de l\'étude de l\'alimentation totale 2008-2023 (2015 ESCC-Nutrition).</a>',
+          ],
         },
-        language: "Passer à l'anglais",
+        language: "English",
         subtitle:
-          "How much of various chemicals is the Canadian population exposed to through their diet? And which foods and food groups contribute the most? (fr)",
+          "Quelle est l'exposition alimentaire estimée des populations canadiennes à divers produits chimiques ? Quels sont les aliments et les groupes d'aliments qui contribuent le plus à l'exposition alimentaire totale ?",
       },
 
       filters: {
         graphSelects: {
-          [GraphTypes.RBASG]: "Result by Age-Sex Group (fr)",
-          [GraphTypes.RBF]: "Result by Food (fr)",
-          [GraphTypes.RBFG]: "Result by Food Group (fr)",
+          [GraphTypes.RBASG]: "Résultats par groupe d'âge et de sexe",
+          [GraphTypes.RBF]: "Résultats par aliments",
+          [GraphTypes.RBFG]: "Résultats par groupe d'aliments",
         },
         titles: {
-          title: "Select Graph Type and Chemical: (fr)",
-          chemicalGroup: "Chemical Group (fr)",
-          chemical: "Chemical (fr)",
-          years: "Year(s) (fr)",
-          multiSubtitle: "+ctrl (fr)",
-          lod: "Occurrence &ltLOD = (fr)",
-          lodSubtitle: "LOD Range:  (fr)",
-          units: "Units (fr)",
-          ageGroup: "Age Group (fr)",
-          domain: "Domain (fr)",
-          ageSexGroup: "Age-Sex Group (fr)",
-          range: "Range Format (fr)",
-          sortBy: "Sort By (fr)",
-          referenceLine: "Limit (fr)",
-          overrideFood: "Food (fr)",
-          overrideValue: "New Value (fr)",
+          title: "Sélectionnez le type de graphique et le produit chimique :",
+          chemicalGroup: "Groupe chimique",
+          chemical: "Chimique",
+          years: "Année(s)",
+          multiSubtitle: "Multi-sélection avec Ctrl",
+          lod: "Traitement des valeurs <LD",
+          lodSubtitle: "Période LD : ",
+          units: "Unités",
+          ageGroup: "Groupes d'âge",
+          domain: "Voir par",
+          ageSexGroup: "Groupes âge-sexe",
+          range: "Voir comme",
+          sortBy: "Trier par",
+          referenceLine: "Limite",
+          overrideFood: "Aliment",
+          overrideValue: "Nouvelle valeur",
         },
         placeholders: {
-          select: "Select (fr)",
-          none: "None (fr)",
+          select: "Sélectionner",
+          none: "Aucun",
         },
         lods: {
-          [LODs[0]]: "0 (fr)",
-          [LODs["1/2 LOD"]]: "1/2 LOD (fr)",
-          [LODs.LOD]: "LOD (fr)",
-          [LODs.Exclude]: "Exclude (fr)",
+          [LODs[0]]: "0",
+          [LODs["1/2 LOD"]]: "1/2 LD",
+          [LODs.LOD]: "LD",
+          [LODs.Exclude]: "Exclure",
         },
         consumptionUnits: {
-          [ConsumptionUnits.PERSON]: "Per Person per Day (fr)",
-          [ConsumptionUnits.KGBW]: "Per kg Bodyweight per Day (fr)",
+          [ConsumptionUnits.PERSON]: "ng/jour",
+          [ConsumptionUnits.KGBW]: "ng/kg pc par jour",
         },
         rbasgDomainFormat: {
-          [RbasgDomainFormat.AGESEX]: "Age-Sex (fr)",
-          [RbasgDomainFormat.YEAR]: "Year (fr)",
+          [RbasgDomainFormat.AGESEX]: "Groupe âge-sexe",
+          [RbasgDomainFormat.YEAR]: "Année",
         },
         rbfgRangeFormat: {
-          [RbfgRangeFormat.PERCENT]: "Percentages (fr)",
-          [RbfgRangeFormat.ABSOLUTE]: "Absolute (fr)",
+          [RbfgRangeFormat.PERCENT]: "Pourcentages",
+          [RbfgRangeFormat.ABSOLUTE]: "Valeurs absolues",
         },
         rbfSortByFormat: {
-          [RbfSortByFormat.FOOD]: "Food (fr)",
-          [RbfSortByFormat.GROUP]: "Food Group (fr)",
+          [RbfSortByFormat.FOOD]: "Aliment",
+          [RbfSortByFormat.GROUP]: "Groupe alimentaire",
         },
         sandbox: {
-          openButton: "Open Sandbox (fr)",
-          closeButton: "Close (fr)",
-          title: "Sandbox Environment (fr)",
+          openButton: "Modifier le graphique/les valeurs",
+          closeButton: "Fermer",
+          title: "Modifier le graphique/les valeurs",
           subtitle:
-            "Any new values that are added will apply to all three graphs. The modifications are not saved and will be cleared when the chemical is changed or the tool is refreshed or closed.",
-          referenceLineTitle: "Add Reference Line to Graph: (fr)",
-          overrideTitle: "Override Occurrence Value(s): (fr)",
+            "Toute nouvelle valeur ajoutée s'appliquera aux trois graphiques. Les modifications ne sont pas sauvegardées et seront effacées lorsque le produit chimique sera modifié ou lorsque l'outil sera actualisé ou fermé.",
+          referenceLineTitle: "Ajouter une ligne de référence au graphique :",
+          overrideTitle: "Remplacer la valeur(s) d’occurrence :",
           overrideSubtitle:
-            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved. (fr)",
-          addOverrideButton: "Apply (fr)",
+            "Cette fonction permet de modifier temporairement les données afin d'estimer l'exposition selon différents scénarios.",
+          addOverrideButton: "Appliquer",
           removeOverrideButton: "-",
-          showSuppressedTitle: "Consumption Values with CV > 33.3% (fr)",
+          showSuppressedTitle: "Valeurs de consommation avec CV > 33.3%",
           showSuppressedSubTitle:
-            "Consumption values with high CV have been suppressed by default. You can choose to include them for calculating estimated exposures. (fr)",
+            "Les valeurs de consommation ayant un CV élevé ont été supprimées par défaut. Vous pouvez choisir de les inclure dans le calcul des expositions estimées.",
           confirmShowSuppressedValues:
-            "Warning from Statistics Canada: The user is advised that the consumption values with CV>33.3% do not meet Statistics Canada’s quality guidelines for this statistical program. Conclusions based on these data will be unreliable and most likely invalid. These data and any consequent findings should not be published. If the user choses to publish these findings, then this disclaimer must be published with the data. (fr)",
-          showSuppressed: "Include (fr)",
-          dontShowSuppressed: "Exclude (fr)",
+            "Avertissement de Statistique Canada : L'utilisateur est avisé que les valeurs de consommation dont le CV est supérieur à 33,3 % ne satisfont pas aux lignes directrices de Statistique Canada en matière de qualité pour ce programme statistique. Les conclusions basées sur ces données ne seront pas fiables et très probablement invalides. Ces données et les résultats qui en découlent ne doivent pas être publiés. Si l'utilisateur choisit de publier ces résultats, cet avertissement doit être publié avec les données.",
+          showSuppressed: "Include (TODO)",
+          dontShowSuppressed: "Exclude (TODO)",
         },
       },
 
       graphs: {
         info: {
-          exposure: "Dietary Exposure (fr)",
-          percentExposure: "% Dietary Exposure (fr)",
-          occurrence: "Contaminant Occurrence (mean) (fr)",
-          foodConsumption: "Mean Food Composite Consumption (fr)",
-          ageSexGroup: "Age-Sex Group (fr)",
-          ageGroup: "Age Group (fr)",
-          year: "Year (fr)",
+          exposure: "Exposition Alimentaire",
+          percentExposure: "% Exposition Alimentaire ",
+          occurrence: "Occurrence du contaminant (moyenne)",
+          foodConsumption: "Consommation composite d'aliments (moyenne)",
+          ageSexGroup: "Groupe âge-sexe",
+          ageGroup: "Groupe d'âge",
+          year: "Année",
         },
         legend: {
-          ageGroup: "Age Groups (fr)",
-          foodGroup: "Food Groups (fr)",
+          sexGroup: "Sexe",
+          foodGroup: "Groupes d'aliments d’EAT",
           sexGroups: {
             [sexGroups.B]: "Les deux",
-            [sexGroups.F]: "Femelle",
-            [sexGroups.M]: "Mâle",
+            [sexGroups.F]: "Femme",
+            [sexGroups.M]: "Homme",
           },
         },
         saveGraph: {
-          button: "Save Graph (fr)",
-          footer: "Data sources: xxxx (fr)",
-          filename: "Graph Export (fr)",
+          button: "Enregistrer le graphique",
+          footer:
+            "Sources des données : Santé Canada, Étude canadienne sur l'alimentation totale, CANLINE et Statistique Canada, Enquête sur la santé dans les collectivités canadiennes 2015 - Nutrition, 2015, Share File",
+          filename: "Exportation du graphique",
         },
         [GraphTypes.RBASG]: {
-          title: "Dietary Exposure Estimate by Age-Sex Group for (fr)",
-          range: "Dietary Exposure (fr)",
+          title:
+            "Estimation de l'exposition alimentaire par groupe d'âge et de sexe",
+          range: "Exposition alimentaire",
           domain: {
-            [RbasgDomainFormat.AGESEX]: "Age Group(s) (fr)",
-            [RbasgDomainFormat.YEAR]: "Year (fr)",
+            [RbasgDomainFormat.AGESEX]: "Groupe d'âge",
+            [RbasgDomainFormat.YEAR]: "Année",
           },
         },
         [GraphTypes.RBF]: {
-          title: "Dietary Exposure Estimate by Food for (fr)",
+          title: "Estimation de l'exposition alimentaire par aliment",
         },
         [GraphTypes.RBFG]: {
-          title: "Dietary Exposure Estimate by Food Group for (fr)",
+          title: "Estimation de l'exposition alimentaire par groupe d'aliments",
           range: {
-            [RbfgRangeFormat.PERCENT]: "% of Total Exposure (fr)",
-            [RbfgRangeFormat.NUMBER]: "Dietary Exposure (fr)",
+            [RbfgRangeFormat.PERCENT]: "% de l'exposition totale",
+            [RbfgRangeFormat.NUMBER]: "Exposition alimentaire",
           },
-          domain: "Age-Sex Groups (fr)",
+          domain: "Groupe d'âge et de sexe",
         },
       },
 
       dataTable: {
-        title: "Data Tables (fr)",
+        title: "Tableaux de données",
         buttons: {
-          downloadContaminantData: "Download Contaminant Data (fr)",
-          downloadConsumptionData: "Download Consumption Data (fr)",
-          downloadDataTable: "Download Calculations (Found Below) (fr)",
+          downloadContaminantData: "Télécharger les données d'occurrence",
+          downloadConsumptionData: "Télécharger les données de consommation",
+          downloadDataTable: "Télécharger les estimations d'exposition",
         },
         exportNames: {
-          [ConsumptionUnits.PERSON]: "Food Consumption per Person per Day (fr)",
+          [ConsumptionUnits.PERSON]:
+            "Consommation alimentaire par personne et par jour",
           [ConsumptionUnits.KGBW]:
-            "Food Consumption per kg Bodyweight per Day (fr)",
-          dataExport: "Data Export (fr)",
-          calculations: "Dietary Exposure Calculations (fr)",
+            "Consommation alimentaire par kg de poids corporel par jour",
+          dataExport: "Exportation de données",
+          calculations: "Calculs d’exposition alimentaire",
         },
         headers: {
-          [DataTableHeader.CHEMICAL]: "Chemical (fr)",
-          [DataTableHeader.AGE_SEX_GROUP]: "Age-sex Group (fr)",
-          [DataTableHeader.FOOD_GROUP]: "Food Group (fr)",
-          [DataTableHeader.COMPOSITE]: "Food Name and Code (fr)",
-          [DataTableHeader.PERCENT_EXPOSURE]: "Percent Total Exposure (fr)",
-          [DataTableHeader.EXPOSURE]: "Exposure Estimate (fr)",
-          [DataTableHeader.EXPOSURE_UNIT]: "Unit (fr)",
-          [DataTableHeader.YEARS]: "Year(s) (fr)",
-          [DataTableHeader.PERCENT_NOT_TESTED]: "Percent Not Tested (fr)",
-          [DataTableHeader.PERCENT_UNDER_LOD]: "% <LOD (fr)",
-          [DataTableHeader.TREATMENT]: "Treatment of <LOD (fr)",
-          [DataTableHeader.MODIFIED]: "User-modified Values (fr)",
-          [DataTableHeader.FLAGGED]: "'E' Flag (fr)",
-          [DataTableHeader.SUPPRESSED]: "'F' Suppressed (fr)",
+          [DataTableHeader.CHEMICAL]: "Chimique",
+          [DataTableHeader.AGE_SEX_GROUP]: "Groupe âge-sexe",
+          [DataTableHeader.FOOD_GROUP]: "Groupe d’aliments d’EAT",
+          [DataTableHeader.COMPOSITE]: "Nom et code de l'aliment",
+          [DataTableHeader.PERCENT_EXPOSURE]: "% de l'exposition totale",
+          [DataTableHeader.EXPOSURE]: "Estimation de l'exposition",
+          [DataTableHeader.EXPOSURE_UNIT]: "Unité",
+          [DataTableHeader.YEARS]: "Année(s)",
+          [DataTableHeader.PERCENT_NOT_TESTED]: "% aliments non analysés",
+          [DataTableHeader.PERCENT_UNDER_LOD]: "% valeurs d’occurrence <LD",
+          [DataTableHeader.TREATMENT]: "Traitement de <LD",
+          [DataTableHeader.MODIFIED]: "Valeurs modifiées par l'utilisateur",
+          [DataTableHeader.FLAGGED]:
+            "Drapeau 'E' : Marginal - CV > 16,6 % mais CV < 33,3 %",
+          [DataTableHeader.SUPPRESSED]:
+            "Drapeau 'F' : Inacceptable - n<10, données supprimées",
+          [DataTableHeader.INCLUDED_SUPPRESSED]:
+            "Valeurs incluses avec CV du drapeau 'F' > 33,3%.",
         },
         values: {
-          occurrence: "Occurrence (fr)",
+          occurrence: "Occurrence",
         },
       },
 
       about: {
-        title: "About the Tool (fr)",
+        title: "A propos de l'outil",
         table: [
           {
-            header: "First Row Example (fr)",
+            header: "First Row Example",
             value:
-              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. (fr)",
+              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
           },
           {
-            header: "More for the Second Row (fr)",
+            header: "More for the Second Row",
             value:
-              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. (fr)",
+              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
           },
           {
-            header: "Third Row with Random Text (fr)",
+            header: "Third Row with Random Text",
             value:
-              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. (fr)",
+              "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
           },
         ],
       },
 
       misc: {
-        noDataMsg: "No data available (fr)",
-        na: "NA (fr)",
-        consumptionUnitShort: {
-          [ConsumptionUnits.KGBW]: "/kg BW/day (fr)",
-          [ConsumptionUnits.PERSON]: "/person/day (fr)",
+        sexGroups: {
+          [sexGroups.F]: "F",
+          [sexGroups.M]: "H",
+          [sexGroups.B]: "FH",
         },
-        gramsShort: "g (fr)",
+        noDataMsg: "Aucun résultat supérieur à LD",
+        na: "NA",
+        consumptionUnitShort: {
+          [ConsumptionUnits.KGBW]: "/kg pc/jour",
+          [ConsumptionUnits.PERSON]: "/personne/jour",
+        },
+        gramsShort: "g",
       },
 
       tdsData: {
@@ -643,9 +658,6 @@ export function getTranslations() {
           [DataColumn.MDL]: "Limite de détection de la méthode",
         },
         values: {
-          [sexGroups.F]: "F",
-          [sexGroups.M]: "H",
-          [sexGroups.B]: "B",
           allPeople: "Toutes les personnes",
           radionuclides: "Radionucléides",
           PFAS: "Produits chimiques perfluorés (PFC) ",
