@@ -80,9 +80,22 @@ export function getRbf(tdsData, filters) {
           }
         });
       });
-      const meanConsumption = filters.usePerPersonPerDay
+      let meanConsumption = filters.usePerPersonPerDay
         ? consumption.meanGramsPerPersonPerDay
         : consumption.meanGramsPerKgBWPerDay;
+
+      const meanFlag = filters.usePerPersonPerDay
+        ? consumption.meanFlagForPerPersonPerDay
+        : consumption.meanFlagForPerKgBWPerDay;
+
+      meanConsumption =
+        meanFlag == MeanFlag.SUPPRESSED
+          ? 0
+          : meanFlag == MeanFlag.SUPPRESSED_HIGH_CV
+          ? filters.useSuppressedHighCvValues
+            ? meanConsumption
+            : 0
+          : meanConsumption;
 
       const occurrence = sumContaminants / numContaminants || 0;
 
@@ -147,7 +160,15 @@ export function formatRbfToDataTable(rbfData, filters) {
       [DataTableHeader.FLAGGED]:
         row.consumptionMeanFlag == MeanFlag.FLAGGED ? compositeInfo : "",
       [DataTableHeader.SUPPRESSED]:
-        row.consumptionMeanFlag == MeanFlag.SUPPRESSED ? compositeInfo : "",
+        row.consumptionMeanFlag == MeanFlag.SUPPRESSED ||
+        row.consumptionMeanFlag == MeanFlag.SUPPRESSED_HIGH_CV
+          ? compositeInfo
+          : "",
+      [DataTableHeader.INCLUDED_SUPPRESSED]:
+        filters.useSuppressedHighCvValues &&
+        row.consumptionMeanFlag == MeanFlag.SUPPRESSED_HIGH_CV
+          ? compositeInfo
+          : "",
     };
   });
 

@@ -99,11 +99,19 @@ export const el = {
       closeButton: document.getElementById("sandbox-close-button"),
       container: document.getElementById("sandbox-container"),
       title: document.getElementById("sandbox-title"),
+      subtitle: document.getElementById("sandbox-subtitle"),
       referenceLineTitle: document.getElementById("reference-line-title"),
       overrideTitle: document.getElementById("override-title"),
       overrideSubtitle: document.getElementById("override-subtitle"),
       addOverrideButton: document.getElementById("override-add-button"),
       overridesList: document.getElementById("overrides-list-container"),
+      showSuppressedTitle: document.getElementById("show-suppressed-title"),
+      showSuppressedSubtitle: document.getElementById(
+        "show-suppressed-subtitle",
+      ),
+      showSuppressedButton: document.getElementById(
+        "filter-show-suppressed-button",
+      ),
     },
     inputs: {
       chemicalGroup: document.getElementById("filter-chemical-group-select"),
@@ -143,7 +151,9 @@ export const el = {
 
     [GraphTypes.RBF]: {
       graphSelect: document.getElementById("rbf-graph-select"),
-      filterContainers: document.querySelectorAll("." + classs.FILTER_ADDITIONAL_RBF),
+      filterContainers: document.querySelectorAll(
+        "." + classs.FILTER_ADDITIONAL_RBF,
+      ),
       filters: {
         sortBy: document.getElementById("filter-rbf-sort-by-select"),
         ageSexGroup: document.getElementById("filter-rbf-age-sex-group-select"),

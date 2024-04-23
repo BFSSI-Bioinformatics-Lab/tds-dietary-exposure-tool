@@ -51,8 +51,9 @@ import { getTranslations } from "../translation/translation.js";
  *                      Many foods can fall into one food composite. Every food composite belongs to a unique food group.
  *         - compositeDesc: The human-readable form of a composite. For example: "Cake".
  *         - foodGroup: Example: "Breads & Grains"
- *         - meanFlag
+ *         - meanFlagForPerKgBWPerDay
  *         - meanGramsPerKgBWPerDay
+ *         - meanFlagForPerPersonPerDay
  *         - meanGramsPerPersonPerDay
  *         - sex
  *       // ... (more composites)
@@ -100,7 +101,7 @@ export async function loadTdsData() {
         ),
         lod: Number(
           row[getTranslations().tdsData.headers[DataColumn.LOD]] ||
-          row[getTranslations().tdsData.headers[DataColumn.MDL]],
+            row[getTranslations().tdsData.headers[DataColumn.MDL]],
         ),
       });
     });
@@ -114,13 +115,13 @@ export async function loadTdsData() {
       row[getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_DESC]];
     const compositeContent =
       row[
-      getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CONTENT]
+        getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CONTENT]
       ];
     if (!compositeDescription && !compositeContent) {
       // Entry is a food group if other entries are empty (just the way the data is formatted)
       currentFoodGroup =
         row[
-        getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CODE]
+          getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CODE]
         ];
       data.consumption[currentFoodGroup] = {};
     } else {
@@ -158,6 +159,10 @@ export async function loadTdsData() {
         ) {
           break; // Don't double count rows for a given age-sex group
         }
+        const meanGramsPerPersonPerDay =
+          Number(
+            row[getTranslations().tdsData.headers[DataColumn.MEAN_G_PPPD]],
+          ) || 0;
         data.consumption[foodGroup][composite].push({
           age,
           ageSexGroup,
@@ -170,11 +175,9 @@ export async function loadTdsData() {
           meanGramsPerKgBWPerDay: 0, // Fill in in the next function
           meanFlagForPerPersonPerDay: getMeanFlagForConsumptionEntry(
             row[getTranslations().tdsData.headers[DataColumn.MEAN_FLAG]],
+            meanGramsPerPersonPerDay,
           ),
-          meanGramsPerPersonPerDay:
-            Number(
-              row[getTranslations().tdsData.headers[DataColumn.MEAN_G_PPPD]],
-            ) || 0,
+          meanGramsPerPersonPerDay,
           sex,
         });
         break; // There is only one place this composite can go
@@ -201,17 +204,18 @@ export async function loadTdsData() {
     // Find which entry in the consumption data has the composite
     for (const foodGroup of Object.keys(data.consumption)) {
       if (data.consumption[foodGroup][composite]) {
-        data.consumption[foodGroup][composite].forEach((r) => {
-          if (r.ageSexGroup == ageSexGroup) {
-            r.meanGramsPerKgBWPerDay =
+        data.consumption[foodGroup][composite].forEach((row) => {
+          if (row.ageSexGroup == ageSexGroup) {
+            const meanGramsPerKgBWPerDay =
               Number(
                 row[
-                getTranslations().tdsData.headers[DataColumn.MEAN_G_PKGBWPD]
+                  getTranslations().tdsData.headers[DataColumn.MEAN_G_PKGBWPD]
                 ],
               ) || 0;
-
-            r.meanFlagForPerKgBWPerDay = getMeanFlagForConsumptionEntry(
+            row.meanGramsPerKgBWPerDay = meanGramsPerKgBWPerDay;
+            row.meanFlagForPerKgBWPerDay = getMeanFlagForConsumptionEntry(
               row[getTranslations().tdsData.headers[DataColumn.MEAN_FLAG]],
+              meanGramsPerKgBWPerDay,
             );
           }
         });
@@ -253,7 +257,7 @@ export async function loadTdsData() {
                   ...pfasContaminant,
                   chemicalGroup:
                     getTranslations().tdsData.values.PFASGroupings[
-                    pfasGrouping
+                      pfasGrouping
                     ],
                 });
               }
@@ -298,7 +302,7 @@ export async function getRawFilteredConsumptionData() {
       );
       return (
         row[getTranslations().tdsData.headers[DataColumn.POPULATION_GROUP]] ==
-        getTranslations().tdsData.values.allPeople &&
+          getTranslations().tdsData.values.allPeople &&
         filters.ageSexGroups.includes(
           filters.ageSexGroupsIsAgeGroups ? age : ageSexGroup,
         )
@@ -355,7 +359,7 @@ export async function getRawFilteredContaminantData() {
       } else {
         return (
           row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]] ==
-          filters.chemical &&
+            filters.chemical &&
           filters.years.includes(getYearForContaminantEntry(row))
         );
       }

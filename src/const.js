@@ -11,15 +11,20 @@ export let userLanguage =
 export const toggleUserLanguage = () =>
   (userLanguage = userLanguage == language.EN ? language.FR : language.EN);
 
+/* Remove feature flag logic once decisions have been made for suppressed values in new data */
+const SUPPRESSED_HIGH_CSV_FEATURE_FLAG = true;
+
 const consumptionFile = {
   [language.EN]: Object.assign(
     {},
     ...Object.entries({
       desc: "6.-compositedescription_en_2008-2022tds_fct_cchs2015.csv",
-      perKgBw:
-        "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_en.csv",
-      perPerson:
-        "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_en.csv",
+      perKgBw: SUPPRESSED_HIGH_CSV_FEATURE_FLAG
+        ? "F-Test data_Food Consumption per kg Bodyweight per Day.csv"
+        : "2.-2008-2022-tds-food-consumption-data-table-per-kgbw-all-persons-and-consumers-only_en.csv",
+      perPerson: SUPPRESSED_HIGH_CSV_FEATURE_FLAG
+        ? "F-Test data_Food Consumption per Person per Day.csv"
+        : "3.-2008-2022-tds-food-consumption-data-table-per-person-all-persons-and-consumers-only_en.csv",
     }).map(([key, value]) => ({
       [key]: "./data/consumption/en/" + value,
     })),
@@ -136,6 +141,7 @@ export const DataTableHeader = {
   MODIFIED: "MODIFIED",
   FLAGGED: "FLAGGED",
   SUPPRESSED: "SUPPRESSED",
+  INCLUDED_SUPPRESSED: "INCLUDED_SUPPRESSED",
 };
 
 export const SortByDir = {
@@ -147,6 +153,7 @@ export const MeanFlag = {
   NONE: "NONE",
   FLAGGED: "FLAGGED",
   SUPPRESSED: "SUPPRESSED",
+  SUPPRESSED_HIGH_CV: "SUPPRESSED_HIGH_CV",
 };
 
 export const YearMax = 2022; // The maximum year the tool will consider for data

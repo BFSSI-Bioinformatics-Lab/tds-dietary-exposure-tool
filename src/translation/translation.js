@@ -8,7 +8,6 @@ import {
   RbasgDomainFormat,
   RbfSortByFormat,
   RbfgRangeFormat,
-  ageSexGroups,
   language,
   sexGroups,
   userLanguage,
@@ -105,12 +104,21 @@ export function getTranslations() {
           openButton: "Modify Graph/Values",
           closeButton: "Close",
           title: "Modify Graph/Values",
+          subtitle:
+            "Any new values that are added will apply to all three graphs. The modifications are not saved and will be cleared when the chemical is changed or the tool is refreshed or closed.",
           referenceLineTitle: "Add Reference Line to Graph:",
           overrideTitle: "Override Occurrence Value(s):",
           overrideSubtitle:
             "This feature allows you to temporarily modify the data to estimate exposure under different scenarios.",
           addOverrideButton: "Apply",
           removeOverrideButton: "-",
+          showSuppressedTitle: "Consumption Values with CV > 33.3%",
+          showSuppressedSubTitle:
+            "Consumption values with high CV have been suppressed by default. You can choose to include them for calculating estimated exposures.",
+          confirmShowSuppressedValues:
+            "Warning from Statistics Canada: The user is advised that the consumption values with CV>33.3% do not meet Statistics Canada’s quality guidelines for this statistical program. Conclusions based on these data will be unreliable and most likely invalid. These data and any consequent findings should not be published. If the user choses to publish these findings, then this disclaimer must be published with the data.",
+          showSuppressed: "Include",
+          dontShowSuppressed: "Exclude",
         },
       },
 
@@ -194,8 +202,11 @@ export function getTranslations() {
           [DataTableHeader.PERCENT_UNDER_LOD]: "% Occurrence Values <LOD",
           [DataTableHeader.TREATMENT]: "Treatment of <LOD",
           [DataTableHeader.MODIFIED]: "User-modified Values",
-          [DataTableHeader.FLAGGED]: "'E' Flag",
-          [DataTableHeader.SUPPRESSED]: "'F' Suppressed",
+          [DataTableHeader.FLAGGED]:
+            "'E' Flag: Marginal - CV > 16.6% but CV < 33.3%",
+          [DataTableHeader.SUPPRESSED]: "'F' Flag: n<10 and data suppressed",
+          [DataTableHeader.INCLUDED_SUPPRESSED]:
+            "Included values with 'F' Flag CV > 33.3 %",
         },
         values: {
           occurrence: "Occurrence",
@@ -473,12 +484,21 @@ export function getTranslations() {
           openButton: "Open Sandbox (fr)",
           closeButton: "Close (fr)",
           title: "Sandbox Environment (fr)",
+          subtitle:
+            "Any new values that are added will apply to all three graphs. The modifications are not saved and will be cleared when the chemical is changed or the tool is refreshed or closed.",
           referenceLineTitle: "Add Reference Line to Graph: (fr)",
           overrideTitle: "Override Occurrence Value(s): (fr)",
           overrideSubtitle:
             "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. Any new values or limits that are added are used only for this session and are not saved. (fr)",
           addOverrideButton: "Apply (fr)",
           removeOverrideButton: "-",
+          showSuppressedTitle: "Consumption Values with CV > 33.3% (fr)",
+          showSuppressedSubTitle:
+            "Consumption values with high CV have been suppressed by default. You can choose to include them for calculating estimated exposures. (fr)",
+          confirmShowSuppressedValues:
+            "Warning from Statistics Canada: The user is advised that the consumption values with CV>33.3% do not meet Statistics Canada’s quality guidelines for this statistical program. Conclusions based on these data will be unreliable and most likely invalid. These data and any consequent findings should not be published. If the user choses to publish these findings, then this disclaimer must be published with the data. (fr)",
+          showSuppressed: "Include (fr)",
+          dontShowSuppressed: "Exclude (fr)",
         },
       },
 

@@ -31,6 +31,7 @@ import { getTranslations } from "../translation/translation.js";
  *      - ageSexGroup
  *      - consumptionsFlagged: array of food composite descriptons
  *      - consumptionsSuppressed: array of food composite descriptons
+ *      - consumptionsSuppressedWithHighCv: array of food composite descriptions
  *      - contaminantUnit
  *      - exposure
  *      - foodGroup
@@ -49,20 +50,21 @@ export function getRbfg(tdsData, filters) {
   Object.keys(tdsData.consumption).forEach((foodGroup) => {
     filters.ageSexGroups.forEach(
       (ageSexGroup) =>
-      (rbfgData[ageSexGroup][foodGroup] = {
-        ageSexGroup,
-        consumptionsSuppressed: [],
-        consumptionsFlagged: [],
-        contaminantUnit:
-          Object.values(tdsData.contaminant).length != 0
-            ? Object.values(tdsData.contaminant)[0][0].units
-            : null, // All occurrences use the same value for a given chemical group
-        exposure: 0,
-        foodGroup,
-        percentUnderLod: 0,
-        numContaminantsTested: 0,
-        numContaminantsUnderLod: 0,
-      }),
+        (rbfgData[ageSexGroup][foodGroup] = {
+          ageSexGroup,
+          consumptionsSuppressed: [],
+          consumptionsFlagged: [],
+          consumptionsSuppressedWithHighCv: [],
+          contaminantUnit:
+            Object.values(tdsData.contaminant).length != 0
+              ? Object.values(tdsData.contaminant)[0][0].units
+              : null, // All occurrences use the same value for a given chemical group
+          exposure: 0,
+          foodGroup,
+          percentUnderLod: 0,
+          numContaminantsTested: 0,
+          numContaminantsUnderLod: 0,
+        }),
     );
 
     Object.keys(tdsData.consumption[foodGroup]).forEach((composite) => {
@@ -84,6 +86,13 @@ export function getRbfg(tdsData, filters) {
           rbfgData[consumption.ageSexGroup][foodGroup].consumptionsFlagged.push(
             compositeInfo,
           );
+        } else if (consumptionMeanFlag == MeanFlag.SUPPRESSED_HIGH_CV) {
+          rbfgData[consumption.ageSexGroup][
+            foodGroup
+          ].consumptionsSuppressed.push(compositeInfo);
+          rbfgData[consumption.ageSexGroup][
+            foodGroup
+          ].consumptionsSuppressedWithHighCv.push(compositeInfo);
         }
 
         let numContaminantsTested = 0;
@@ -106,10 +115,26 @@ export function getRbfg(tdsData, filters) {
         });
 
         const occurrence = sumContaminantsTested / numContaminantsTested || 0;
+
+        let meanConsumption = filters.usePerPersonPerDay
+          ? consumption.meanGramsPerPersonPerDay
+          : consumption.meanGramsPerKgBWPerDay;
+
+        const meanFlag = filters.usePerPersonPerDay
+          ? consumption.meanFlagForPerPersonPerDay
+          : consumption.meanFlagForPerKgBWPerDay;
+
+        meanConsumption =
+          meanFlag == MeanFlag.SUPPRESSED
+            ? 0
+            : meanFlag == MeanFlag.SUPPRESSED_HIGH_CV
+            ? filters.useSuppressedHighCvValues
+              ? meanConsumption
+              : 0
+            : meanConsumption;
+
         const exposure = getContaminantExposure(
-          filters.usePerPersonPerDay
-            ? consumption.meanGramsPerPersonPerDay
-            : consumption.meanGramsPerKgBWPerDay,
+          meanConsumption,
           occurrence,
           filters,
           consumption.age,
@@ -177,6 +202,9 @@ export function formatRbfgToDataTable(rbfgData, filters) {
           .join("; "),
         [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
         [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
+        [DataTableHeader.INCLUDED_SUPPRESSED]: filters.useSuppressedHighCvValues
+          ? row.consumptionsSuppressedWithHighCv.join("; ")
+          : [],
       });
     });
   });
@@ -195,10 +223,11 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
 
   const stackedBarData = {
     children: [],
-    titleY: `${getTranslations().graphs[GraphTypes.RBFG].range[
-      filters.usePercent ? RbfgRangeFormat.PERCENT : RbfgRangeFormat.NUMBER
+    titleY: `${
+      getTranslations().graphs[GraphTypes.RBFG].range[
+        filters.usePercent ? RbfgRangeFormat.PERCENT : RbfgRangeFormat.NUMBER
       ]
-      } (${getExposureUnit(contaminantUnit, filters)})`,
+    } (${getExposureUnit(contaminantUnit, filters)})`,
     titleX: getTranslations().graphs[GraphTypes.RBFG].domain,
   };
 
@@ -221,16 +250,16 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
           getAgeSexDisplay(ageSexGroup) +
           ")\n" +
           getTranslations().graphs[GraphTypes.RBFG].range[
-          filters.usePercent
-            ? RbfgRangeFormat.PERCENT
-            : RbfgRangeFormat.NUMBER
+            filters.usePercent
+              ? RbfgRangeFormat.PERCENT
+              : RbfgRangeFormat.NUMBER
           ] +
           ": " +
           (filters.usePercent
             ? formatPercent(exposure)
             : formatNumber(exposure, filters) +
-            " " +
-            getExposureUnit(contaminantUnit, filters)),
+              " " +
+              getExposureUnit(contaminantUnit, filters)),
       });
     });
   });

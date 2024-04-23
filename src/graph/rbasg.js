@@ -30,6 +30,7 @@ import {
  *      - ageSexGroup
  *      - consumptionsFlagged: array of food composite descriptons
  *      - consumptionsSuppressed: array of food composite descriptons
+ *      - consumptionsSuppressedWithHighCv: array of food composite descriptions
  *      - contaminantUnit
  *      - exposure
  *      - numContaminantsTested
@@ -57,6 +58,7 @@ export function getRbasg(tdsData, filters) {
         years: filters.showByAgeSexGroup ? filters.years : [entry],
         consumptionsSuppressed: [],
         consumptionsFlagged: [],
+        consumptionsSuppressedWithHighCv: [],
         percentUnderLod: 0,
         numContaminantsTested: 0,
         numContaminantsUnderLod: 0,
@@ -83,6 +85,11 @@ export function getRbasg(tdsData, filters) {
               rbasgData[entry][sex].consumptionsSuppressed.push(compositeInfo);
             } else if (consumptionMeanFlag == MeanFlag.FLAGGED) {
               rbasgData[entry][sex].consumptionsFlagged.push(compositeInfo);
+            } else if (consumptionMeanFlag == MeanFlag.SUPPRESSED_HIGH_CV) {
+              rbasgData[entry][sex].consumptionsSuppressed.push(compositeInfo);
+              rbasgData[entry][sex].consumptionsSuppressedWithHighCv.push(
+                compositeInfo,
+              );
             }
 
             let numContaminantsTested = 0;
@@ -107,10 +114,26 @@ export function getRbasg(tdsData, filters) {
               });
             });
             const meanOccurrence = sumContaminants / numContaminantsTested || 0;
+
+            let meanConsumption = filters.usePerPersonPerDay
+              ? consumption.meanGramsPerPersonPerDay
+              : consumption.meanGramsPerKgBWPerDay;
+
+            const meanFlag = filters.usePerPersonPerDay
+              ? consumption.meanFlagForPerPersonPerDay
+              : consumption.meanFlagForPerKgBWPerDay;
+
+            meanConsumption =
+              meanFlag == MeanFlag.SUPPRESSED
+                ? 0
+                : meanFlag == MeanFlag.SUPPRESSED_HIGH_CV
+                ? filters.useSuppressedHighCvValues
+                  ? meanConsumption
+                  : 0
+                : meanConsumption;
+
             const exposure = getContaminantExposure(
-              filters.usePerPersonPerDay
-                ? consumption.meanGramsPerPersonPerDay
-                : consumption.meanGramsPerKgBWPerDay,
+              meanConsumption,
               meanOccurrence,
               filters,
               consumption.age,
@@ -124,7 +147,7 @@ export function getRbasg(tdsData, filters) {
       rbasgData[entry][sex].percentUnderLod =
         (rbasgData[entry][sex].numContaminantsUnderLod /
           rbasgData[entry][sex].numContaminantsTested) *
-        100 || 0;
+          100 || 0;
 
       const numComposites = Object.values(tdsData.consumption).reduce(
         (acc, row) => {
@@ -178,6 +201,9 @@ export function formatRbsagToDataTable(rbasgData, filters) {
           .join("; "),
         [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
         [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
+        [DataTableHeader.INCLUDED_SUPPRESSED]: filters.useSuppressedHighCvValues
+          ? row.consumptionsSuppressedWithHighCv.join("; ")
+          : [],
       });
     });
   });
@@ -196,13 +222,14 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
 
   const groupedBarData = {
     children: [],
-    titleY: `${getTranslations().graphs[GraphTypes.RBASG].range
-      } (${getExposureUnit(contaminantUnit, filters)})`,
+    titleY: `${
+      getTranslations().graphs[GraphTypes.RBASG].range
+    } (${getExposureUnit(contaminantUnit, filters)})`,
     titleX:
       getTranslations().graphs[GraphTypes.RBASG].domain[
-      filters.showByAgeSexGroup
-        ? RbasgDomainFormat.AGESEX
-        : RbasgDomainFormat.YEAR
+        filters.showByAgeSexGroup
+          ? RbasgDomainFormat.AGESEX
+          : RbasgDomainFormat.YEAR
       ],
   };
 

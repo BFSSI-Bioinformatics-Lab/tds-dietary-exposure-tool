@@ -75,13 +75,13 @@ function addEventListenersToDropdown(dropdown) {
 
     (arrowDown.classList.contains(classs.HIDDEN)
       ? () => {
-        arrowDown.classList.remove(classs.HIDDEN);
-        arrowRight.classList.add(classs.HIDDEN);
-      }
+          arrowDown.classList.remove(classs.HIDDEN);
+          arrowRight.classList.add(classs.HIDDEN);
+        }
       : () => {
-        arrowRight.classList.remove(classs.HIDDEN);
-        arrowDown.classList.add(classs.HIDDEN);
-      })();
+          arrowRight.classList.remove(classs.HIDDEN);
+          arrowDown.classList.add(classs.HIDDEN);
+        })();
   });
 }
 
@@ -193,6 +193,7 @@ export async function initializePageText() {
   el.filters.sandbox.title.innerHTML = translations.filters.sandbox.title;
   el.filters.sandbox.referenceLineTitle.innerHTML =
     translations.filters.sandbox.referenceLineTitle;
+  el.filters.sandbox.subtitle.innerHTML = translations.filters.sandbox.subtitle;
   el.filters.sandbox.overrideTitle.innerHTML =
     translations.filters.sandbox.overrideTitle;
   el.filters.sandbox.overrideSubtitle.innerHTML =
@@ -210,6 +211,13 @@ export async function initializePageText() {
     translations.filters.titles.overrideValue;
   el.filters.inputs.overrideValue.placeholder =
     translations.filters.placeholders.none;
+
+  el.filters.sandbox.showSuppressedTitle.innerHTML =
+    translations.filters.sandbox.showSuppressedTitle;
+  el.filters.sandbox.showSuppressedSubtitle.innerHTML =
+    translations.filters.sandbox.showSuppressedSubTitle;
+  el.filters.sandbox.showSuppressedButton.innerHTML =
+    translations.filters.sandbox.showSuppressed;
 
   el.graphs.saveGraph.innerHTML = translations.graphs.saveGraph.button;
 

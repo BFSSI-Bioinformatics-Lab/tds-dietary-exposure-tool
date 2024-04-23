@@ -59,7 +59,7 @@ export function getActiveFilters() {
   let graphType;
   try {
     graphType = getSelectedGraphType();
-  } catch (e) { }
+  } catch (e) {}
 
   return {
     chemicalGroup: el.filters.inputs.chemicalGroup.value,
@@ -72,18 +72,18 @@ export function getActiveFilters() {
         ? LODs[0]
         : el.filters.inputs.lod.value ==
           getTranslations().filters.lods[LODs["1/2 LOD"]]
-          ? LODs["1/2 LOD"]
-          : el.filters.inputs.lod.value ==
-            getTranslations().filters.lods[LODs["LOD"]]
-            ? LODs["LOD"]
-            : el.filters.inputs.lod.value ==
-              getTranslations().filters.lods[LODs.Exclude]
-              ? LODs.Exclude
-              : LODs[0],
+        ? LODs["1/2 LOD"]
+        : el.filters.inputs.lod.value ==
+          getTranslations().filters.lods[LODs["LOD"]]
+        ? LODs["LOD"]
+        : el.filters.inputs.lod.value ==
+          getTranslations().filters.lods[LODs.Exclude]
+        ? LODs.Exclude
+        : LODs[0],
     ageSexGroups: graphType
       ? Array.from(
-        el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
-      ).map((option) => option.value)
+          el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
+        ).map((option) => option.value)
       : [],
     ageSexGroupsIsAgeGroups: graphType == GraphTypes.RBASG,
     showByAgeSexGroup:
@@ -109,6 +109,11 @@ export function getActiveFilters() {
         (item) => JSON.parse(item.data),
       ),
     },
+    useSuppressedHighCvValues:
+      el.filters.sandbox.showSuppressedButton.innerHTML ==
+      getTranslations().filters.sandbox.showSuppressed
+        ? false
+        : true,
     dataTableSortBy: {
       column: DataTableHeader.AGE_SEX_GROUP,
       dir: SortByDir.ASC,
@@ -224,6 +229,24 @@ function addEventListenersToFilters() {
       itemContainer.appendChild(removeButton);
       el.filters.sandbox.overridesList.appendChild(itemContainer);
     }
+    displayGraph(getFilteredTdsData());
+  });
+
+  el.filters.sandbox.showSuppressedButton.addEventListener("click", () => {
+    el.filters.sandbox.showSuppressedButton.innerHTML =
+      el.filters.sandbox.showSuppressedButton.innerHTML ==
+      getTranslations().filters.sandbox.showSuppressed
+        ? getTranslations().filters.sandbox.dontShowSuppressed
+        : getTranslations().filters.sandbox.showSuppressed;
+
+    // confirm popup
+    if (
+      el.filters.sandbox.showSuppressedButton.innerHTML ==
+      getTranslations().filters.sandbox.dontShowSuppressed
+    ) {
+      confirm(getTranslations().filters.sandbox.confirmShowSuppressedValues);
+    }
+
     displayGraph(getFilteredTdsData());
   });
 }
@@ -499,12 +522,12 @@ export function updateLodFilterDescription(filteredTdsData, filters) {
       (minContaminantLod == 0 && maxContaminantLod == 0
         ? "0 - 0"
         : formatNumber(minContaminantLod, filters) +
-        " " +
-        minUnits +
-        " - " +
-        formatNumber(maxContaminantLod, filters) +
-        " " +
-        maxUnits);
+          " " +
+          minUnits +
+          " - " +
+          formatNumber(maxContaminantLod, filters) +
+          " " +
+          maxUnits);
   }
 }
 
@@ -518,9 +541,9 @@ export function updateSandbox(filteredTdsData, filters) {
     '<span class="small"> (' +
     (Object.keys(filteredTdsData.contaminant).length != 0
       ? getExposureUnit(
-        Object.values(filteredTdsData.contaminant)[0][0].units,
-        filters,
-      )
+          Object.values(filteredTdsData.contaminant)[0][0].units,
+          filters,
+        )
       : getTranslations().misc.na) +
     ")</span>";
 

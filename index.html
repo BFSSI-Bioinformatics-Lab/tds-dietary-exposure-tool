@@ -212,6 +212,8 @@
         <button id="sandbox-close-button" class="sandbox-button"></button>
       </div>
 
+      <div id="sandbox-subtitle"></div>
+
       <div id="sandbox-content">
         <div id="reference-line-container" class="sandbox-item">
           <div id="reference-line-title" class="sandbox-item-title"></div>
@@ -246,9 +248,25 @@
               ></label>
               <input id="filter-override-value-select" type="number" />
             </div>
-            <button id="override-add-button" class="sandbox-button"></button>
           </div>
+          <button id="override-add-button" class="sandbox-button"></button>
           <div id="overrides-list-container"></div>
+        </div>
+
+        <div class="border"></div>
+
+        <div id="show-suppressed-container" class="sandbox-item">
+          <div id="show-suppressed-title" class="sandbox-item-title"></div>
+          <div id="show-suppressed-subtitle" class="small"></div>
+          <div class="filters-container">
+            <div class="filter hidden">
+              <button
+                type="button"
+                id="filter-show-suppressed-button"
+                class="sandbox-button"
+              ></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

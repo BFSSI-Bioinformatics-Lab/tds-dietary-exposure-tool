@@ -131,9 +131,9 @@ export function getExposureUnit(contaminantUnit, filters) {
   return (
     contaminantUnit.split("/")[0] +
     getTranslations().misc.consumptionUnitShort[
-    filters.usePerPersonPerDay
-      ? ConsumptionUnits.PERSON
-      : ConsumptionUnits.KGBW
+      filters.usePerPersonPerDay
+        ? ConsumptionUnits.PERSON
+        : ConsumptionUnits.KGBW
     ]
   );
 }
@@ -147,9 +147,9 @@ export function getConsumptionUnit(meanConsumption, filters) {
     " " +
     getTranslations().misc.gramsShort +
     getTranslations().misc.consumptionUnitShort[
-    filters.usePerPersonPerDay
-      ? ConsumptionUnits.PERSON
-      : ConsumptionUnits.KGBW
+      filters.usePerPersonPerDay
+        ? ConsumptionUnits.PERSON
+        : ConsumptionUnits.KGBW
     ]
   );
 }
@@ -271,12 +271,16 @@ export function getCompositeDescForConsumptionEntry(desc) {
 /**
  * Return mean flag found in raw consumption entry
  */
-export function getMeanFlagForConsumptionEntry(meanFlag) {
+export function getMeanFlagForConsumptionEntry(meanFlag, meanConsumption) {
   return meanFlag == "E"
     ? MeanFlag.FLAGGED
     : meanFlag == "F"
+    ? meanConsumption == 0
       ? MeanFlag.SUPPRESSED
-      : MeanFlag.NONE;
+      : MeanFlag.SUPPRESSED_HIGH_CV
+    : meanFlag == "FF"
+    ? MeanFlag.SUPPRESSED_HIGH_CV
+    : MeanFlag.NONE;
 }
 
 /**
