@@ -9,7 +9,7 @@ At the core of the application are the user filters. Once users select their des
 At a high level, the project is structured as follows:
 - Source code exists in the `src` folder.
 - External libraries exist in the `lib` folder.
-- Data (in the form of CSV files) is stored in the `data` folder, categorized by data type (consumption or contaminant).
+- Data (in the form of CSV files) is stored in the `data` folder, categorized by data type (consumption or contaminant). These files must be in UTF-8 format to correctly represent symbols (french). This can easily be achieved by saving as UTF-8 formatted CSV in Excel.
 - Any general-purpose scripts should be contained within a `bin` folder.
 - Other static assets such as images and stylesheets exist in their own appropriately named folders.
 

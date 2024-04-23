@@ -62,9 +62,15 @@ const contaminantFile = {
   [language.FR]: [
     "2017 PFAS TDS_FR_Public CANLINE Export w acronyms 2024-04-17.csv",
     "2016 PFAS TDS_FR_Public CANLINE Export w acronyms 2024-04-17.csv",
-    "Radionuclide TDS 2022 public French(Export).csv",
-    "Radionuclides TDS 2021 public French(Export).csv",
-    "Trace Elements TDS 1993-2018 public French(Export).csv",
+    "Radionuclide TDS 2022 public French_2024-04-18.csv",
+    "TDS Radionuclides 2000-2020 French Public_2024-04-18.csv",
+    "Radionuclides TDS 2021 public French_2024-04-18.csv",
+    "Trace Elements TDS 1993-2018 public French_2024-04-18.csv",
+    "TDS PCB 1992-2015 public French.csv",
+    "TDS DEHA & phthalates 2011, 2013, 2014 public French.csv",
+    "TDS VOC 2015 public French.csv",
+    "TDS BPA 2008-2012, 2016 public French.csv",
+    "TDS Mycotoxin 2008-2009 public French.csv",
   ].map((file) => "./data/contaminant/fr/" + file),
 };
 
