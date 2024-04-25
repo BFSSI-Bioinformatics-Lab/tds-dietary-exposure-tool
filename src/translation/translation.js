@@ -245,7 +245,7 @@ export function getTranslations() {
         sexGroups: {
           [sexGroups.F]: "F",
           [sexGroups.M]: "M",
-          [sexGroups.B]: "FM",
+          [sexGroups.B]: "M/F",
         },
         noDataMsg: "No results above LOD",
         na: "NA",
@@ -619,7 +619,7 @@ export function getTranslations() {
         sexGroups: {
           [sexGroups.F]: "F",
           [sexGroups.M]: "H",
-          [sexGroups.B]: "FH",
+          [sexGroups.B]: "H/F",
         },
         noDataMsg: "Aucun résultat supérieur à LD",
         na: "NA",

@@ -103,7 +103,10 @@ export function displayGraph(data) {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title}, ${
         filters.chemical
       }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
-      colorLegendMappings: [colorLegendMapping.foodGroup],
+      colorLegendMappings: [
+        colorLegendMapping.foodGroup,
+        colorLegendMapping.sexGroupText,
+      ],
       getDataFn: getRbf,
       getGraphDataFn: formatRbfToSunburst,
       getSvgFn: getSunburstSvg,
@@ -113,7 +116,7 @@ export function displayGraph(data) {
     [GraphTypes.RBFG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title}, ${
         filters.chemical
-      }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
+      }`,
       colorLegendMappings: [
         colorLegendMapping.foodGroup,
         colorLegendMapping.sexGroupText,
