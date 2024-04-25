@@ -64,7 +64,7 @@ export function displayGraph(data) {
   const sexGroupTextMapping = Object.keys(sexGroups).reduce((acc, sex) => {
     acc[sex] = {
       label: getTranslations().graphs.legend.sexGroups[sex],
-      short: sex,
+      short: getTranslations().misc.sexGroups[sex],
     };
     return acc;
   }, {});

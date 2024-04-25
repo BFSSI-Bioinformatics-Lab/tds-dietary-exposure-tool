@@ -42,10 +42,10 @@ export function getSunburstSvg(data) {
     return b.data.sortBy[1] - a.data.sortBy[1];
   });
 
-  const startAngle = 0; // Starting angle
-  const endAngle = 2 * Math.PI; // Ending angle
-  const radius = Math.min(width - 2 * margin, height - 2 * margin) / 2; // Outer radius
-  d3.partition().size([endAngle - startAngle, radius])(root); // Polar coordinates: x (angle), y (radius)
+  const startAngle = 0;
+  const endAngle = 2 * Math.PI;
+  const radius = Math.min(width - 2 * margin, height - 2 * margin) / 2;
+  d3.partition().size([endAngle - startAngle, radius])(root);
 
   const arc = d3
     .arc()

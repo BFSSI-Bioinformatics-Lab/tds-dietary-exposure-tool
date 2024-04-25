@@ -24,8 +24,8 @@ export function getStackedBarSvg(data) {
   const height = 600;
   const marginTop = 10;
   const marginRight = 10;
-  const marginBottom = 60;
-  const marginLeft = 60;
+  const marginBottom = 140;
+  const marginLeft = 100;
 
   const series = d3
     .stack()
@@ -40,12 +40,12 @@ export function getStackedBarSvg(data) {
       ),
     )
     .value(([, D], key) => D.get(key).value)(
-      d3.index(
-        data.children,
-        (d) => d.entry,
-        (d) => d.stack,
-      ),
-    );
+    d3.index(
+      data.children,
+      (d) => d.entry,
+      (d) => d.stack,
+    ),
+  );
 
   if (!dataExists) {
     return;
@@ -65,7 +65,6 @@ export function getStackedBarSvg(data) {
 
   const y = d3
     .scaleLinear()
-
     .domain(
       (() => {
         let max = d3.max(series, (d) => d3.max(d, (d) => d[1]));
@@ -108,12 +107,19 @@ export function getStackedBarSvg(data) {
         ).info,
     );
 
-  // Append the horizontal axis.
+  /* Horizontal Axis */
+
   svg
     .append("g")
     .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(x).tickSizeOuter(0))
-    .call((g) => g.selectAll(".domain").remove());
+    .call((g) => g.selectAll(".domain").remove())
+    .selectAll("text")
+    .attr("class", "graph-x-axis-text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.2em")
+    .attr("dy", ".8em")
+    .attr("transform", "rotate(-45)");
 
   svg
     .append("line")
@@ -124,12 +130,22 @@ export function getStackedBarSvg(data) {
     .attr("stroke", "black")
     .attr("stroke-width", 2);
 
-  // Append the vertical axis.
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - marginTop)
+    .text(data.titleX)
+    .attr("class", "graph-axis-title");
+
+  /* Vertical Axis */
+
   svg
     .append("g")
     .attr("transform", `translate(${marginLeft}, 0)`)
     .call(d3.axisLeft(y).ticks(null, "s"))
-    .call((g) => g.selectAll(".domain").remove());
+    .call((g) => g.selectAll(".domain").remove())
+    .selectAll("text")
+    .attr("class", "graph-y-axis-text");
 
   svg
     .append("line")
@@ -142,19 +158,14 @@ export function getStackedBarSvg(data) {
 
   svg
     .append("text")
-    .attr("x", width / 2)
-    .attr("y", height - marginTop)
-    .attr("class", "graph-axis-title")
-    .style("text-anchor", "middle")
-    .text(data.titleX);
-  svg
-    .append("text")
     .attr("x", 0)
-    .attr("y", height / 2)
-    .attr("class", "graph-axis-title")
-    .attr("transform", `rotate(-90, 15, ${height / 2})`)
+    .attr("y", (height - marginBottom) / 2)
+    .attr("transform", `rotate(-90, 20, ${(height - marginBottom) / 2})`)
     .style("text-anchor", "middle")
-    .text(data.titleY);
+    .text(data.titleY)
+    .attr("class", "graph-axis-title");
+
+  /* Horizontal Refernence Line */
 
   if (data.hr) {
     svg

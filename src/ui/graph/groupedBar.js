@@ -23,11 +23,9 @@ export function getGroupedBarSvg(data) {
   const height = 600;
   const marginTop = 10;
   const marginRight = 10;
-  const marginBottom = 60;
-  const marginLeft = 60;
+  const marginBottom = 100;
+  const marginLeft = 100;
 
-  // Prepare the scales for positional and color encodings.
-  // Fx encodes the state.
   const fx = d3
     .scaleBand()
     .domain(new Set(data.children.map((d) => d.entry)))
@@ -42,7 +40,6 @@ export function getGroupedBarSvg(data) {
     .rangeRound([0, fx.bandwidth()])
     .padding(0.05);
 
-  // Y encodes the height of the bar.
   const y = d3
     .scaleLinear()
     .domain(
@@ -57,7 +54,6 @@ export function getGroupedBarSvg(data) {
     .nice()
     .rangeRound([height - marginBottom, marginTop]);
 
-  // Create the SVG container.
   const svg = d3
     .create("svg")
     .attr("width", width)
@@ -65,7 +61,6 @@ export function getGroupedBarSvg(data) {
     .attr("viewBox", [0, 0, width, height])
     .attr("style", "max-width: 100%; height: auto;");
 
-  // Append a group for each state, and a rect for each age.
   svg
     .append("g")
     .selectAll()
@@ -92,12 +87,19 @@ export function getGroupedBarSvg(data) {
     return;
   }
 
-  // Append the horizontal axis.
+  /* Horizontal Axis */
+
   svg
     .append("g")
     .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(fx).tickSizeOuter(0))
-    .call((g) => g.selectAll(".domain").remove());
+    .call((g) => g.selectAll(".domain").remove())
+    .selectAll("text")
+    .attr("class", "graph-x-axis-text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.2em")
+    .attr("dy", ".8em")
+    .attr("transform", "rotate(-45)");
 
   svg
     .append("line")
@@ -108,12 +110,22 @@ export function getGroupedBarSvg(data) {
     .attr("stroke", "black")
     .attr("stroke-width", 2);
 
-  // Append the vertical axis.
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - marginTop)
+    .text(data.titleX)
+    .attr("class", "graph-axis-title");
+
+  /* Vertical Axis */
+
   svg
     .append("g")
     .attr("transform", `translate(${marginLeft}, 0)`)
     .call(d3.axisLeft(y).ticks(null, "s"))
-    .call((g) => g.selectAll(".domain").remove());
+    .call((g) => g.selectAll(".domain").remove())
+    .selectAll("text")
+    .attr("class", "graph-y-axis-text");
 
   svg
     .append("line")
@@ -126,19 +138,14 @@ export function getGroupedBarSvg(data) {
 
   svg
     .append("text")
-    .attr("x", width / 2)
-    .attr("y", height - marginTop)
-    .attr("class", "graph-axis-title")
-    .style("text-anchor", "middle")
-    .text(data.titleX);
-  svg
-    .append("text")
     .attr("x", 0)
-    .attr("y", height / 2)
-    .attr("class", "graph-axis-title")
-    .attr("transform", `rotate(-90, 15, ${height / 2})`)
+    .attr("y", (height - marginBottom) / 2)
+    .attr("transform", `rotate(-90, 20, ${(height - marginBottom) / 2})`)
     .style("text-anchor", "middle")
-    .text(data.titleY);
+    .text(data.titleY)
+    .attr("class", "graph-axis-title");
+
+  /* Horizontal Reference Line */
 
   if (data.hr) {
     svg

@@ -470,6 +470,19 @@ Graph
   }
 }
 
+.graph-axis-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.graph-x-axis-text {
+  font-size: 1.3rem;
+}
+
+.graph-y-axis-text {
+  font-size: 1.3rem;
+}
+
 /*
 
 Data Table
