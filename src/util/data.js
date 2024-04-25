@@ -79,14 +79,14 @@ export function getAgeSexDisplay(ageSexGroup) {
 export function formatNumber(number, filters) {
   const precision =
     filters?.chemicalGroup === getTranslations().tdsData.values.radionuclides
-      ? 6
-      : 2;
-  const roundedNumber = parseFloat(number).toFixed(precision);
+      ? 7
+      : 4;
+  const roundedNumber = number.toFixed(precision);
 
-  if (parseFloat(roundedNumber) === 0) {
+  if (roundedNumber == 0) {
     return "0";
   } else {
-    return parseFloat(roundedNumber).toLocaleString(browserLanguage());
+    return roundedNumber.toLocaleString(browserLanguage());
   }
 }
 

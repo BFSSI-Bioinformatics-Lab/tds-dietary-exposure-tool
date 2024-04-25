@@ -104,11 +104,11 @@ export function getTranslations() {
           closeButton: "Close",
           title: "Modify Graph/Values",
           subtitle:
-            "Any new values that are added will apply to all three graphs. The modifications are not saved and will be cleared when the chemical is changed or the tool is refreshed or closed.",
+            "Any new values that are added will apply to all three graphs.",
           referenceLineTitle: "Add Reference Line to Graph:",
           overrideTitle: "Override Occurrence Value(s):",
           overrideSubtitle:
-            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios.",
+            "This feature allows you to temporarily modify the data to estimate exposure under different scenarios. The modifications are not saved and will be cleared when the chemical is changed or the tool is refreshed or closed.",
           addOverrideButton: "Apply",
           removeOverrideButton: "-",
           showSuppressedTitle: "Consumption Values with CV > 33.3%",
@@ -491,11 +491,11 @@ export function getTranslations() {
           closeButton: "Fermer",
           title: "Modifier le graphique/les valeurs",
           subtitle:
-            "Toute nouvelle valeur ajoutée s'appliquera aux trois graphiques. Les modifications ne sont pas sauvegardées et seront effacées lorsque le produit chimique sera modifié ou lorsque l'outil sera actualisé ou fermé.",
+            "Toute nouvelle valeur ajoutée s'appliquera aux trois graphiques.",
           referenceLineTitle: "Ajouter une ligne de référence au graphique :",
           overrideTitle: "Remplacer la valeur(s) d’occurrence :",
           overrideSubtitle:
-            "Cette fonction permet de modifier temporairement les données afin d'estimer l'exposition selon différents scénarios.",
+            "Cette fonction permet de modifier temporairement les données afin d'estimer l'exposition selon différents scénarios. Les modifications ne sont pas sauvegardées et seront effacées lorsque le produit chimique sera modifié ou lorsque l'outil sera actualisé ou fermé.",
           addOverrideButton: "Appliquer",
           removeOverrideButton: "-",
           showSuppressedTitle: "Valeurs de consommation avec CV > 33.3%",
