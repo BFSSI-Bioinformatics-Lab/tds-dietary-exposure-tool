@@ -5,11 +5,18 @@ export const language = {
   FR: "FR",
 };
 
+const browserLanguageMap = {
+  [language.EN]: "en-CA",
+  [language.FR]: "fr-CA",
+};
+
 export let userLanguage =
   navigator.language.split("-")[0] == "fr" ? language.FR : language.EN;
 
 export const toggleUserLanguage = () =>
   (userLanguage = userLanguage == language.EN ? language.FR : language.EN);
+
+export let browserLanguage = () => browserLanguageMap[userLanguage];
 
 /* Remove feature flag logic once decisions have been made for suppressed values in new data */
 const SUPPRESSED_HIGH_CSV_FEATURE_FLAG = true;

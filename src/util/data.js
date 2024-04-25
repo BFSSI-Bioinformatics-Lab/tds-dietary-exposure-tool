@@ -3,6 +3,7 @@ import {
   DataColumn,
   MeanFlag,
   ageGroups,
+  browserLanguage,
   sexGroups,
 } from "../const.js";
 import { getTranslations } from "../translation/translation.js";
@@ -85,7 +86,7 @@ export function formatNumber(number, filters) {
   if (parseFloat(roundedNumber) === 0) {
     return "0";
   } else {
-    return parseFloat(roundedNumber).toLocaleString();
+    return parseFloat(roundedNumber).toLocaleString(browserLanguage());
   }
 }
 
@@ -93,7 +94,7 @@ export function formatNumber(number, filters) {
  * Function used to format percents when displaying to users. Used throughout the application.
  */
 export function formatPercent(percent) {
-  return parseFloat(percent.toFixed(2)).toLocaleString() + "%";
+  return parseFloat(percent.toFixed(2)).toLocaleString(browserLanguage()) + "%";
 }
 
 /**
