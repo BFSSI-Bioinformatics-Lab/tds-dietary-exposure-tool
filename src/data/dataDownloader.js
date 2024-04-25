@@ -10,10 +10,13 @@ import { getTranslations } from "../translation/translation.js";
  */
 export function downloadCSV(data) {
   const csvContent = d3.csvFormat(data.rows);
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["\uFEFF" + csvContent], {
+    type: "text/csv;charset=utf-8;",
+  });
   const link = document.createElement("a");
-  link.download = `${data.filename}, ${getTranslations().dataTable.exportNames.dataExport
-    }, ${new Date().toLocaleString("en-US")}`;
+  link.download = `${data.filename}, ${
+    getTranslations().dataTable.exportNames.dataExport
+  }, ${new Date().toLocaleString("en-US")}`;
   link.href = window.URL.createObjectURL(blob);
   document.body.appendChild(link);
   link.click();
