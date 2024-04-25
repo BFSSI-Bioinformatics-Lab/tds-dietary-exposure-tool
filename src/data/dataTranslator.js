@@ -366,7 +366,6 @@ export async function getRawFilteredContaminantData() {
     });
     data.filename = filters.chemicalGroup + " - " + filters.chemical;
     filtered.push(data);
-    break;
   }
 
   return filtered;
