@@ -1,17 +1,22 @@
 import { classs, el } from "../const.js";
 
 /*
- * Display a color legend on the provided HTML element
+ * Display a color legend
  *
  * Parameters:
  * - data: An object mapping labels to colors for display
- * - title: The title of the legend
+ * - title: The titleEl of the legend section
  */
-export function displayColorLegend(data, title) {
-  el.graphs.legend.title.innerHTML = title;
+export function displayColorLegendSection(data, title) {
+  const legendSection = document.createElement("div");
+  legendSection.classList.add(classs.GRAPH_LEGEND_SECTION);
 
-  const contentEl = el.graphs.legend.content;
-  contentEl.innerHTML = "";
+  const titleEl = document.createElement("div");
+  titleEl.classList.add(classs.GRAPH_LEGEND_TITLE);
+  titleEl.innerHTML = title;
+
+  const contentEl = document.createElement("div");
+  contentEl.classList.add(classs.GRAPH_LEGEND_CONTENT);
 
   Object.values(data).forEach((mapping) => {
     const itemEl = document.createElement("div");
@@ -28,4 +33,37 @@ export function displayColorLegend(data, title) {
     itemEl.append(labelEl);
     contentEl.appendChild(itemEl);
   });
+
+  legendSection.appendChild(titleEl);
+  legendSection.appendChild(contentEl);
+
+  el.graphs.legend.container.appendChild(legendSection);
+}
+
+export function displayTextLegendSection(data, title) {
+  const legendSection = document.createElement("div");
+  legendSection.classList.add(classs.GRAPH_LEGEND_SECTION);
+
+  const titleEl = document.createElement("div");
+  titleEl.classList.add(classs.GRAPH_LEGEND_TITLE);
+  titleEl.innerHTML = title;
+
+  const contentEl = document.createElement("div");
+  contentEl.classList.add(classs.GRAPH_LEGEND_CONTENT);
+
+  Object.values(data).forEach((mapping) => {
+    const itemEl = document.createElement("div");
+    itemEl.classList.add(classs.GRAPH_LEGEND_ITEM);
+
+    const labelEl = document.createElement("div");
+    labelEl.innerHTML = mapping.short + " - " + mapping.label;
+
+    itemEl.append(labelEl);
+    contentEl.appendChild(itemEl);
+  });
+
+  legendSection.appendChild(titleEl);
+  legendSection.appendChild(contentEl);
+
+  el.graphs.legend.container.appendChild(legendSection);
 }

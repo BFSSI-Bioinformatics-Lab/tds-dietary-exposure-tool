@@ -1,4 +1,4 @@
-import { GraphTypes, sexGroups } from "../const.js";
+import { GraphLegendTypes, GraphTypes, sexGroups } from "../const.js";
 import { classs, el } from "./const.js";
 import {
   formatRbasgToGroupedBar,
@@ -16,7 +16,10 @@ import {
   getRbfg,
 } from "../graph/rbfg.js";
 import { generateColorMapping } from "../util/graph.js";
-import { displayColorLegend } from "./graph/colorLegend.js";
+import {
+  displayColorLegendSection,
+  displayTextLegendSection,
+} from "./graph/colorLegend.js";
 import { getGroupedBarSvg } from "./graph/groupedBar.js";
 import { getStackedBarSvg } from "./graph/stackedBar.js";
 import { getSunburstSvg } from "./graph/sunburst.js";
@@ -58,54 +61,78 @@ export function displayGraph(data) {
       return acc;
     }, {}),
   );
+  const sexGroupTextMapping = Object.keys(sexGroups).reduce((acc, sex) => {
+    acc[sex] = {
+      label: getTranslations().graphs.legend.sexGroups[sex],
+      short: sex,
+    };
+    return acc;
+  }, {});
+
+  const colorLegendMapping = {
+    sexGroup: {
+      mapping: sexGroupColorMapping,
+      title: getTranslations().graphs.legend.sexGroup,
+      type: GraphLegendTypes.COLOR,
+    },
+    sexGroupText: {
+      mapping: sexGroupTextMapping,
+      title: getTranslations().graphs.legend.sexGroup,
+      type: GraphLegendTypes.TEXT,
+    },
+    foodGroup: {
+      mapping: foodGroupColorMapping,
+      title: getTranslations().graphs.legend.foodGroup,
+      type: GraphLegendTypes.COLOR,
+    },
+  };
 
   const graphMapping = {
     [GraphTypes.RBASG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title}, ${
         filters.chemical
       }`,
-      colorLegendMapping: sexGroupColorMapping,
+      colorLegendMappings: [colorLegendMapping.sexGroup],
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
       getSvgFn: getGroupedBarSvg,
       getDataTableDataFn: formatRbsagToDataTable,
-      legendTitle: getTranslations().graphs.legend.sexGroup,
       hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title}, ${
         filters.chemical
       }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
-      colorLegendMapping: foodGroupColorMapping,
+      colorLegendMappings: [colorLegendMapping.foodGroup],
       getDataFn: getRbf,
       getGraphDataFn: formatRbfToSunburst,
       getSvgFn: getSunburstSvg,
       getDataTableDataFn: formatRbfToDataTable,
-      legendTitle: getTranslations().graphs.legend.foodGroup,
       hasReferenceLine: false,
     },
     [GraphTypes.RBFG]: {
       graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title}, ${
         filters.chemical
       }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
-      colorLegendMapping: foodGroupColorMapping,
+      colorLegendMappings: [
+        colorLegendMapping.foodGroup,
+        colorLegendMapping.sexGroupText,
+      ],
       getDataFn: getRbfg,
       getGraphDataFn: formatRbfgToStackedBar,
       getSvgFn: getStackedBarSvg,
       getDataTableDataFn: formatRbfgToDataTable,
-      legendTitle: getTranslations().graphs.legend.foodGroup,
       hasReferenceLine: !filters.usePercent,
     },
   };
 
   const [
     graphTitle,
-    colorLegendMapping,
+    colorLegendMappings,
     getDataFn,
     getGraphDataFn,
     getSvgFn,
     getDataTableDataFn,
-    legendTitle,
     hasReferenceLine,
   ] = Object.values(graphMapping[graphType]);
 
@@ -113,7 +140,11 @@ export function displayGraph(data) {
   updateSandbox(data, filters);
 
   const specificData = getDataFn(data, filters);
-  const graphData = getGraphDataFn(specificData, filters, colorLegendMapping);
+  const graphData = getGraphDataFn(
+    specificData,
+    filters,
+    colorLegendMappings[0].mapping,
+  );
   if (filters.referenceLine && hasReferenceLine) {
     graphData.hr = filters.referenceLine;
   }
@@ -125,7 +156,14 @@ export function displayGraph(data) {
   el.graphs.graph.innerHTML = "";
   el.graphs.graph.append(graphSvg || getTranslations().misc.noDataMsg);
 
-  displayColorLegend(colorLegendMapping, legendTitle);
+  el.graphs.legend.container.innerHTML = "";
+  colorLegendMappings.forEach((legendMapping) => {
+    if (legendMapping.type == GraphLegendTypes.COLOR) {
+      displayColorLegendSection(legendMapping.mapping, legendMapping.title);
+    } else {
+      displayTextLegendSection(legendMapping.mapping, legendMapping.title);
+    }
+  });
 
   el.graphs.saveGraph.classList.remove(classs.HIDDEN);
   el.dataTable.dataContainer.classList.remove(classs.HIDDEN);

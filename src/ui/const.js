@@ -15,8 +15,11 @@ export const classs = {
   FILTER_ADDITIONAL_RBASG: "filter-additional-rbasg",
   FILTER_ADDITIONAL_RBF: "filter-additional-rbf",
   FILTER_ADDITIONAL_RBFG: "filter-additional-rbfg",
-  GRAPH_LEGEND_ITEM: "graph-legend-item",
-  GRAPH_LEGEND_COLOR: "graph-legend-item-color",
+  GRAPH_LEGEND_SECTION: "legend-section",
+  GRAPH_LEGEND_TITLE: "legend-title",
+  GRAPH_LEGEND_CONTENT: "legend-content",
+  GRAPH_LEGEND_ITEM: "legend-item",
+  GRAPH_LEGEND_COLOR: "legend-item-color",
   DATA_TABLE_CELL: "data-table-cell",
   DATA_TABLE_HEADER: "data-table-header",
   DATA_TABLE_HEADER_ARROWS: "data-table-header-arrows",
@@ -178,8 +181,7 @@ export const el = {
     },
 
     legend: {
-      title: document.getElementById("legend-title"),
-      content: document.getElementById("legend-content"),
+      container: document.getElementById("legend-container"),
     },
   },
 

@@ -132,6 +132,11 @@ export const GraphTypes = {
   RBF: "RBF",
 };
 
+export const GraphLegendTypes = {
+  COLOR: "COLOR",
+  TEXT: "TEXT",
+};
+
 export const DataTableHeader = {
   CHEMICAL: "CHEMICAL",
   AGE_SEX_GROUP: "AGE_SEX_GROUP",

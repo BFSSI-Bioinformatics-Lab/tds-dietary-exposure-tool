@@ -445,17 +445,22 @@ Graph
     #legend-container {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
       flex-shrink: 0;
       margin: 2.5rem 2rem;
-      #legend-content {
+      gap: 1rem;
+      .legend-section {
         display: flex;
         flex-direction: column;
-        .graph-legend-item {
+        gap: 0.3rem;
+        .legend-content {
           display: flex;
-          flex-direction: row;
-          gap: 0.3rem;
-          .graph-legend-item-color {
+          flex-direction: column;
+          .legend-item {
+            display: flex;
+            flex-direction: row;
+            gap: 0.3rem;
+          }
+          .legend-item-color {
             width: 1rem;
             height: 1rem;
           }
