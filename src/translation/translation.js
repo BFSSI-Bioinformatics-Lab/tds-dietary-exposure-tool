@@ -304,7 +304,7 @@ export function getTranslations() {
             [PFASGroupings.LC_PFS]:
               "Total LC-PFS (Long-chained perfluorosulfonate) (≥C6)",
             [PFASGroupings.SC_PFCA]:
-              "Total SC-PFCA (Short-chained perfluorocarboxylic acid) (≤C7)logues",
+              "Total SC-PFCA (Short-chained perfluorocarboxylic acid) (≤C7)",
             [PFASGroupings.SC_PFS]:
               "Total SC-PFS (Short-chained perfluorosulfonate) (≤C5)",
           },

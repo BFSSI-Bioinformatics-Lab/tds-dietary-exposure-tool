@@ -34,6 +34,7 @@ import {
  *      - contaminantUnit
  *      - exposure
  *      - numContaminantsTested
+ *      - numCompositesTested
  *      - numContaminantsUnderLod
  *      - percentUnderLod
  *      - years: array of years the calculations are for
@@ -61,6 +62,7 @@ export function getRbasg(tdsData, filters) {
         consumptionsSuppressedWithHighCv: [],
         percentUnderLod: 0,
         numContaminantsTested: 0,
+        numCompositesTested: 0,
         numContaminantsUnderLod: 0,
       };
       Object.keys(tdsData.consumption).forEach((foodGroup) => {
@@ -94,6 +96,7 @@ export function getRbasg(tdsData, filters) {
 
             let numContaminantsTested = 0;
             let sumContaminants = 0;
+            let compositeFound = 0;
 
             const years = filters.showByAgeSexGroup ? filters.years : [entry];
             years.forEach((year) => {
@@ -110,9 +113,13 @@ export function getRbasg(tdsData, filters) {
                   if (contaminant.occurrence < contaminant.lod) {
                     rbasgData[entry][sex].numContaminantsUnderLod++;
                   }
+                  compositeFound = 1;
                 }
               });
             });
+
+            rbasgData[entry][sex].numCompositesTested += compositeFound;
+
             const meanOccurrence = sumContaminants / numContaminantsTested || 0;
 
             let meanConsumption = filters.usePerPersonPerDay
@@ -150,14 +157,12 @@ export function getRbasg(tdsData, filters) {
           100 || 0;
 
       const numComposites = Object.values(tdsData.consumption).reduce(
-        (acc, row) => {
-          return acc + Object.values(row).length * filters.years.length;
-        },
+        (acc, row) => acc + Object.values(row).length,
         0,
       );
 
       rbasgData[entry][sex].percentNotTested =
-        ((numComposites - rbasgData[entry][sex].numContaminantsTested) /
+        ((numComposites - rbasgData[entry][sex].numCompositesTested) /
           numComposites) *
         100;
     });

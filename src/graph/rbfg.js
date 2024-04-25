@@ -36,6 +36,7 @@ import { getTranslations } from "../translation/translation.js";
  *      - exposure
  *      - foodGroup
  *      - numContaminantsTested
+ *      - numCompositesTested
  *      - numContaminantsUnderLod
  *      - percentExposure
         - percentNotTested
@@ -63,6 +64,7 @@ export function getRbfg(tdsData, filters) {
           foodGroup,
           percentUnderLod: 0,
           numContaminantsTested: 0,
+          numCompositesTested: 0,
           numContaminantsUnderLod: 0,
         }),
     );
@@ -96,6 +98,7 @@ export function getRbfg(tdsData, filters) {
         }
 
         let numContaminantsTested = 0;
+        let compositeTested = 0;
         let sumContaminantsTested = 0;
 
         filters.years.forEach((year) => {
@@ -106,6 +109,7 @@ export function getRbfg(tdsData, filters) {
                 contaminant,
                 filters,
               );
+              compositeTested = 1;
               if (contaminant.occurrence < contaminant.lod) {
                 rbfgData[consumption.ageSexGroup][foodGroup]
                   .numContaminantsUnderLod++;
@@ -143,6 +147,8 @@ export function getRbfg(tdsData, filters) {
         rbfgData[consumption.ageSexGroup][foodGroup].exposure += exposure;
         rbfgData[consumption.ageSexGroup][foodGroup].numContaminantsTested +=
           numContaminantsTested;
+        rbfgData[consumption.ageSexGroup][foodGroup].numCompositesTested +=
+          compositeTested;
       });
     });
   });
@@ -156,11 +162,11 @@ export function getRbfg(tdsData, filters) {
       row.percentExposure = (row.exposure / sumExposures) * 100 || 0;
       row.percentUnderLod =
         (row.numContaminantsUnderLod / row.numContaminantsTested) * 100 || 0;
-      const numComposites =
-        Object.values(tdsData.consumption[row.foodGroup]).length *
-        filters.years.length;
+      const numComposites = Object.values(
+        tdsData.consumption[row.foodGroup],
+      ).length;
       row.percentNotTested =
-        ((numComposites - row.numContaminantsTested) / numComposites) * 100;
+        ((numComposites - row.numCompositesTested) / numComposites) * 100;
     });
   });
 
