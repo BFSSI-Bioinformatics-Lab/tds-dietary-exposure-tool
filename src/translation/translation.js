@@ -369,7 +369,11 @@ export function getTranslations() {
               "Perfluoro-1-butanesulfonate (L-PFBS)",
               "Perfluoro-1-pentanesulfonate (L-PFPeS)",
             ],
-            [PFASGroupings.TOTAL_PFOSA]: [],
+            [PFASGroupings.TOTAL_PFOSA]: [
+              "Perfluorooctanesulfonamide (PFOSA)",
+              "Methylperfluorooctanesulfonamide (MeFOSA)",
+              "Ethylperfluorooctanidesulfonamide (EtFOSA)",
+            ],
             [PFASGroupings.LC_PFCA]: [
               "Perfluoro-n-octanoic acid (PFOA)",
               "Perfluoro-n-nonanoic acid (PFNA)",
@@ -670,17 +674,16 @@ export function getTranslations() {
               "SPFA Totale (Substances perfluoroalkyliques et polyfluoroalkyliques)",
             [PFASGroupings.TOTAL_PFCA]:
               "APFC Totale (Acides perfluorocarboxyliques)",
-            [PFASGroupings.TOTAL_PFS]:
-              "APFS Totale (Acides perfluorosulfoniques)",
+            [PFASGroupings.TOTAL_PFS]: "PFS Totale (Perfluorosulfonates)",
             [PFASGroupings.TOTAL_PFOSA]: "PFOSA Totale (Perfluorosulfonamide)",
             [PFASGroupings.LC_PFCA]:
               "APFC-LC Totale (Acides perfluorocarboxyliques à longue chaîne) (≥C8)",
             [PFASGroupings.LC_PFS]:
-              "APFS-LC Totale (Acides perfluorosulfoniques à longue chaîne) (≥C6)",
+              "PFS-LC Totale (Perfluorosulfonates à longue chaîne) (≥C6)",
             [PFASGroupings.SC_PFCA]:
               "APFC-CC Totale (Acides perfluorocarboxyliques à chaîne courte) (≤C7)",
             [PFASGroupings.SC_PFS]:
-              "APFS-CC Totale (Acides perfluorosulfoniques à chaîne courte) (≤C5)",
+              "PFS-CC Totale (Perfluorosulfonates à chaîne courte) (≤C5)",
           },
           PFASMapping: {
             [PFASGroupings.TOTAL_PFAS]: [
@@ -743,7 +746,11 @@ export function getTranslations() {
               "Sulfonate de perfluoro-n-butane (L-PFBS)",
               "Sulfonate de perfluoro-n-pentane (L-PFPeS)",
             ],
-            [PFASGroupings.TOTAL_PFOSA]: [],
+            [PFASGroupings.TOTAL_PFOSA]: [
+              "Perfluorooctane sulfonamide (PFOSA)",
+              "Méthyle perfluorooctane sulfonamide (MeFOSA)",
+              "Éthyle perfluorooctane sulfonamide (EtFOSA)",
+            ],
             [PFASGroupings.LC_PFCA]: [
               "Acide perfluoro-n-octanoïque (PFOA)",
               "Acide perfluoro-n-nonanoïque (PFNA)",
