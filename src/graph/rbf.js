@@ -141,7 +141,8 @@ export function formatRbfToDataTable(rbfData, filters) {
       [DataTableHeader.CHEMICAL]: filters.chemical,
       [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
       [DataTableHeader.FOOD_GROUP]: row.foodGroup,
-      [DataTableHeader.COMPOSITE]: compositeInfo,
+      [DataTableHeader.COMPOSITE_NAME]: row.compositeDesc,
+      [DataTableHeader.COMPOSITE_CODE]: row.composite,
       [DataTableHeader.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
       [DataTableHeader.EXPOSURE]: formatNumber(row.exposure, filters),
       [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(
