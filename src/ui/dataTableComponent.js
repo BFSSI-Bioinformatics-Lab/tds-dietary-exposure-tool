@@ -62,6 +62,13 @@ export function downloadDataTable(tdsData, graphType) {
     filename: getTranslations().dataTable.exportNames.calculations,
     rows: getDataTableDataFn(specificData, filters),
   };
+  data.rows = data.rows.map((row) => {
+    return Object.keys(row).reduce((acc, column) => {
+      acc[getTranslations().dataTable.headers[column]] = row[column];
+      return acc;
+    }, {});
+  });
+
   downloadCSV(data);
 }
 
