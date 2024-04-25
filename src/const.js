@@ -54,7 +54,7 @@ export const getConsumptionFiles = () => consumptionFile[userLanguage];
 
 const contaminantFile = {
   [language.EN]: [
-    "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016.csv",
+    "Total Diet Study Bisphenol A (BPA) results 2008-2012, 2016_mean2008.csv",
     "Total Diet Study DEHA & Phthalates results 2011, 2013, 2014.csv",
     "Total Diet Study Mycotoxin results 2008-2009.csv",
     "Total Diet Study Polychlorinated Biphenyls (PCB) results 1992-2015.csv",
@@ -76,7 +76,7 @@ const contaminantFile = {
     "TDS PCB 1992-2015 public French.csv",
     "TDS DEHA & phthalates 2011, 2013, 2014 public French.csv",
     "TDS VOC 2015 public French.csv",
-    "TDS BPA 2008-2012, 2016 public French.csv",
+    "Total Diet Study Bisphenol A (BPA) results_French_ 2008-2012, 2016_mean2008.csv",
     "TDS Mycotoxin 2008-2009 public French.csv",
   ].map((file) => "./data/contaminant/fr/" + file),
 };
@@ -148,7 +148,7 @@ export const DataTableHeader = {
   CHEMICAL: "CHEMICAL",
   AGE_SEX_GROUP: "AGE_SEX_GROUP",
   FOOD_GROUP: "FOOD_GROUP",
-  COMPOSITE: "COMPOSITE",
+  COMPOSITE_NAME: "COMPOSITE",
   PERCENT_EXPOSURE: "PERCENT_EXPOSURE",
   EXPOSURE: "EXPOSURE",
   EXPOSURE_UNIT: "EXPOSURE_UNIT",
