@@ -166,8 +166,12 @@ export async function initializePageText() {
     translations.filters.titles.chemicalGroup;
   el.filters.titles.chemical.innerHTML = translations.filters.titles.chemical;
   el.filters.titles.years.innerHTML = translations.filters.titles.years;
-  el.filters.titles.multis.forEach(
-    (multi) => (multi.innerHTML = translations.filters.titles.multiSubtitle),
+  el.filters.titles.multisSels.forEach(
+    (multi) => (multi.innerHTML = translations.filters.titles.multiSelSubtitle),
+  );
+  el.filters.titles.multisSelAlls.forEach(
+    (multi) =>
+      (multi.innerHTML = translations.filters.titles.multiSelAllSubtitle),
   );
   el.filters.titles.lod.innerHTML = translations.filters.titles.lod;
   el.filters.titles.lodSubtitle.innerHTML =

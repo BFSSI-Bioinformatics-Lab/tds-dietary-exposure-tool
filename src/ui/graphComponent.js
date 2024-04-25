@@ -142,7 +142,6 @@ export function displayGraph(data) {
  */
 export function downloadGraph() {
   const footer = document.createElement("div");
-  footer.classList.add(classs.RED);
   footer.innerText = getTranslations().graphs.saveGraph.footer;
   el.graphs.saveGraphContainer.appendChild(footer);
 

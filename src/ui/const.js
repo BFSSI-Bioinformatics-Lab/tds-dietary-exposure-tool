@@ -21,7 +21,8 @@ export const classs = {
   DATA_TABLE_HEADER: "data-table-header",
   DATA_TABLE_HEADER_ARROWS: "data-table-header-arrows",
   DATA_TABLE_HEADER_ARROWS_INACTIVE: "data-table-header-arrows-inactive",
-  MULTI_SUBTITLE: "multi-subtitle",
+  MULTI_SEL_SUBTITLE: "multi-sel-subtitle",
+  MULTI_SEL_ALL_SUBTITLE: "multi-sel-all-subtitle",
 };
 
 export const text = {
@@ -73,7 +74,10 @@ export const el = {
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
       chemical: document.getElementById("filter-chemical-title"),
       years: document.getElementById("filter-year-title"),
-      multis: document.querySelectorAll("." + classs.MULTI_SUBTITLE),
+      multisSels: document.querySelectorAll("." + classs.MULTI_SEL_SUBTITLE),
+      multisSelAlls: document.querySelectorAll(
+        "." + classs.MULTI_SEL_ALL_SUBTITLE,
+      ),
       lod: document.getElementById("filter-lod-title"),
       lodSubtitle: document.getElementById("filter-lod-subtitle"),
       consumptionUnits: document.getElementById(
