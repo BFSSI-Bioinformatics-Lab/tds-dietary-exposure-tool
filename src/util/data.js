@@ -76,16 +76,22 @@ export function getAgeSexDisplay(ageSexGroup) {
 /**
  * Function used to format numbers when displaying to users. Used throughout the application.
  */
-export function formatNumber(number, filters) {
-  const precision =
-    filters?.chemicalGroup === getTranslations().tdsData.values.radionuclides
-      ? 7
-      : 4;
+export function formatNumber(number, filters, precision) {
+  precision = precision
+    ? precision
+    : filters?.chemicalGroup === getTranslations().tdsData.values.radionuclides
+    ? 7
+    : 4;
   const roundedNumber = number.toFixed(precision);
 
   if (roundedNumber == 0) {
     return "0";
   } else {
+    if (roundedNumber.toString().includes(".")) {
+      return roundedNumber.toString()
+        .replace(/\.?0+$/, "")
+        .toLocaleString(browserLanguage());
+    }
     return roundedNumber.toLocaleString(browserLanguage());
   }
 }

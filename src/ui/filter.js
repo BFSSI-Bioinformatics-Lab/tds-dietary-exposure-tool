@@ -228,6 +228,7 @@ function addEventListenersToFilters() {
       itemContainer.appendChild(itemText);
       itemContainer.appendChild(removeButton);
       el.filters.sandbox.overridesList.appendChild(itemContainer);
+      el.filters.inputs.overrideValue.value = null;
     }
     displayGraph(getFilteredTdsData());
   });
@@ -521,11 +522,11 @@ export function updateLodFilterDescription(filteredTdsData, filters) {
       " " +
       (minContaminantLod == 0 && maxContaminantLod == 0
         ? "0 - 0"
-        : formatNumber(minContaminantLod, filters) +
+        : formatNumber(minContaminantLod, filters, 2) +
           " " +
           minUnits +
           " - " +
-          formatNumber(maxContaminantLod, filters) +
+          formatNumber(maxContaminantLod, filters, 2) +
           " " +
           maxUnits);
   }
