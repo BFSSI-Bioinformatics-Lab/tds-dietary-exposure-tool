@@ -204,7 +204,7 @@ export function getTranslations() {
           [DataTableHeader.MODIFIED]: "User-modified Values",
           [DataTableHeader.FLAGGED]:
             "'E' Flag: Marginal - CV > 16.6% but CV < 33.3%",
-          [DataTableHeader.SUPPRESSED]: "'F' Flag: n<10 and data suppressed",
+          [DataTableHeader.SUPPRESSED]: "'F' Flag: data suppressed",
           [DataTableHeader.INCLUDED_SUPPRESSED]:
             "Included values with 'F' Flag CV > 33.3 %",
         },
@@ -591,7 +591,7 @@ export function getTranslations() {
           [DataTableHeader.FLAGGED]:
             "Drapeau 'E' : Marginal - CV > 16,6 % mais CV < 33,3 %",
           [DataTableHeader.SUPPRESSED]:
-            "Drapeau 'F' : Inacceptable - n<10, données supprimées",
+            "Drapeau 'F' : Inacceptable, données supprimées",
           [DataTableHeader.INCLUDED_SUPPRESSED]:
             "Valeurs incluses avec CV du drapeau 'F' > 33,3%.",
         },

@@ -130,7 +130,9 @@ export async function loadTdsData() {
         row[
           getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CODE]
         ].toUpperCase();
-      data.consumption[currentFoodGroup][composite] = [];
+      if (composite != "PP11" && composite != "PP13") {
+        data.consumption[currentFoodGroup][composite] = [];
+      }
     }
   });
 
@@ -213,10 +215,11 @@ export async function loadTdsData() {
                 ],
               ) || 0;
             consumptionRow.meanGramsPerKgBWPerDay = meanGramsPerKgBWPerDay;
-            consumptionRow.meanFlagForPerKgBWPerDay = getMeanFlagForConsumptionEntry(
-              row[getTranslations().tdsData.headers[DataColumn.MEAN_FLAG]],
-              meanGramsPerKgBWPerDay,
-            );
+            consumptionRow.meanFlagForPerKgBWPerDay =
+              getMeanFlagForConsumptionEntry(
+                row[getTranslations().tdsData.headers[DataColumn.MEAN_FLAG]],
+                meanGramsPerKgBWPerDay,
+              );
           }
         });
       }

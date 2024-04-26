@@ -151,15 +151,15 @@ export function getRbasg(tdsData, filters) {
         });
       });
 
-      rbasgData[entry][sex].percentUnderLod =
-        (rbasgData[entry][sex].numContaminantsUnderLod /
-          rbasgData[entry][sex].numContaminantsTested) *
-          100 || 0;
-
       const numComposites = Object.values(tdsData.consumption).reduce(
         (acc, row) => acc + Object.values(row).length,
         0,
       );
+
+      rbasgData[entry][sex].percentUnderLod =
+        (rbasgData[entry][sex].numContaminantsUnderLod /
+          rbasgData[entry][sex].numContaminantsTested) *
+          100 || 0;
 
       rbasgData[entry][sex].percentNotTested =
         ((numComposites - rbasgData[entry][sex].numCompositesTested) /
