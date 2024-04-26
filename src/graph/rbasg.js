@@ -1,6 +1,7 @@
 import {
   DataTableHeader,
   GraphTypes,
+  LODs,
   MeanFlag,
   RbasgDomainFormat,
   sexGroups,
@@ -103,7 +104,12 @@ export function getRbasg(tdsData, filters) {
               tdsData.contaminant[year].forEach((contaminant) => {
                 if (contaminant.compositeInfo.includes(composite)) {
                   rbasgData[entry][sex].contaminantUnit = contaminant.units;
-                  numContaminantsTested++;
+                  if (
+                    filters.lod != LODs.Exclude ||
+                    contaminant.occurrence != 0
+                  ) {
+                    numContaminantsTested++;
+                  }
                   sumContaminants += getOccurrenceForContaminantEntry(
                     contaminant,
                     filters,

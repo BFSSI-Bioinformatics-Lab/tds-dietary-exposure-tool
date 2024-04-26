@@ -1,6 +1,7 @@
 import {
   DataTableHeader,
   GraphTypes,
+  LODs,
   MeanFlag,
   RbfgRangeFormat,
   ageGroups,
@@ -104,7 +105,9 @@ export function getRbfg(tdsData, filters) {
         filters.years.forEach((year) => {
           tdsData.contaminant[year].forEach((contaminant) => {
             if (contaminant.compositeInfo.includes(composite)) {
-              numContaminantsTested++;
+              if (filters.lod != LODs.Exclude || contaminant.occurrence != 0) {
+                numContaminantsTested++;
+              }
               sumContaminantsTested += getOccurrenceForContaminantEntry(
                 contaminant,
                 filters,

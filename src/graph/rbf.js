@@ -3,7 +3,7 @@ import {
   getContaminantExposure,
   getOccurrenceForContaminantEntry as getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { DataTableHeader, MeanFlag } from "../const.js";
+import { DataTableHeader, LODs, MeanFlag } from "../const.js";
 import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
@@ -68,12 +68,13 @@ export function getRbf(tdsData, filters) {
           if (contaminant.compositeInfo.includes(composite)) {
             rbfData[composite].contaminantUnit = contaminant.units;
 
-            numContaminants++;
             sumContaminants += getOccurrenceForContaminantEntry(
               contaminant,
               filters,
             );
-
+            if (filters.lod != LODs.Exclude || contaminant.occurrence != 0) {
+              numContaminants++;
+            }
             if (contaminant.occurrence < contaminant.lod) {
               numContaminantUnderLod++;
             }
