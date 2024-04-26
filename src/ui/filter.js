@@ -202,7 +202,7 @@ function addEventListenersToFilters() {
 
   el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
     const { override } = getActiveFilters();
-    if (override.composite && override.occurrence) {
+    if (override.composite && !isNaN(override.occurrence)) {
       Array.from(el.filters.inputs.overrideFood.options).find(
         (option) =>
           JSON.parse(option.value || null)?.composite == override.composite,
