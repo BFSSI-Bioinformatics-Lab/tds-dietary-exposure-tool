@@ -19,7 +19,7 @@ export const toggleUserLanguage = () =>
 export let browserLanguage = () => browserLanguageMap[userLanguage];
 
 /* Remove feature flag logic once decisions have been made for suppressed values in new data */
-const SUPPRESSED_HIGH_CSV_FEATURE_FLAG = true;
+const SUPPRESSED_HIGH_CSV_FEATURE_FLAG = false;
 
 const consumptionFile = {
   [language.EN]: Object.assign(
