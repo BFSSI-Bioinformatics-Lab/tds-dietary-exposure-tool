@@ -332,10 +332,12 @@ export async function getRawFilteredConsumptionData() {
 export async function getRawFilteredContaminantData() {
   const filters = getActiveFilters();
 
-  let filtered = [];
+  let data = {
+    filename: filters.chemicalGroup + " - " + filters.chemical,
+    rows: [],
+  };
 
   for (const file of getContaminantFiles()) {
-    let data = {};
     let rows = (await readCSV(file)).rows;
     const chemicalGroup =
       rows[0][getTranslations().tdsData.headers[DataColumn.CHEMICAL_GROUP]];
@@ -349,27 +351,27 @@ export async function getRawFilteredContaminantData() {
         filters.chemical,
     );
 
-    data.rows = rows.filter((row) => {
-      const chemical =
-        row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]];
+    rows
+      .filter((row) => {
+        const chemical =
+          row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]];
 
-      if (pfasGrouping) {
-        return (
-          getTranslations().tdsData.values.PFASMapping[pfasGrouping].includes(
-            chemical,
-          ) && filters.years.includes(getYearForContaminantEntry(row))
-        );
-      } else {
-        return (
-          row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]] ==
-            filters.chemical &&
-          filters.years.includes(getYearForContaminantEntry(row))
-        );
-      }
-    });
-    data.filename = filters.chemicalGroup + " - " + filters.chemical;
-    filtered.push(data);
+        if (pfasGrouping) {
+          return (
+            getTranslations().tdsData.values.PFASMapping[pfasGrouping].includes(
+              chemical,
+            ) && filters.years.includes(getYearForContaminantEntry(row))
+          );
+        } else {
+          return (
+            row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]] ==
+              filters.chemical &&
+            filters.years.includes(getYearForContaminantEntry(row))
+          );
+        }
+      })
+      .forEach((row) => data.rows.push(row));
   }
 
-  return filtered;
+  return [data];
 }
