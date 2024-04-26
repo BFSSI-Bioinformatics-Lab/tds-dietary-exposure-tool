@@ -15,7 +15,7 @@ export function getOccurrenceForContaminantEntry(row, filters) {
       return 0;
     }
     if (filters.lod == LODs.Exclude) {
-      return;
+      return 0;
     } else if (filters.lod == LODs[0]) {
       result = 0;
     } else if (filters.lod == LODs["1/2 LOD"]) {

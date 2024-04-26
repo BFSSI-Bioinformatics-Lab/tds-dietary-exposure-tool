@@ -87,12 +87,7 @@ export function formatNumber(number, filters, precision) {
   if (roundedNumber == 0) {
     return "0";
   } else {
-    if (roundedNumber.toString().includes(".")) {
-      return roundedNumber.toString()
-        .replace(/\.?0+$/, "")
-        .toLocaleString(browserLanguage());
-    }
-    return roundedNumber.toLocaleString(browserLanguage());
+    return parseFloat(roundedNumber).toLocaleString(browserLanguage());
   }
 }
 
