@@ -117,6 +117,10 @@ export async function loadTdsData() {
       row[
         getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CONTENT]
       ];
+    const composite =
+      row[
+        getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CODE]
+      ].toUpperCase();
     if (!compositeDescription && !compositeContent) {
       // Entry is a food group if other entries are empty (just the way the data is formatted)
       currentFoodGroup =
@@ -124,12 +128,8 @@ export async function loadTdsData() {
           getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CODE]
         ];
       data.consumption[currentFoodGroup] = {};
-    } else {
+    } else if (composite) {
       // Entry is a food composite mapping for the current food group (until the next food group is encountered)
-      const composite =
-        row[
-          getTranslations().tdsData.headers[DataColumn.MAPPING_COMPOSITE_CODE]
-        ].toUpperCase();
       if (composite != "PP11" && composite != "PP13") {
         data.consumption[currentFoodGroup][composite] = [];
       }
