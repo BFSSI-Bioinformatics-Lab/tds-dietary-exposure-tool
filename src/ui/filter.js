@@ -182,7 +182,12 @@ function addEventListenersToFilters() {
   });
 
   [
-    ...Object.values(el.filters.inputs),
+    el.filters.inputs.chemicalGroup,
+    el.filters.inputs.chemical,
+    el.filters.inputs.years,
+    el.filters.inputs.lod,
+    el.filters.inputs.consumptionUnits,
+    el.filters.inputs.referenceLine,
     ...Object.values(el.graphs[GraphTypes.RBASG].filters),
     ...Object.values(el.graphs[GraphTypes.RBF].filters),
     ...Object.values(el.graphs[GraphTypes.RBFG].filters),
@@ -234,21 +239,23 @@ function addEventListenersToFilters() {
   });
 
   el.filters.sandbox.showSuppressedButton.addEventListener("click", () => {
-    el.filters.sandbox.showSuppressedButton.innerHTML =
-      el.filters.sandbox.showSuppressedButton.innerHTML ==
-      getTranslations().filters.sandbox.showSuppressed
-        ? getTranslations().filters.sandbox.dontShowSuppressed
-        : getTranslations().filters.sandbox.showSuppressed;
-
     // confirm popup
     if (
       el.filters.sandbox.showSuppressedButton.innerHTML ==
-      getTranslations().filters.sandbox.dontShowSuppressed
+      getTranslations().filters.sandbox.showSuppressed
     ) {
-      confirm(getTranslations().filters.sandbox.confirmShowSuppressedValues);
+      if (
+        confirm(getTranslations().filters.sandbox.confirmShowSuppressedValues)
+      ) {
+        el.filters.sandbox.showSuppressedButton.innerHTML =
+          getTranslations().filters.sandbox.dontShowSuppressed;
+        displayGraph(getFilteredTdsData());
+      }
+    } else {
+      el.filters.sandbox.showSuppressedButton.innerHTML =
+        getTranslations().filters.sandbox.showSuppressed;
+      displayGraph(getFilteredTdsData());
     }
-
-    displayGraph(getFilteredTdsData());
   });
 }
 
@@ -614,23 +621,39 @@ export function getFilteredTdsData() {
     }
   });
 
-  filteredTdsData = {
-    ...filteredTdsData,
-    contaminant: Object.fromEntries(
-      Object.entries(filteredTdsData.contaminant).map(([year, entries]) => [
-        year,
-        entries.map((entry) => {
-          const modifiedEntry = { ...entry };
-          filters.override.list.forEach((override) => {
-            if (modifiedEntry.compositeInfo.includes(override.composite)) {
-              modifiedEntry.occurrence = override.occurrence;
-            }
-          });
-          return modifiedEntry;
-        }),
-      ]),
-    ),
-  };
+  const filteredContaminantData = {};
+  Object.keys(filteredTdsData.contaminant).forEach((year) => {
+    filteredContaminantData[year] = [];
+    filters.override.list = filters.override.list.map((override) => {
+      return { ...override, entryFound: false };
+    });
+    filteredTdsData.contaminant[year].forEach((row) => {
+      const modifiedRow = { ...row };
+      filters.override.list.forEach((override) => {
+        if (row.compositeInfo.includes(override.composite)) {
+          override.entryFound = true;
+          modifiedRow.occurrence = override.occurrence;
+        }
+      });
+      filteredContaminantData[year].push(modifiedRow);
+    });
+
+    filters.override.list.forEach((override) => {
+      if (!override.entryFound) {
+        filteredContaminantData[year].push({
+          chemical: filters.chemical,
+          chemicalGroup: filters.chemicalGroup,
+          compositeInfo: override.composite,
+          lod: 0,
+          units: filteredTdsData.contaminant[year][0].units,
+          occurrence: override.occurrence,
+          year: year,
+        });
+      }
+    });
+  });
+
+  filteredTdsData.contaminant = filteredContaminantData;
 
   return filteredTdsData;
 }

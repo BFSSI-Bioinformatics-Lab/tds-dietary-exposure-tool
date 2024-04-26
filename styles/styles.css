@@ -402,7 +402,7 @@ Sandbox
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      min-width: 30%;
+      min-width: 10.5rem;
     }
   }
 
