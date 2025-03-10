@@ -419,10 +419,18 @@ Graph
             display: flex;
             flex-direction: row;
             gap: 0.3rem;
+            position: relative;
           }
           .legend-item-color {
+            position: absolute;
             width: 1rem;
             height: 1rem;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+          }
+          .legend-item-text {
+            margin-left: 1.5rem;
           }
         }
       }
