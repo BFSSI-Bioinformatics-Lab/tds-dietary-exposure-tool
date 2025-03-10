@@ -1,4 +1,4 @@
-import { GraphLegendTypes, GraphTypes, sexGroups, getTranslations } from "../const.js";
+import { GraphLegendTypes, GraphTypes, sexGroups, getTranslations, Translation } from "../const.js";
 import { classes, el } from "./const.js";
 import {
   formatRbasgToGroupedBar,
@@ -86,11 +86,11 @@ export function displayGraph(data) {
     },
   };
 
+  console.log("FILTERS: ", filters);
+
   const graphMapping = {
     [GraphTypes.RBASG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBASG].title}, ${
-        filters.chemical
-      }`,
+      graphTitle: filters.showByAgeSexGroup? Translation.translate(`graphs.${GraphTypes.RBASG}.titleByAgeGroups`, {chemical: filters.chemical, selectedYears: filters.years.join(", ")}) : Translation.translate(`graphs.${GraphTypes.RBASG}.titleByYears`, {chemical: filters.chemical, ageGroups: filters.ageSexGroups.join(", ")}),
       colorLegendMappings: [colorLegendMapping.sexGroup],
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,

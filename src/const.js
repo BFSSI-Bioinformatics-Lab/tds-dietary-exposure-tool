@@ -725,7 +725,7 @@ const LangEN = {
 
   filters: {
     graphSelects: {
-      [GraphTypes.RBASG]: "Results by Age-Sex Group",
+      [GraphTypes.RBASG]: "Results by Age Group",
       [GraphTypes.RBF]: "Results by Food",
       [GraphTypes.RBFG]: "Results by Food Group",
     },
@@ -763,7 +763,7 @@ const LangEN = {
       [ConsumptionUnits.KGBW]: "ng/kg bw per day",
     },
     rbasgDomainFormat: {
-      [RbasgDomainFormat.AGESEX]: "Age-Sex Group",
+      [RbasgDomainFormat.AGESEX]: "Age Group",
       [RbasgDomainFormat.YEAR]: "Year",
     },
     rbfgRangeFormat: {
@@ -826,6 +826,8 @@ const LangEN = {
       filename: "Graph Export",
     },
     [GraphTypes.RBASG]: {
+      titleByAgeGroups: "Dietary exposure estimate by age, {{ chemical }} Years: {{ selectedYears }}",
+      titleByYears: "Dietary exposure estimate, age {{ ageGroups }}, {{ chemical }}",
       title: "Dietary Exposure Estimate by Age-Sex Group",
       range: "Dietary Exposure",
       domain: {
@@ -1416,7 +1418,7 @@ const LangFR = {
       [ConsumptionUnits.KGBW]: "ng/kg pc par jour",
     },
     rbasgDomainFormat: {
-      [RbasgDomainFormat.AGESEX]: "Groupe âge-sexe",
+      [RbasgDomainFormat.AGESEX]: "Groupe d'âge",
       [RbasgDomainFormat.YEAR]: "Année",
     },
     rbfgRangeFormat: {
@@ -1475,8 +1477,9 @@ const LangFR = {
       filename: "Exportation du graphique",
     },
     [GraphTypes.RBASG]: {
-      title:
-        "Estimation de l'exposition alimentaire par groupe d'âge et de sexe",
+      titleByAgeGroups: "Estimation de l'exposition alimentaire par âge, {{ chemical }} Années: {{ selectedYears }}",
+      titleByYears: "Estimation de l'exposition alimentaire âge {{ ageGroups }}, {{ chemical }}",
+      title: "Estimation de l'exposition alimentaire par groupe d'âge et de sexe",
       range: "Exposition alimentaire",
       domain: {
         [RbasgDomainFormat.AGESEX]: "Groupe d'âge",
