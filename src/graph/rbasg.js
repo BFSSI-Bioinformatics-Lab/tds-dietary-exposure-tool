@@ -5,13 +5,13 @@ import {
   MeanFlag,
   RbasgDomainFormat,
   sexGroups,
+  getTranslations
 } from "../const.js";
 import {
   getCompositeInfo,
   getContaminantExposure,
   getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
   formatPercent,

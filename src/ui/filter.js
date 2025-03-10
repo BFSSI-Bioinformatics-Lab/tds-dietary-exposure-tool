@@ -1,4 +1,5 @@
-import { classs, el } from "./const.js";
+import { classes, el } from "./const.js";
+import { getTranslations } from "../const.js";
 import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
@@ -12,7 +13,6 @@ import {
   ageGroups,
   ageSexGroups,
 } from "../const.js";
-import { getTranslations } from "../translation/translation.js";
 import {
   formatNumber,
   getAgeSexDisplay,
@@ -21,6 +21,11 @@ import {
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
 import { tdsData } from "../data/dataTranslator.js";
+
+
+let ChemicalGroupIsSet = false;
+let ChemicalIsSet = false;
+
 
 /**
  * Return the graph-type selected by the user
@@ -43,7 +48,28 @@ export function getSelectedGraphType() {
 /**
  * Check if the user has filled out manditory filters
  */
-function selectionsCompleted() {
+export function selectionsCompleted() {
+  const prevChemicalGroupIsSet = ChemicalGroupIsSet;
+  const prevChemicalIsSet = ChemicalIsSet;
+
+  if (!ChemicalGroupIsSet) {
+    const chemicalGroup = setDefaultChemicalGroup();
+    ChemicalGroupIsSet = chemicalGroup !== "";
+  }
+
+  if (!prevChemicalGroupIsSet && ChemicalGroupIsSet) {
+    displayChemicals();
+  }
+
+  if (ChemicalGroupIsSet && !ChemicalIsSet) {
+    const chemical = setDefaultChemical(el.filters.inputs.chemicalGroup.value);
+    ChemicalIsSet = chemical !== "";
+  }
+
+  if ((!prevChemicalGroupIsSet || !prevChemicalIsSet) && ChemicalGroupIsSet && ChemicalIsSet) {
+    displayNonChemFilters();
+  }
+
   return (
     document.querySelector(".active-graph-select") &&
     el.filters.inputs.chemicalGroup.value &&
@@ -121,6 +147,20 @@ export function getActiveFilters() {
   };
 }
 
+// displayNonChemFilters(): Displays all the other filters not related to chemicals
+function displayNonChemFilters() {
+  clearSandbox();
+  displayYears();
+  if (selectionsCompleted()) {
+    el.filters.containers.forEach((container) => {
+      container.classList.remove(classes.HIDDEN);
+    });
+    el.filters.borders.forEach((border) => {
+      border.classList.remove(classes.HIDDEN);
+    });
+  }
+}
+
 /**
  * Initialize all the event listeners related to the filters.
  */
@@ -129,56 +169,18 @@ function addEventListenersToFilters() {
     displayChemicals();
   });
 
-  [el.filters.inputs.chemicalGroup, el.filters.inputs.chemical].forEach(
-    (select) =>
-      select.addEventListener("change", () => {
-        clearSandbox();
-        displayYears();
-        if (selectionsCompleted()) {
-          el.filters.containers.forEach((container) => {
-            container.classList.remove(classs.HIDDEN);
-          });
-          el.filters.borders.forEach((border) => {
-            border.classList.remove(classs.HIDDEN);
-          });
-        }
-      }),
-  );
+  el.filters.inputs.chemicalGroup.addEventListener("change", () => {
+    const chemicalGroup = el.filters.inputs.chemicalGroup.value;
+    setDefaultChemical(chemicalGroup);
+    displayNonChemFilters();
+  });
+
+  el.filters.inputs.chemical.addEventListener("change", () => {
+    displayNonChemFilters();
+  });
 
   el.graphs[GraphTypes.RBASG].filters.domain.addEventListener("change", () => {
     displayRbasgAgeGroupFilter();
-  });
-
-  const graphSelects = [
-    el.graphs[GraphTypes.RBASG].graphSelect,
-    el.graphs[GraphTypes.RBF].graphSelect,
-    el.graphs[GraphTypes.RBFG].graphSelect,
-  ];
-
-  graphSelects.forEach((element) => {
-    element.addEventListener("click", () => {
-      graphSelects.forEach((element) => {
-        element.classList.remove("active-graph-select");
-      });
-      [
-        ...el.graphs[GraphTypes.RBASG].filterContainers,
-        ...el.graphs[GraphTypes.RBF].filterContainers,
-        ...el.graphs[GraphTypes.RBFG].filterContainers,
-      ].forEach((filter) => {
-        filter.classList.remove("filter-additional-active");
-      });
-      element.classList.add(classs.ACTIVE_GRAPH_SELECT);
-      const graphType = getSelectedGraphType();
-      el.graphs[graphType].filterContainers.forEach((container) => {
-        if (!container.classList.contains(classs.FILTER_ADDITIONAL_ACTIVE)) {
-          container.classList.add(classs.FILTER_ADDITIONAL_ACTIVE);
-        }
-      });
-      if (selectionsCompleted()) {
-        showFilters();
-        displayGraph(getFilteredTdsData());
-      }
-    });
   });
 
   [
@@ -210,15 +212,15 @@ function addEventListenersToFilters() {
       el.filters.inputs.overrideFood.selectedIndex = 0;
 
       const itemContainer = document.createElement("div");
-      itemContainer.classList.add(classs.OVERRIDE_ITEM);
+      itemContainer.classList.add(classes.OVERRIDE_ITEM);
 
       const itemText = document.createElement("div");
       itemText.data = JSON.stringify(override);
       itemText.innerHTML = getOverrideText(override);
-      itemText.classList.add(classs.OVERRIDE_VALUE);
+      itemText.classList.add(classes.OVERRIDE_VALUE);
 
       const removeButton = document.createElement("button");
-      removeButton.classList.add(classs.SANDBOX_BUTTON);
+      removeButton.classList.add(classes.SANDBOX_BUTTON);
       removeButton.innerHTML =
         getTranslations().filters.sandbox.removeOverrideButton;
       removeButton.addEventListener("click", () => {
@@ -284,26 +286,26 @@ export function displayFilterText() {
 
 export function hideFilters() {
   el.filters.hiddenContainers.forEach((container) => {
-    container.classList.add(classs.HIDDEN);
+    container.classList.add(classes.HIDDEN);
   });
   el.filters.borders.forEach((border) => {
-    border.classList.add(classs.HIDDEN);
+    border.classList.add(classes.HIDDEN);
   });
 }
 
-function showFilters() {
+export function showFilters() {
   el.filters.hiddenContainers.forEach((container) => {
-    container.classList.remove(classs.HIDDEN);
+    container.classList.remove(classes.HIDDEN);
   });
   el.filters.borders.forEach((border) => {
-    border.classList.remove(classs.HIDDEN);
+    border.classList.remove(classes.HIDDEN);
   });
 
   if (
     el.filters.inputs.chemicalGroup.value ==
     getTranslations().tdsData.values.radionuclides
   ) {
-    el.filters.containersMap.consumptionUnits.classList.add(classs.HIDDEN);
+    el.filters.containersMap.consumptionUnits.classList.add(classes.HIDDEN);
   }
 }
 
@@ -313,12 +315,56 @@ function addPlaceholderToSelect(select, text) {
   oe.selected = true;
   oe.disabled = true;
   oe.text = text;
-  oe.classList.add(classs.DISABLED);
+  oe.classList.add(classes.DISABLED);
   select.appendChild(oe);
 }
 
-function displayChemicalGroups() {
-  el.filters.inputs.chemicalGroup.innerHTML = "";
+// setDefaultChemicalGroup(): Sets the default chemical group for the
+//  chemical group selection
+export function setDefaultChemicalGroup() {
+  if (tdsData === undefined) return "";
+
+  const chemicalGroups = Object.keys(tdsData.contaminant);
+  const result = chemicalGroups.length == 0 ? "" : chemicalGroups.sort()[0];
+
+  el.filters.inputs.chemicalGroup.value = result;
+  return result;
+}
+
+// resetChemicalGroup(): Resets the flag of whether the chemical group is set
+export function resetChemicalGroupIsSet() {
+  ChemicalGroupIsSet = false;
+}
+
+// setDefaultChemical(chemicalGroup): Sets the default chemical for the
+//  chemical selections
+export function setDefaultChemical(chemicalGroup) {
+  let result = "";
+  if (tdsData === undefined) return result;
+
+  let chemicals = tdsData.contaminant[chemicalGroup];
+  if (chemicals === undefined) return result;
+
+  chemicals = Object.keys(chemicals);
+  result = chemicals.length == 0 ? "" : chemicals.sort()[0];
+
+  el.filters.inputs.chemical.value = result;
+  return result;
+}
+
+// resetChemical(chemicalGroup): Resets the flag of whether the chemical is set
+export function resetChemicalIsSet() {
+  ChemicalIsSet = false;
+}
+
+// displayChemicalGroups(flush): Displays all the chemical group options
+//  for the chemical group dropdown selection
+function displayChemicalGroups(flush = true) {
+  if (flush) {
+    el.filters.inputs.chemicalGroup.innerHTML = ""
+  }
+
+  setDefaultChemicalGroup();
   addPlaceholderToSelect(
     el.filters.inputs.chemicalGroup,
     getTranslations().filters.placeholders.select,
@@ -333,9 +379,14 @@ function displayChemicalGroups() {
     });
 }
 
-function displayChemicals() {
+// displayChemicals(flush): Displays all the chemical options for the
+//  chemical dropdown selection
+function displayChemicals(flush = true) {
+  if (flush) {
+    el.filters.inputs.chemical.innerHTML = "";
+  }
+
   const filters = getActiveFilters();
-  el.filters.inputs.chemical.innerHTML = "";
   let chemicals = Object.keys(
     tdsData.contaminant[el.filters.inputs.chemicalGroup.value],
   ).sort();

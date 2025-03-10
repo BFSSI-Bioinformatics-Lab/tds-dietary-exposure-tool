@@ -3,8 +3,7 @@ import {
   getContaminantExposure,
   getOccurrenceForContaminantEntry as getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { DataTableHeader, LODs, MeanFlag } from "../const.js";
-import { getTranslations } from "../translation/translation.js";
+import { DataTableHeader, LODs, MeanFlag, getTranslations } from "../const.js";
 import {
   formatNumber,
   formatPercent,

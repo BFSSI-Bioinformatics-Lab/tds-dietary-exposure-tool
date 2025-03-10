@@ -115,7 +115,8 @@ export function getGroupedBarSvg(data) {
     .attr("x", width / 2)
     .attr("y", height - marginTop)
     .text(data.titleX)
-    .attr("class", "graph-axis-title");
+    .attr("class", "graph-axis-title")
+    .attr("fill", "var(--fontColour)");
 
   /* Vertical Axis */
 
@@ -143,7 +144,8 @@ export function getGroupedBarSvg(data) {
     .attr("transform", `rotate(-90, 20, ${(height - marginBottom) / 2})`)
     .style("text-anchor", "middle")
     .text(data.titleY)
-    .attr("class", "graph-axis-title");
+    .attr("class", "graph-axis-title")
+    .attr("fill", "var(--fontColour)");
 
   /* Horizontal Reference Line */
 

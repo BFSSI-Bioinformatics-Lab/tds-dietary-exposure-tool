@@ -7,6 +7,7 @@ import {
   ConsumptionUnits,
   getConsumptionFiles,
   PFASGroupings,
+  getTranslations
 } from "../const.js";
 import { readCSV } from "./dataLoader.js";
 import {
@@ -20,7 +21,6 @@ import {
   getYearForContaminantEntry,
 } from "../util/data.js";
 import { getActiveFilters } from "../ui/filter.js";
-import { getTranslations } from "../translation/translation.js";
 
 /**
  * An object containing TDS data in a structured format with the following properties:

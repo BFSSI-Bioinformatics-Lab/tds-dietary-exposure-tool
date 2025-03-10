@@ -1,4 +1,4 @@
-import { DataType, GraphTypes, SortByDir } from "../const.js";
+import { DataType, GraphTypes, SortByDir, getTranslations, Translation, DataTableHeader } from "../const.js";
 import { downloadCSV } from "../data/dataDownloader.js";
 import {
   getRawFilteredConsumptionData,
@@ -7,8 +7,7 @@ import {
 import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
 import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
-import { getTranslations } from "../translation/translation.js";
-import { classs, el, text } from "./const.js";
+import { classes, el, text } from "./const.js";
 import { getActiveFilters } from "./filter.js";
 import { addEventListernToDataTableHeader } from "./page.js";
 
@@ -28,6 +27,37 @@ export async function downloadTDSData(dataToDownload) {
   data.forEach((d) => {
     downloadCSV(d);
   });
+}
+
+
+// updateTable(data, selector): Updates the data in the table
+// Note:
+// - based off Jquery's Datatables: https://datatables.net/
+export function updateTable(selector, columnInfo, data, dataTableKwargs = undefined) {
+    let dataTable;
+    if (DataTable.isDataTable(selector)) {
+        $(selector).DataTable().destroy();
+    }
+
+    $(`${selector} tbody`).empty();
+    $(`${selector} thead`).empty();
+
+    const dataTableTranslations = Translation.translate("dataTableTemplate", { returnObjects: true });
+    if (dataTableKwargs === undefined) {
+      dataTableKwargs = {
+        language: dataTableTranslations,
+        columns: columnInfo,
+        scrollCollapse: true,
+        scrollX: true,
+        scrollY: '500px'
+      }
+    }
+
+    dataTable = $(selector).DataTable(dataTableKwargs);
+
+    dataTable.clear();
+    dataTable.rows.add(data);
+    dataTable.draw();
 }
 
 /**
@@ -79,104 +109,62 @@ export function downloadDataTable(tdsData, graphType) {
  * - data: the data to display, in object format where each key is a column (a DataTableHeader) with a corresponding value
  */
 export async function displayDataTable(data, filters) {
-  const tableContainer = el.dataTable.dataTable;
-  tableContainer.innerHTML = "";
+  const tableId = "#data-table";
+  const table = d3.select(el.dataTable.dataTable);
+  const tableNoContentContainer = d3.select(el.dataTable.dataTableNoContentContainer);
 
-  const table = document.createElement("table");
+  const noData = data.length == 0;
+  tableNoContentContainer.classed("d-none", !noData);
+  table.classed("d-none", noData);
 
-  if (data.length == 0) {
-    tableContainer.innerHTML = getTranslations().misc.noDataMsg;
+  if (noData) {
+    tableNoContentContainer.innerHTML = getTranslations().misc.noDataMsg;
     return;
+  }
+
+  // clean up the data
+  for (const row of data) {
+    const includeSuppresed = row[DataTableHeader.INCLUDED_SUPPRESSED];
+    if (includeSuppresed === undefined) continue;
+
+    if (!includeSuppresed) {
+      row[DataTableHeader.INCLUDED_SUPPRESSED] = "";
+      continue;
+    }
+ 
+    let newIncludedSuppressed = row[DataTableHeader.INCLUDED_SUPPRESSED].map((suppressedEntry) => String(suppressedEntry));
+    row[DataTableHeader.INCLUDED_SUPPRESSED] = newIncludedSuppressed.join("; ");
   }
 
   const columns = Object.keys(data[0]);
 
-  const tableHeader = document.createElement("thead");
-  const tableHeaderRow = document.createElement("tr");
-  tableHeaderRow.classList.add(classs.BOLD);
-  columns.forEach((column) => {
-    const th = document.createElement("th");
-    th.classList.add(classs.DATA_TABLE_CELL);
-    const header = document.createElement("div");
-    header.classList.add(classs.DATA_TABLE_HEADER);
-    header.textContent = getTranslations().dataTable.headers[column];
-    const arrows = document.createElement("span");
-    arrows.classList.add(classs.DATA_TABLE_HEADER_ARROWS);
-    const arrowUp = document.createElement("span");
-    arrowUp.innerHTML = text.arrowUp;
-    const arrowDown = document.createElement("span");
-    arrowDown.innerHTML = text.arrowDown;
-
-    [arrowUp, arrowDown].forEach((arrow) => {
-      arrows.appendChild(arrow);
-      arrow.classList.add(classs.DATA_TABLE_HEADER_ARROWS_INACTIVE);
-    });
-
-    if (filters.dataTableSortBy.column == column) {
-      if (filters.dataTableSortBy.dir == SortByDir.ASC) {
-        arrowDown.classList.remove(classs.DATA_TABLE_HEADER_ARROWS_INACTIVE);
-      } else {
-        arrowUp.classList.remove(classs.DATA_TABLE_HEADER_ARROWS_INACTIVE);
-      }
-    }
-
-    addEventListernToDataTableHeader(arrowUp, arrowDown, column, data, filters);
-    header.appendChild(arrows);
-    th.appendChild(header);
-    tableHeaderRow.appendChild(th);
-  });
-  tableHeader.appendChild(tableHeaderRow);
-  table.appendChild(tableHeader);
-
-  data.sort((a, b) => {
-    const sortBy = filters.dataTableSortBy;
-    let valueA = a[sortBy.column]?.replace(/,/g, "").replace(/%/g, "");
-    let valueB = b[sortBy.column]?.replace(/,/g, "").replace(/%/g, "");
-    if (!isNaN(parseFloat(valueA))) {
-      valueA = parseFloat(valueA);
-      valueB = parseFloat(valueB);
-    }
-    if (valueA < valueB) return sortBy.dir == SortByDir.ASC ? -1 : 1;
-    if (valueA > valueB) return sortBy.dir == SortByDir.ASC ? 1 : -1;
-    return 0;
+  const headerTranslations = getTranslations().dataTable.headers;
+  const tableColInfo = columns.map((columnKey) => {
+      return {"title": headerTranslations[columnKey], "data": columnKey};
   });
 
-  const body = document.createElement("tbody");
-  data.forEach((item) => {
-    const row = document.createElement("tr");
-    columns.forEach((column) => {
-      const td = document.createElement("td");
-      td.textContent = item[column];
-      row.appendChild(td);
-    });
-    body.append(row);
-  });
-  table.appendChild(body);
-  tableContainer.appendChild(table);
+  updateTable(tableId, tableColInfo, data);
 }
 
 /*
  * Display table providing additional information about the tool
  */
 export async function displayAboutTable() {
+  const tableId = "#about-table";
+  const tableColInfo = [
+    {title: "header", data: "header"},
+    {title: "value", data: "value"}
+  ]
+
   const data = getTranslations().about.table;
+  const dataTableTranslations = Translation.translate("dataTableTemplate", { returnObjects: true });
 
-  const tableContainer = el.about.tableContainer;
-  tableContainer.innerHTML = "";
+  const dataTableKwargs = {
+    language: dataTableTranslations,
+    columns: tableColInfo,
+    info: false,
+    paging: false
+  }
 
-  const table = document.createElement("table");
-
-  data.forEach((item) => {
-    const row = document.createElement("tr");
-    const th = document.createElement("th");
-    th.textContent = item.header;
-    th.classList.add(classs.BOLD);
-    row.appendChild(th);
-    const td = document.createElement("td");
-    td.textContent = item.value;
-    row.appendChild(td);
-    table.appendChild(row);
-  });
-
-  tableContainer.appendChild(table);
+  updateTable(tableId, tableColInfo, data, dataTableKwargs);
 }

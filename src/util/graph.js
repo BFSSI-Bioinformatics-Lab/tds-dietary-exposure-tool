@@ -1,5 +1,4 @@
-import { IDCs, LODs, ageGroupToIDCAgeGroup } from "../const.js";
-import { getTranslations } from "../translation/translation.js";
+import { IDCs, LODs, ageGroupToIDCAgeGroup, getTranslations } from "../const.js";
 import { lodOrMdlIsValid } from "./data.js";
 
 /**

@@ -1,5 +1,5 @@
-import { GraphLegendTypes, GraphTypes, sexGroups } from "../const.js";
-import { classs, el } from "./const.js";
+import { GraphLegendTypes, GraphTypes, sexGroups, getTranslations } from "../const.js";
+import { classes, el } from "./const.js";
 import {
   formatRbasgToGroupedBar,
   formatRbsagToDataTable,
@@ -30,7 +30,6 @@ import {
   updateSandbox,
 } from "./filter.js";
 import { displayDataTable } from "./dataTableComponent.js";
-import { getTranslations } from "../translation/translation.js";
 import { getAgeSexDisplay } from "../util/data.js";
 
 /**
@@ -153,7 +152,7 @@ export function displayGraph(data) {
   }
   const graphSvg = getSvgFn(graphData);
 
-  el.graphs.container.classList.remove(classs.HIDDEN);
+  el.graphs.container.classList.remove(classes.HIDDEN);
 
   el.graphs.title.innerHTML = graphTitle;
   el.graphs.graph.innerHTML = "";
@@ -168,12 +167,9 @@ export function displayGraph(data) {
     }
   });
 
-  el.graphs.saveGraph.classList.remove(classs.HIDDEN);
-  el.dataTable.dataContainer.classList.remove(classs.HIDDEN);
+  el.graphs.saveGraph.classList.remove(classes.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);
   displayDataTable(dataTableData, filters);
-
-  el.about.container.classList.remove(classs.HIDDEN);
 }
 
 /**
@@ -186,7 +182,10 @@ export function downloadGraph() {
   footer.innerText = getTranslations().graphs.saveGraph.footer;
   el.graphs.saveGraphContainer.appendChild(footer);
 
-  html2canvas(el.graphs.saveGraphContainer, { logging: false }).then(
+  const styles = getComputedStyle(document.querySelector(':root'));
+  const backgroundColour = styles.getPropertyValue('--background');
+
+  html2canvas(el.graphs.saveGraphContainer, { logging: false, backgroundColor: backgroundColour }).then(
     function (canvas) {
       var link = document.createElement("a");
       link.download = getTranslations().graphs.saveGraph.filename;

@@ -1,5 +1,11 @@
 # Total Diet Study Dietary Exposure Tool
 
+[![Static Badge](https://img.shields.io/badge/D3-%23ff9933?style=for-the-badge)](https://d3js.org/)
+[![Static Badge](https://img.shields.io/badge/Bootstrap-%237733ff?style=for-the-badge)](https://getbootstrap.com/)
+[![GitHub deployments](https://img.shields.io/github/deployments/BFSSI-Bioinformatics-Lab/tds-dietary-exposure-tool/github-pages?style=for-the-badge)](https://bfssi-bioinformatics-lab.github.io/Microorganism-Dashboard-D3-fsdat/)
+
+<br>
+
 Health Canada's Total Diet Study has amassed extensive data on the consumption and contamination of food among Canadians. This data encompasses studies from various years, each targeting specific contaminants in particular foods, alongside statistics on food consumption among Canadians based on age-sex groups. The tool's primary purpose is to efficiently aggregate and calculate findings for this data, enabling visualizations for stakeholders.
 
 At the core of the application are the user filters. Once users select their desired filters/modifications, calculations are executed and graphs are generated and displayed. Currently, three types of graphs are available: Results by Age-Sex Group (RBASG, a grouped bar chart), Results by Food Group (RBFG, a stacked bar chart), and Results by Food (RBF, a sunburst graph). Data tables accompany each graph, providing detailed calculations and findings, along with options to save the graph or download the involved data.
@@ -53,11 +59,6 @@ All text visible to users should be dynamically loaded from the `translations.js
 
 All data flowing in and out (loaded from data files and displayed to user) of the application code should be translated to and from domain objects, respectively. In this way, the application code is always operating on language-agnostic constants. Throughout the code, methods exist which utilize these constants, defined in `const.js`, to ensure consistent handling of translations. For example, see the `util/` folder.
 
-### Libraries
-
-Two libraries are used in the application:
-- [D3](https://d3js.org/), for creating graphs/visualizations.
-- [html2canvas](https://html2canvas.hertzen.com/documentation), for the save-graph feature.
 
 ## Deployment
 
