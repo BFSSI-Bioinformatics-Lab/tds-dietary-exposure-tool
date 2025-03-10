@@ -20,6 +20,7 @@ export const classes = {
   GRAPH_LEGEND_CONTENT: "legend-content",
   GRAPH_LEGEND_ITEM: "legend-item",
   GRAPH_LEGEND_COLOR: "legend-item-color",
+  GRAPH_LEGEND_ITEM_TEXT: "legend-item-text",
   DATA_TABLE_CELL: "data-table-cell",
   DATA_TABLE_HEADER: "data-table-header",
   DATA_TABLE_HEADER_ARROWS: "data-table-header-arrows",

@@ -28,6 +28,7 @@ export function displayColorLegendSection(data, title) {
 
     colorEl.style.backgroundColor = mapping.color;
     labelEl.innerHTML = mapping.label;
+    labelEl.classList.add(classes.GRAPH_LEGEND_ITEM_TEXT);
 
     itemEl.append(colorEl);
     itemEl.append(labelEl);
