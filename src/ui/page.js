@@ -2,16 +2,16 @@ import {
   DataType,
   GraphTypes,
   SortByDir,
-  toggleUserLanguage,
+  Translation,
+  getTranslations
 } from "../const.js";
-import { getTranslations } from "../translation/translation.js";
 import {
   displayAboutTable,
   displayDataTable,
   downloadDataTable,
   downloadTDSData,
 } from "./dataTableComponent.js";
-import { classs, el } from "./const.js";
+import { classes, el } from "./const.js";
 import { downloadGraph } from "./graphComponent.js";
 import { loadTdsData } from "../data/dataTranslator.js";
 import {
@@ -20,34 +20,21 @@ import {
   getFilteredTdsData,
   getSelectedGraphType,
   hideFilters,
+  resetChemicalGroupIsSet,
+  resetChemicalIsSet
 } from "./filter.js";
 
 /**
  * Initialize all the event listeners related to the page: dropdowns, buttons, etc.
  */
 export function addEventListenersToPage() {
-  /* Dropdowns */
-
-  [
-    el.header.information.howToUse,
-    el.header.information.moreInfo,
-    el.dataTable.dropdown,
-    el.about.dropdown,
-  ].forEach((dropdown) => {
-    addEventListenersToDropdown(dropdown);
-  });
-
   /* Buttons */
 
-  el.header.languageButton.addEventListener("click", async () => {
-    toggleUserLanguage();
-    await resetPage();
-  });
   el.filters.sandbox.openButton.addEventListener("click", () => {
-    el.filters.sandbox.container.classList.remove(classs.HIDDEN);
+    el.filters.sandbox.container.classList.remove(classes.HIDDEN);
   });
   el.filters.sandbox.closeButton.addEventListener("click", () => {
-    el.filters.sandbox.container.classList.add(classs.HIDDEN);
+    el.filters.sandbox.container.classList.add(classes.HIDDEN);
   });
   el.graphs.saveGraph.addEventListener("click", () => {
     downloadGraph();
@@ -60,28 +47,6 @@ export function addEventListenersToPage() {
   });
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
     downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
-  });
-}
-
-/**
- * Function used to perform UI changes necessary for a dropdown.
- */
-function addEventListenersToDropdown(dropdown) {
-  const { button, content, arrowDown, arrowRight } = dropdown;
-  button.addEventListener("click", () => {
-    content.classList.contains(classs.HIDDEN)
-      ? content.classList.remove(classs.HIDDEN)
-      : content.classList.add(classs.HIDDEN);
-
-    (arrowDown.classList.contains(classs.HIDDEN)
-      ? () => {
-          arrowDown.classList.remove(classs.HIDDEN);
-          arrowRight.classList.add(classs.HIDDEN);
-        }
-      : () => {
-          arrowRight.classList.remove(classs.HIDDEN);
-          arrowDown.classList.add(classs.HIDDEN);
-        })();
   });
 }
 
@@ -117,23 +82,22 @@ export function addEventListernToDataTableHeader(
  * Function to reset the application: hiding certain elements, redisplay page text, clear and redisplay filters, reload data, etc.
  * This function is used when switching languages.
  */
-async function resetPage() {
-  el.header.languageButton.disabled = true;
-  el.misc.loader.classList.remove(classs.HIDDEN);
+export async function resetPage() {
+  el.misc.loader.classList.remove(classes.HIDDEN);
   initializePageText();
   hideFilters();
-  el.graphs.container.classList.add(classs.HIDDEN);
-  el.graphs.saveGraph.classList.add(classs.HIDDEN);
-  el.dataTable.dataContainer.classList.add(classs.HIDDEN);
-  el.about.container.classList.add(classs.HIDDEN);
-  el.filters.sandbox.container.classList.add(classs.HIDDEN);
+  el.graphs.container.classList.add(classes.HIDDEN);
+  el.graphs.saveGraph.classList.add(classes.HIDDEN);
+  el.filters.sandbox.container.classList.add(classes.HIDDEN);
   el.filters.inputs.chemicalGroup.innerHTML = "";
   el.filters.inputs.chemical.innerHTML = "";
+  resetChemicalGroupIsSet();
+  resetChemicalIsSet();
   clearSandbox();
+
   await loadTdsData();
   displayFilterText();
-  el.misc.loader.classList.add(classs.HIDDEN);
-  el.header.languageButton.disabled = false;
+  el.misc.loader.classList.add(classes.HIDDEN);
 }
 
 /**
@@ -149,18 +113,8 @@ export async function initializePageText() {
     translations.header.information.moreInfoButton;
   el.header.information.moreInfo.content.innerHTML =
     translations.header.information.moreInfoContent.join("<br/>");
-  el.header.languageButton.innerHTML = translations.header.language;
 
   el.filters.titles.title.innerHTML = translations.filters.titles.title;
-
-  Object.keys(GraphTypes).forEach((graphType) => {
-    const caption = document.createElement("figcaption");
-    caption.innerHTML = getTranslations().filters.graphSelects[graphType];
-    el.graphs[graphType].graphSelect.removeChild(
-      el.graphs[graphType].graphSelect.lastChild,
-    );
-    el.graphs[graphType].graphSelect.appendChild(caption);
-  });
 
   el.filters.titles.chemicalGroup.innerHTML =
     translations.filters.titles.chemicalGroup;

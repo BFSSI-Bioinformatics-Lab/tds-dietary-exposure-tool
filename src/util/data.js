@@ -5,8 +5,8 @@ import {
   ageGroups,
   browserLanguage,
   sexGroups,
+  getTranslations
 } from "../const.js";
-import { getTranslations } from "../translation/translation.js";
 
 /**
  * Return domain specific age-sex group, age group, and sex group from age-sex group found in raw consumption entry

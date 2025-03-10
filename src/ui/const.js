@@ -1,6 +1,6 @@
 import { GraphTypes } from "../const.js";
 
-export const classs = {
+export const classes = {
   HIDDEN: "hidden",
   DISABLED: "disabled",
   BOLD: "bold",
@@ -63,9 +63,9 @@ export const el = {
    */
 
   filters: {
-    containers: document.querySelectorAll("." + classs.FILTER),
+    containers: document.querySelectorAll("." + classes.FILTER),
     hiddenContainers: document.querySelectorAll(
-      "." + classs.FILTER + "." + classs.HIDDEN,
+      "." + classes.FILTER + "." + classes.HIDDEN,
     ),
     containersMap: {
       consumptionUnits: document.getElementById(
@@ -77,9 +77,9 @@ export const el = {
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
       chemical: document.getElementById("filter-chemical-title"),
       years: document.getElementById("filter-year-title"),
-      multisSels: document.querySelectorAll("." + classs.MULTI_SEL_SUBTITLE),
+      multisSels: document.querySelectorAll("." + classes.MULTI_SEL_SUBTITLE),
       multisSelAlls: document.querySelectorAll(
-        "." + classs.MULTI_SEL_ALL_SUBTITLE,
+        "." + classes.MULTI_SEL_ALL_SUBTITLE,
       ),
       lod: document.getElementById("filter-lod-title"),
       lodSubtitle: document.getElementById("filter-lod-subtitle"),
@@ -100,7 +100,7 @@ export const el = {
       overrideFood: document.getElementById("filter-override-food-title"),
       overrideValue: document.getElementById("filter-override-value-title"),
     },
-    borders: document.querySelectorAll("." + classs.FILTER_BORDER),
+    borders: document.querySelectorAll("." + classes.FILTER_BORDER),
     sandbox: {
       openButton: document.getElementById("sandbox-open-button"),
       closeButton: document.getElementById("sandbox-close-button"),
@@ -121,7 +121,7 @@ export const el = {
       ),
     },
     inputs: {
-      chemicalGroup: document.getElementById("filter-chemical-group-select"),
+      chemicalGroup: document.getElementById("filter-chemical-group-select"),   
       chemical: document.getElementById("filter-chemical-select"),
       years: document.getElementById("filter-year-select"),
       lod: document.getElementById("filter-lod-select"),
@@ -148,7 +148,7 @@ export const el = {
     [GraphTypes.RBASG]: {
       graphSelect: document.getElementById("rbasg-graph-select"),
       filterContainers: document.querySelectorAll(
-        "." + classs.FILTER_ADDITIONAL_RBASG,
+        "." + classes.FILTER_ADDITIONAL_RBASG,
       ),
       filters: {
         ageSexGroup: document.getElementById("filter-rbasg-age-group-select"),
@@ -159,7 +159,7 @@ export const el = {
     [GraphTypes.RBF]: {
       graphSelect: document.getElementById("rbf-graph-select"),
       filterContainers: document.querySelectorAll(
-        "." + classs.FILTER_ADDITIONAL_RBF,
+        "." + classes.FILTER_ADDITIONAL_RBF,
       ),
       filters: {
         sortBy: document.getElementById("filter-rbf-sort-by-select"),
@@ -170,7 +170,7 @@ export const el = {
     [GraphTypes.RBFG]: {
       graphSelect: document.getElementById("rbfg-graph-select"),
       filterContainers: document.querySelectorAll(
-        "." + classs.FILTER_ADDITIONAL_RBFG,
+        "." + classes.FILTER_ADDITIONAL_RBFG,
       ),
       filters: {
         range: document.getElementById("filter-rbfg-range-select"),
@@ -200,6 +200,7 @@ export const el = {
     title: document.getElementById("data-table-title"),
     container: document.getElementById("data-table-container"),
     dataTable: document.getElementById("data-table"),
+    dataTableNoContentContainer: document.getElementById("dataTableNoContent"),
     buttons: {
       downloadConsumptionData: document.getElementById(
         "download-consumption-data-button",

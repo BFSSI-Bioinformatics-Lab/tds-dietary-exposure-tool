@@ -5,6 +5,7 @@ import {
   MeanFlag,
   RbfgRangeFormat,
   ageGroups,
+  getTranslations
 } from "../const.js";
 import {
   formatNumber,
@@ -19,7 +20,6 @@ import {
   getContaminantExposure,
   getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { getTranslations } from "../translation/translation.js";
 
 /**
  * Take in TDS data and return data which has been strictly filtered and formatted

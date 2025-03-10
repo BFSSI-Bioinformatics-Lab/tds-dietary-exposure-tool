@@ -1,4 +1,4 @@
-import { getTranslations } from "../translation/translation.js";
+import { getTranslations } from "../const.js";
 
 /**
  * Download data in CSV format
