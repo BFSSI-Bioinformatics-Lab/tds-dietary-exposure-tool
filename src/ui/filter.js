@@ -325,7 +325,7 @@ export function setDefaultChemicalGroup() {
   if (tdsData === undefined) return "";
 
   const chemicalGroups = Object.keys(tdsData.contaminant);
-  const result = chemicalGroups.length == 0 ? "" : chemicalGroups.sort()[0];
+  const result = chemicalGroups.length == 0 ? "" : chemicalGroups.sort((a, b) => a.localeCompare(b))[0];
 
   el.filters.inputs.chemicalGroup.value = result;
   return result;
@@ -346,7 +346,7 @@ export function setDefaultChemical(chemicalGroup) {
   if (chemicals === undefined) return result;
 
   chemicals = Object.keys(chemicals);
-  result = chemicals.length == 0 ? "" : chemicals.sort()[0];
+  result = chemicals.length == 0 ? "" : chemicals.sort((a, b) => a.localeCompare(b))[0];
 
   el.filters.inputs.chemical.value = result;
   return result;
@@ -370,7 +370,7 @@ function displayChemicalGroups(flush = true) {
     getTranslations().filters.placeholders.select,
   );
   Object.keys(tdsData.contaminant)
-    .sort()
+    .sort((a, b) => a.localeCompare(b))
     .forEach((chemicalGroup) => {
       const oe = document.createElement("option");
       oe.value = chemicalGroup;
@@ -389,7 +389,7 @@ function displayChemicals(flush = true) {
   const filters = getActiveFilters();
   let chemicals = Object.keys(
     tdsData.contaminant[el.filters.inputs.chemicalGroup.value],
-  ).sort();
+  ).sort((a, b) => a.localeCompare(b));
 
   if (filters.chemicalGroup == getTranslations().tdsData.values.PFAS) {
     const first = Object.values(getTranslations().tdsData.values.PFASGroupings);
