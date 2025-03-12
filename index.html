@@ -48,8 +48,6 @@
   </head>
 
   <body>
-    <span id="loader" class="hidden"></span>
-
     <div id="header">
       <header class="headerTitleSection">
           <div class="container">
@@ -71,31 +69,8 @@
         <div class="container navBarContainer">
           <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <div class="mobileMenuIcon">
-                  <div class="mobileMenuLine"></div>
-                  <div class="mobileMenuLine"></div>
-                  <div class="mobileMenuLine"></div>
-                </div>
-              </button>
               <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                  <li class="nav-item">
-                    <a id="rbasg-graph-select" class="nav-link active graph-select" aria-current="page" href="#" value="RBASG">
-                      <div></div>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a id="rbfg-graph-select" class="nav-link graph-select" href="#" value="RBFG">
-                      <div></div>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a id="rbf-graph-select" class="nav-link graph-select" href="#" value="RBF">
-                      <div></div>
-                    </a>
-                  </li>
-                </ul>
+                
               </div>
         
               <div class="dropdown">
@@ -114,8 +89,61 @@
   </div>
 
   <main id="mainPage">
-    <div class="my-5 mx-3 row pageContainer">  
-      <div class="accordion" id="infoDropdownContainer">
+    <div id="loader" class="hidden">
+      <div class="loadingContainer d-flex justify-content-center">
+        <div class="my-auto"">
+            <div class="spinner-grow loadingCircle loadCircleMed loadCircleRight" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow loadingCircleSecondary loadCircleSlow loadCircleLeft" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow loadingCircle loadCircleMed loadCircleRight" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow loadingCircleSecondary loadCircleSlow loadCircleLeft" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow loadingCircle loadCircleMed loadCircleLeft" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div id="pageContainer" class="my-5 mx-3 row pageContainer">  
+      <!--
+  
+  
+      About Section
+  
+  
+      -->
+
+      <div class="accordion mt-3" id="aboutTableDropdownContainer">
+        <div class="accordion-item">
+          <h2 class="menuFilterHeading accordion-header" id="aboutTableDropdownHeading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aboutTableDropdown" aria-controls="aboutTableDropdown">
+              <i class="accordionIcon fas fa-chevron-down"></i>
+              <span id="about-title"></span>
+            </button>
+          </h2>
+          <div id="aboutTableDropdown" class="accordion-collapse collapse" aria-labelledby="aboutTableDropdownHeading" data-bs-parent="#aboutTableDropdownContainer">
+            <div class="accordion-body" id="about-table-container">
+              <table id="about-table" class="table table-striped"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--
+  
+  
+      Data Sources Section
+  
+  
+      -->
+
+      <div class="accordion mt-3" id="infoDropdownContainer">
           <div class="accordion-item">
             <h2 class="menuFilterHeading accordion-header" id="infoDropdownHeading">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#infoDropdown" aria-controls="infoDropdown">
@@ -132,8 +160,40 @@
       </div>
   
       <h4 id="subtitle"class="mt-5 mb-4"></h4>
-  
-      <h4 id="filters-title" class="bold mt-4"></h4>
+
+      <!--
+
+
+      Graph Selects
+
+
+      -->
+
+      <h4 id="graph-select-title" class="bold mt-4"></h4>
+
+      <div id="graph-selects-container" class="mb-4">
+        <div id="rbasg-graph-select" class="graph-select active" value="RBASG">
+          <img
+            id="rbasg-img"
+            src="./img/rbasg.png"
+            alt="results by age sex group graph preview"
+          />
+        </div>
+        <div id="rbfg-graph-select" class="graph-select" value="RBFG">
+          <img
+            id="rbfg-img"
+            src="./img/rbfg.png"
+            alt="results by food group graph preview"
+          />
+        </div>
+        <div id="rbf-graph-select" class="graph-select" value="RBF">
+          <img
+            id="rbf-img"
+            src="./img/rbf.png"
+            alt="results by food graph preview"
+          />
+        </div>
+      </div>
   
       <!--
   
@@ -142,6 +202,8 @@
   
   
       -->
+
+      <h4 id="filters-title" class="bold mt-4"></h4>
   
       <div class="filters-container mt-3">
         <div class="filter">
@@ -338,7 +400,7 @@
       </div>
   
       <div class="mt-4">
-        <button id="save-graph-title" class="hidden bold"></button>
+        <button id="save-graph-title" class="hidden bold btn btn-primary"></button>
       </div>
   
       <!--
@@ -361,9 +423,9 @@
             <div class="accordion-body">
 
               <div id="data-table-button-container">
-                <button id="download-data-table-button"></button>
-                <button id="download-consumption-data-button"></button>
-                <button id="download-contaminant-data-button"></button>
+                <button id="download-data-table-button" class="btn btn-primary"></button>
+                <button id="download-consumption-data-button" class="btn btn-primary"></button>
+                <button id="download-contaminant-data-button" class="btn btn-primary"></button>
               </div>
 
               <div class="tableContainer mt-3">
@@ -371,30 +433,6 @@
                 <table id="data-table" class="table table-striped"></table>
               </div>
 
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!--
-  
-  
-      About Section
-  
-  
-      -->
-
-      <div class="accordion mt-3" id="aboutTableDropdownContainer">
-        <div class="accordion-item">
-          <h2 class="menuFilterHeading accordion-header" id="aboutTableDropdownHeading">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aboutTableDropdown" aria-controls="aboutTableDropdown">
-              <i class="accordionIcon fas fa-chevron-down"></i>
-              <span id="about-title"></span>
-            </button>
-          </h2>
-          <div id="aboutTableDropdown" class="accordion-collapse collapse" aria-labelledby="aboutTableDropdownHeading" data-bs-parent="#aboutTableDropdownContainer">
-            <div class="accordion-body" id="about-table-container">
-              <table id="about-table" class="table table-striped"></table>
             </div>
           </div>
         </div>

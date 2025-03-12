@@ -78,12 +78,24 @@ export function addEventListernToDataTableHeader(
   });
 }
 
+// showLoadingPage(): Shows the loading page and hides the main page
+export function showLoadingPage() {
+  el.misc.loader.classList.remove(classes.HIDDEN);
+  el.misc.pageContainer.classList.add(classes.HIDDEN);
+}
+
+// hideLoadingPage(): Hides the loading page and show the main page
+export function hideLoadingPage() {
+  el.misc.loader.classList.add(classes.HIDDEN);
+  el.misc.pageContainer.classList.remove(classes.HIDDEN);
+}
+
 /**
  * Function to reset the application: hiding certain elements, redisplay page text, clear and redisplay filters, reload data, etc.
  * This function is used when switching languages.
  */
 export async function resetPage() {
-  el.misc.loader.classList.remove(classes.HIDDEN);
+  showLoadingPage();
   initializePageText();
   hideFilters();
   el.graphs.container.classList.add(classes.HIDDEN);
@@ -97,7 +109,7 @@ export async function resetPage() {
 
   await loadTdsData();
   displayFilterText();
-  el.misc.loader.classList.add(classes.HIDDEN);
+  hideLoadingPage();
 }
 
 /**
@@ -114,7 +126,8 @@ export async function initializePageText() {
   el.header.information.moreInfo.content.innerHTML =
     translations.header.information.moreInfoContent.join("<br/>");
 
-  el.filters.titles.title.innerHTML = translations.filters.titles.title;
+  el.filters.titles.graphSelectTitle.innerHTML = translations.filters.titles.selectGraphType;
+  el.filters.titles.filtersTitle.innerHTML = translations.filters.titles.selectChemical;
 
   el.filters.titles.chemicalGroup.innerHTML =
     translations.filters.titles.chemicalGroup;

@@ -42,6 +42,7 @@ import { getAgeSexDisplay } from "../util/data.js";
  */
 export function displayGraph(data) {
   const graphType = getSelectedGraphType();
+  console.log();
 
   const filters = getActiveFilters();
 

@@ -769,8 +769,7 @@ const LangEN = {
    * Introductory Text
    */
 
-  "websiteTabTitle": "Dietary Exposure Tool",
-  "websiteTitle": "Dietary Exposure Tool",
+  "websiteTabTitle": "Canadian Total Diet Study 2008-2023 Dietary Exposure Tool",
   "changeLanguage": "Français",
   "changeLanguageValue": language.FR,
 
@@ -807,7 +806,8 @@ const LangEN = {
       [GraphTypes.RBFG]: "Results by Food Group",
     },
     titles: {
-      title: "Select Graph Type and Chemical:",
+      selectGraphType: "Select Graph Type:",
+      selectChemical: "Select Chemical:",
       chemicalGroup: "Chemical Group",
       chemical: "Chemical",
       years: "Year(s)",
@@ -1433,8 +1433,7 @@ French
 
 
 const LangFR = {
-  "websiteTabTitle": "Outil d'Exposition Alimentaire",
-  "websiteTitle": "Outil d'Exposition Alimentaire",
+  "websiteTabTitle": "Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023",
   "changeLanguage": "English",
   "changeLanguageValue": language.EN,
 
@@ -1467,7 +1466,8 @@ const LangFR = {
       [GraphTypes.RBFG]: "Résultats par groupe d'aliments",
     },
     titles: {
-      title: "Sélectionnez le type de graphique et le produit chimique :",
+      selectGraphType: "Sélectionnez le type de graphique:",
+      selectChemical: "Sélectionnez le produit chimique:",
       chemicalGroup: "Groupe chimique",
       chemical: "Chimique",
       years: "Année(s)",

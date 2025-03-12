@@ -2,7 +2,7 @@ import { loadTdsData } from "./data/dataTranslator.js";
 import { classes, el, TooltipIds, TooTipIdsStr, ToolTipIdDict } from "./ui/const.js";
 import { initializeFilters, selectionsCompleted, showFilters, getFilteredTdsData, setDefaultChemicalGroup  } from "./ui/filter.js";
 import { displayGraph } from "./ui/graphComponent.js";
-import { addEventListenersToPage, initializePageText, resetPage } from "./ui/page.js";
+import { addEventListenersToPage, initializePageText, resetPage, showLoadingPage, hideLoadingPage } from "./ui/page.js";
 import { ThemeNames, DefaultTheme, userLanguage, Translation, Themes, DefaultPage, GraphTypes } from "./const.js";
 
 
@@ -30,8 +30,8 @@ class App {
         this.themeVars = document.querySelector(':root');
         this.setTheme();
 
-        const selectedHeader = d3.select(".navBarContainer .nav-item .nav-link.active");
-        this.onHeaderClick(selectedHeader);
+        const selectedGraphOpt = d3.select(".graph-select.active");
+        this.onGraphOptClick(selectedGraphOpt);
 
         // add the listner for clicking on the tooltip
         window.addEventListener("click", (event) => { this.toggleToolTip(event) });
@@ -40,15 +40,15 @@ class App {
     // setupHeader(): Setup the header needed for the app
     setupHeader() {
         const self = this;
-        d3.selectAll(".navBarContainer .nav-item .nav-link")
+        d3.selectAll(".graph-select")
             .on("click", (event, data) => {
-                let selectedHeader = event.target;
-                if (selectedHeader.nodeName == "DIV") {
-                    selectedHeader = selectedHeader.parentElement;
+                let selectedGraphOpt = event.target;
+                if (selectedGraphOpt.nodeName == "IMG") {
+                    selectedGraphOpt = selectedGraphOpt.parentElement;
                 }
 
-                selectedHeader = d3.select(selectedHeader);
-                this.onHeaderClick(selectedHeader, data);
+                selectedGraphOpt = d3.select(selectedGraphOpt);
+                this.onGraphOptClick(selectedGraphOpt, data);
             });
 
         // register the link to change the language
@@ -93,9 +93,9 @@ class App {
         self.updateHeaderText();
     }
 
-    // onHeaderClick(selectedHeader, data): Listner for when the header is clicked
-    onHeaderClick(selectedHeader, data = undefined) {
-        const activeHeader = d3.select(".navBarContainer .nav-item .nav-link.active");
+    // onGraphOptClick(selectedHeader, data): Listener for when a graph choice is clicked
+    onGraphOptClick(selectedGraphOpt, data = undefined) {
+        const activeGraphOpt = d3.select(".graph-select.active");
 
         const graphSelects = [
             el.graphs[GraphTypes.RBASG].graphSelect,
@@ -109,7 +109,7 @@ class App {
             ...el.graphs[GraphTypes.RBFG].filterContainers,
         ]
 
-        const page = selectedHeader.attr("value");
+        const page = selectedGraphOpt.attr("value");
         const graphType = page;
         this.activePage = page;
 
@@ -121,7 +121,7 @@ class App {
             element.classList.remove(classes.ACTIVE_GRAPH_SELECT);
         });
 
-        selectedHeader.classed(classes.ACTIVE_GRAPH_SELECT, true);
+        selectedGraphOpt.classed(classes.ACTIVE_GRAPH_SELECT, true);
 
         el.graphs[graphType].filterContainers.forEach((container) => {
             if (!container.classList.contains(classes.FILTER_ADDITIONAL_ACTIVE)) {
@@ -129,7 +129,7 @@ class App {
             }
         });
 
-        this.setSelectedOpt(selectedHeader, activeHeader, data, (selectedOpt, data) => {
+        this.setSelectedGraph(selectedGraphOpt, activeGraphOpt, data, (selectedOpt, data) => {
             this.loadMainPage();
         });
     }
@@ -137,23 +137,33 @@ class App {
     // setNavOptActive(element): Makes some option to be selected
     setNavOptActive(element) {
         element.classed("active", true);
-        element.attr("aria-current", "page"); // for assessibility
+    }
+
+    // setGraphActive(element): Makes some graph choice to be selected
+    setGraphActive(element) {
+        this.setNavOptActive(element);
+        element.classed(classes.ACTIVE_GRAPH_SELECT, true);
     }
 
     // setNavOptInactive(element): Makes some option to be unselected
     setNavOptInactive(element) {
         element.classed("active", false);
-        element.attr("aria-current", null); // for assessibility
+    }
+
+    // setGraphOptInactive(element): Makes some graph choice to be inactive
+    setGraphInactive(element) {
+        this.setNavOptInactive(element);
+        element.classed(classes.ACTIVE_GRAPH_SELECT, false);
     }
 
     // loadMainPage(): Loads the main content for a particular page
     loadMainPage() {
         if (!selectionsCompleted()) return;
 
-        if (this.activePage == GraphTypes.RBFG) {
-            const toolTipId = ToolTipIdDict.title;
-            this.removeToolTips(`#${toolTipId}`)
+        const toolTipId = ToolTipIdDict.title;
+        this.removeToolTips(`#${toolTipId}`);
 
+        if (this.activePage == GraphTypes.RBFG) {
             const toolTipElements = d3.selectAll([el.graphs.titleContainer]);
             const toolTipTextFunc = (data) => { return Translation.translateWebNotes(`graphs.${GraphTypes.RBFG}.titleInfo`); };
 
@@ -164,15 +174,15 @@ class App {
         displayGraph(getFilteredTdsData());
     }
 
-    // setSelectedOpt(selectedOpt, activeOpt, data, onSelected): Sets the selected option to be
-    //  active and disables the previous selected option
-    setSelectedOpt(selectedOpt, activeOpt, data, onSelected) {
+    // setSelectedGraph(selectedOpt, activeOpt, data, onSelected): Sets the selected graph choice to be
+    //  active and disables the previous selected graph choice
+    setSelectedGraph(selectedOpt, activeOpt, data, onSelected) {
         if (data === undefined) {
             data = selectedOpt.attr("value");
         }
 
-        this.setNavOptInactive(activeOpt);
-        this.setNavOptActive(selectedOpt);
+        this.setGraphInactive(activeOpt);
+        this.setGraphActive(selectedOpt);
         onSelected(selectedOpt, data);
     }
 
@@ -188,19 +198,19 @@ class App {
 
     // setTheme(): Changes the colour for the theme selected
     setTheme() {
-    const themeObj = Themes[this.theme];
-    for (const themeKey in themeObj) {
-        const themeColour = themeObj[themeKey];
-        
-        if (themeColour.constructor === Array) {
-            themeColour.forEach((colour, ind) => {
-                this.themeVars.style.setProperty(`--${themeKey}${ind}`, colour);
-            });
-            continue;
-        } 
+        const themeObj = Themes[this.theme];
+        for (const themeKey in themeObj) {
+            const themeColour = themeObj[themeKey];
+            
+            if (themeColour.constructor === Array) {
+                themeColour.forEach((colour, ind) => {
+                    this.themeVars.style.setProperty(`--${themeKey}${ind}`, colour);
+                });
+                continue;
+            } 
 
-        this.themeVars.style.setProperty(`--${themeKey}`, themeColour);
-    }
+            this.themeVars.style.setProperty(`--${themeKey}`, themeColour);
+        }
     }
 
     // updateHeaderText(): Changes the text in the header based off the language
@@ -312,7 +322,14 @@ class App {
 
     // toggleToolTip(icon): Toggles the tooltip to either show/hide
     toggleToolTip(event) {
-        const classNames = event.target.className.split(" ");
+        let classNames = event.target.className;
+
+        try {
+            classNames = classNames.split(" ");
+        } catch (error) {
+            classNames = [];
+        }
+
         const isNotIcon = !TooltipIds.has(event.target.id);
 
         // clicking inside of the box of the tooltip
@@ -355,12 +372,12 @@ class App {
 
 
 async function main() {
-  el.misc.loader.classList.remove(classes.HIDDEN);
+  showLoadingPage();
   await initializePageText();
   await loadTdsData();
   addEventListenersToPage();
   initializeFilters();
-  el.misc.loader.classList.add(classes.HIDDEN);
+  hideLoadingPage();
 }
 
 

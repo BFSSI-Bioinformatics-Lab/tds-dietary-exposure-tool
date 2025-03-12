@@ -158,36 +158,6 @@ button:hover {
   }
 }
 
-/*
-
-Loader
-
-*/
-
-#loader {
-  position: absolute;
-  width: 8rem;
-  height: 8rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin-top: -4rem;
-  margin-left: -4rem;
-  border: 0.4rem solid #ccd1d1;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 /* 
 
@@ -232,13 +202,14 @@ Graph Selects
     padding: 0.5rem;
     border-radius: 0.2rem;
     border: 0.18rem solid rgba(0, 0, 0, 0);
-    transition: all 0.2s ease;
+    transition: var(--medTransition);
     img {
       object-fit: contain;
       width: 100%;
       height: 6rem;
       filter: grayscale(1);
-      opacity: 0.3;
+      opacity: 0.4;
+      transition: var(--medTransition);
     }
     figcaption {
       font-weight: bold;
@@ -250,7 +221,12 @@ Graph Selects
     cursor: pointer;
   }
   .active-graph-select {
-    border: 0.18rem solid #ccd1d1;
+    border: 0.18rem solid var(--primary);
+  }
+
+  .active-graph-select img {
+    filter: none;
+    opacity: 0.8;
   }
 }
 
@@ -873,8 +849,8 @@ About Table
 
 .navBarContainer .navbar {
   background-color: var(--primary);
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: 29px;
+  padding-bottom: 29px;
   border-radius: 0 0 var(--smBorderRadius) var(--smBorderRadius);
   border-bottom: var(--navBarBorderWidth) solid var(--primary);
   border-left: var(--navBarBorderWidth) solid var(--primary);
@@ -1092,12 +1068,44 @@ About Table
   font-weight: normal;
 }
 
-#filters-title {
+#filters-title, #graph-select-title {
   font-size: 18px;
 }
 
 #graph-title-container {
   display: flex;
 }
+
+/* ########################################################## */
+/* ################### Loading Screen ####################### */
+
+.loadingContainer {
+  min-height: 60vh;
+}
+
+.loadingCircle {
+  background-color: var(--primary);
+}
+
+.loadingCircleSecondary {
+  background-color: var(--secondary);
+}
+
+.loadCircleRight {
+  transform: translateX(100%);
+}
+
+.loadCircleLeft {
+  transform: translateX(-100%);
+}
+
+.loadCircleSlow {
+  --bs-spinner-animation-speed: 1s;
+}
+
+.loadCircleMed {
+  --bs-spinner-animation-speed: 0.75s;
+}
+
 
 /* ########################################################## */
