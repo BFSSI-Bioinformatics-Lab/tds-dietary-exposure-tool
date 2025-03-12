@@ -1,5 +1,15 @@
 import { GraphTypes } from "../const.js";
 
+
+// Ids for the different types of tooltips
+export let ToolTipIdDict = {
+  title: "titleInfo"
+};
+
+let ToolTipIdLst = Object.values(ToolTipIdDict);
+export const TooltipIds = new Set(ToolTipIdLst);
+export const TooTipIdsStr = ToolTipIdLst.map((id) => `#${id}`).join(", ");
+
 export const classes = {
   HIDDEN: "hidden",
   DISABLED: "disabled",
@@ -27,6 +37,7 @@ export const classes = {
   DATA_TABLE_HEADER_ARROWS_INACTIVE: "data-table-header-arrows-inactive",
   MULTI_SEL_SUBTITLE: "multi-sel-subtitle",
   MULTI_SEL_ALL_SUBTITLE: "multi-sel-all-subtitle",
+  NOTE_ELEMENT: "note-element"
 };
 
 export const text = {
@@ -142,6 +153,7 @@ export const el = {
   graphs: {
     container: document.getElementById("graph-content"),
     title: document.getElementById("graph-title"),
+    titleContainer: document.getElementById("graph-title-container"),
     graph: document.getElementById("graph"),
     saveGraph: document.getElementById("save-graph-title"),
     saveGraphContainer: document.getElementById("save-graph-container"),

@@ -1,5 +1,5 @@
 import { loadTdsData } from "./data/dataTranslator.js";
-import { classes, el } from "./ui/const.js";
+import { classes, el, TooltipIds, TooTipIdsStr, ToolTipIdDict } from "./ui/const.js";
 import { initializeFilters, selectionsCompleted, showFilters, getFilteredTdsData, setDefaultChemicalGroup  } from "./ui/filter.js";
 import { displayGraph } from "./ui/graphComponent.js";
 import { addEventListenersToPage, initializePageText, resetPage } from "./ui/page.js";
@@ -13,6 +13,9 @@ class App {
         this.lang = userLanguage;
         this.theme = DefaultTheme;
         this.activePage = DefaultPage;
+
+        // the clicked info icon
+        this.clickedIcon = undefined;
     }
 
     // init(page): Initializes the entire app
@@ -29,6 +32,9 @@ class App {
 
         const selectedHeader = d3.select(".navBarContainer .nav-item .nav-link.active");
         this.onHeaderClick(selectedHeader);
+
+        // add the listner for clicking on the tooltip
+        window.addEventListener("click", (event) => { this.toggleToolTip(event) });
     }
 
     // setupHeader(): Setup the header needed for the app
@@ -142,10 +148,20 @@ class App {
 
     // loadMainPage(): Loads the main content for a particular page
     loadMainPage() {
-        if (selectionsCompleted()) {
-            showFilters();
-            displayGraph(getFilteredTdsData());
+        if (!selectionsCompleted()) return;
+
+        if (this.activePage == GraphTypes.RBFG) {
+            const toolTipId = ToolTipIdDict.title;
+            this.removeToolTips(`#${toolTipId}`)
+
+            const toolTipElements = d3.selectAll([el.graphs.titleContainer]);
+            const toolTipTextFunc = (data) => { return Translation.translateWebNotes(`graphs.${GraphTypes.RBFG}.titleInfo`); };
+
+            this.drawToolTips(ToolTipIdDict.title, toolTipElements, toolTipTextFunc);
         }
+
+        showFilters();
+        displayGraph(getFilteredTdsData());
     }
 
     // setSelectedOpt(selectedOpt, activeOpt, data, onSelected): Sets the selected option to be
@@ -220,7 +236,120 @@ class App {
 
         Promise.all([resetPage()]).then(() => {
             this.loadMainPage();
-        });;
+        });
+    }
+
+    // drawToolTips(toolTipId, elementsWithInfoIcons, toolTipTextFunc): Draws the tooltips
+    drawToolTips(toolTipId, elementsWithInfoIcons, toolTipTextFunc = undefined) {
+        // ----------- draw the tool tips ---------------
+        
+        const infoIconGroups = elementsWithInfoIcons.append("span");
+        const icons = infoIconGroups.append("i")
+            .attr("class", "fa fa-info-circle infoIcon")
+            .attr("aria-hidden", true); // used for accessibility purposes
+
+        if (toolTipTextFunc == undefined) {
+            toolTipTextFunc = (data) => { return data; };
+        }
+
+        icons.attr("id", toolTipId)
+            .attr("title", toolTipTextFunc)
+            .attr("data-bs-html", "true")
+            .attr("data-toggle", "tooltip")
+            .attr("data-placement", "right")
+            .each((data, index, elements) => { $(elements[index]).tooltip({placement: "right", container: "body", trigger: "manual"}); })
+
+            // rewrite the title again since creating a Bootstrap tooltip will set the 'title' attribute to null
+            //   and transfer the content of the 'title' attribute to a new attribute called 'data-bs-original-title'
+            //
+            // Comment out the line below if we want to add back the title attribute.
+            // Its used for the hover text of the icon, but the user can see the same text if they click the icon
+            //
+            // The 'title' attribute seems to be for some assessbility purposes
+            // https://fontawesome.com/v5/docs/web/other-topics/accessibility
+            //
+            // .attr("title", toolTipTextFunc);
+
+        // add the hidden text needed for screen readers
+        for (const element of icons._groups[0]) {
+            d3.select(element.parentNode).append("span")
+                .classed("sr-only", true)
+                .text(toolTipTextFunc);
+        }
+
+        icons.on("mouseenter", (event) => { 
+            this.infoIconOnHover(event.target)
+        });
+        icons.on("mouseleave", (event) => { this.infoIconUnHover(event.target)});
+
+        // ----------------------------------------------
+    }
+
+    // removeToolTips(toolTipSelector): Removes the tooltips
+    removeToolTips(toolTipSelector) {
+        const toolTips = d3.selectAll(toolTipSelector);
+        toolTips.each((data, index, elements) => { $(elements[index]).tooltip('dispose'); });
+        toolTips.remove();
+    }
+
+    // infoIconHover(element): When the info icon is being hovered over
+    infoIconOnHover(element) {
+        element = d3.select(element);
+        element.classed("infoIcon-enabled", true);
+        element.classed("infoIcon-disabled", false);
+    }
+
+    // infoIconUnHover(element): when the info icon is unhovered
+    infoIconUnHover(element) {
+        element = d3.select(element);
+
+        // do not change back the color if the icon has already been clicked
+        if (element.attr("infoIconClicked") == null) {
+            element.classed("infoIcon-enabled", false);
+            element.classed("infoIcon-disabled", true);
+        }
+    }
+
+    // toggleToolTip(icon): Toggles the tooltip to either show/hide
+    toggleToolTip(event) {
+        const classNames = event.target.className.split(" ");
+        const isNotIcon = !TooltipIds.has(event.target.id);
+
+        // clicking inside of the box of the tooltip
+        if (classNames.includes(classes.NOTE_ELEMENT) || (isNotIcon && classNames.includes("tooltip-inner"))) return;
+
+        // hide all the tooltips if clicking outside of the tooltip
+        else if (isNotIcon) {
+            $(TooTipIdsStr).tooltip("hide")
+                .attr("infoIconClicked", null)
+                .removeClass("infoIcon-enabled")
+                .addClass("infoIcon-disabled");
+            this.clickedIcon = undefined;
+            return;
+        }
+
+        const hasClickedIcon = this.clickedIcon !== undefined;
+        const icon = $(event.target);
+
+        // hide the tooltip that was previously displayed on screen
+        if (hasClickedIcon) {
+            this.clickedIcon.tooltip("hide")
+                .attr("infoIconClicked", null)
+                .removeClass("infoIcon-enabled")
+                .addClass("infoIcon-disabled");
+        }
+
+        if (hasClickedIcon && this.clickedIcon.attr("nutrient") == icon.attr("nutrient")) {
+            this.clickedIcon = undefined;
+            return;
+        }
+
+        // show the clicked tooltip
+        icon.tooltip("show")
+            .attr("infoIconClicked", "clicked")
+            .removeClass("infoIcon-disabled")
+            .addClass("infoIcon-enabled");
+        this.clickedIcon = icon;
     }
 }
 

@@ -86,8 +86,6 @@ export function displayGraph(data) {
     },
   };
 
-  console.log("FILTERS: ", filters);
-
   const graphMapping = {
     [GraphTypes.RBASG]: {
       graphTitle: filters.showByAgeSexGroup? Translation.translate(`graphs.${GraphTypes.RBASG}.titleByAgeGroups`, {chemical: filters.chemical, selectedYears: filters.years.join(", ")}) : Translation.translate(`graphs.${GraphTypes.RBASG}.titleByYears`, {chemical: filters.chemical, ageGroups: filters.ageSexGroups.join(", ")}),

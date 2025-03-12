@@ -681,6 +681,46 @@ About Table
 }
 
 /* =================================================== */
+/* ======== Tooltip ================================== */
+
+.infoIcon {
+  margin-left: 10px;
+}
+
+.tooltip.show {
+  --bs-tooltip-opacity: 1;
+}
+
+.tooltip-inner {
+  z-index: 1;
+  background: var(--tertiary);
+  border-color: var(--tertiaryBorderColour);
+  border-width: 1px 1px 1px 5px;
+  border-style: solid;
+  color: var(--onTertiary);
+  text-align: left;
+}
+
+.tooltip-arrow {
+  display: none !important;
+}
+
+.infoIcon-enabled {
+  cursor: pointer;
+  color: #269abc;
+  transition: color 0.5s;
+  transition-timing-function: ease-in-out;
+}
+
+.infoIcon-disabled {
+  cursor: default;
+  color: inherit;
+  transition: color 0.5s;
+  transition-timing-function: ease-in-out;
+}
+
+
+/* =================================================== */
 /* ======== Pagination =============================== */
 
 .pagination {
@@ -1054,6 +1094,10 @@ About Table
 
 #filters-title {
   font-size: 18px;
+}
+
+#graph-title-container {
+  display: flex;
 }
 
 /* ########################################################## */

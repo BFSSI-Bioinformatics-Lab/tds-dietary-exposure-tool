@@ -57,6 +57,7 @@ export function updateTable(selector, columnInfo, data, dataTableKwargs = undefi
 
     dataTable.clear();
     dataTable.rows.add(data);
+    dataTable.columns.adjust();
     dataTable.draw();
 }
 
