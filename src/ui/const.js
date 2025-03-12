@@ -85,7 +85,8 @@ export const el = {
       ),
     },
     titles: {
-      title: document.getElementById("filters-title"),
+      graphSelectTitle: document.getElementById("graph-select-title"),
+      filtersTitle: document.getElementById("filters-title"),
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
       chemical: document.getElementById("filter-chemical-title"),
       years: document.getElementById("filter-year-title"),
@@ -247,6 +248,7 @@ export const el = {
    */
 
   misc: {
+    pageContainer: document.getElementById("pageContainer"),
     loader: document.getElementById("loader"),
   },
 };
