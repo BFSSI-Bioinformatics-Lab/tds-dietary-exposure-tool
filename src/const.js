@@ -620,6 +620,14 @@ Themes[ThemeNames.Blue] = {
 // ############################################################
 // ################## TRANSLATIONS ############################
 
+// Different id names for the parts of a note:
+export const NotePartIds = {
+  DoubleLineBreak: "DOUBLELINEBREAK",
+  SingleLineBreak: "LINEBREAK",
+  Link: "Link"
+}
+
+let WebNotesCache = {};
 
 // Translation: Helper class for doing translations
 export class Translation {
@@ -643,10 +651,73 @@ export class Translation {
   static translate(key, args){
       const result = i18next.t(key, args);
 
-      if (Object.prototype.toString.call(result) === '[object Array]') return result.map((line) => he.decode(line));
-      else if (typeof result !== 'string') return result;
+      if (typeof result !== 'string') return result;
       return he.decode(result);
   }
+
+  // translateWebNotes(key): Translate the pop-up notes for the website
+  static translateWebNotes(key) {
+    let result = WebNotesCache[key];
+    if (result !== undefined) return result;
+
+    const noteParts = this.translate(key, {returnObjects: true});
+    if (typeof noteParts === 'string') return null;
+
+    result = "";
+    for (const part of noteParts) {
+        const partIsStr = typeof part === 'string';
+
+        // adding line breaks
+        if (partIsStr && part == NotePartIds.DoubleLineBreak) {
+          result += "<br><br>";
+          continue;
+        } else if (partIsStr && part == NotePartIds.SingleLineBreak) {
+          result += "<br>";
+          continue;
+        }
+
+        const partType = part.type;
+
+        // adding a link
+        if (partType == NotePartIds.Link) {
+          let currentText = '<a class="note-element"';
+          let link = part.url;
+          if (link === undefined) {
+            link = "#";
+          }
+
+          currentText += ` href=${link}`;
+          const openLinkToNewTab = part.openInNewTab;
+          if (openLinkToNewTab !== undefined && openLinkToNewTab) {
+            currentText += ` target="_blank"`;
+          }
+
+          currentText += `>${part.text}</a>`;
+          result += currentText;
+          continue;
+        }
+
+        // adding regular text
+        let textClasses = [];
+        let currentText = '<span class="note-element"';
+
+        if (part.bold !== undefined && part.bold) {
+            textClasses.push("boldTxt");
+        }
+
+        if (textClasses) {
+            textClasses = textClasses.join(", ");
+            textClasses = ` class="${textClasses}"`;
+            currentText += textClasses;
+        }
+        
+        currentText += `>${part.text}</span>`;
+        result += currentText;
+    }
+
+    WebNotesCache[key] = result;
+    return result;
+}
 
   // translateNum(numStr, decimalPlaces): Translate a number to its correct
   //  numeric represented string for different languages
@@ -667,12 +738,18 @@ export class Translation {
       return this.translate("Number", translateArgs);
   }
 
+  // clearTranslationCache(): Clears any cached data related to translations
+  static clearTranslationCache() {
+    WebNotesCache = {};
+  }
+
   // changeLanguage(lang): Changes or toggles the language
   static changeLanguage(lang = null) {
     if (lang === null) {
       lang = userLanguage == language.EN ? language.FR : language.EN
     }
 
+    this.clearTranslationCache();
     userLanguage = lang;
     i18next.changeLanguage(lang);
   }
@@ -840,6 +917,11 @@ const LangEN = {
     },
     [GraphTypes.RBFG]: {
       title: "Dietary Exposure Estimate by Food Group",
+      titleInfo: [
+        {text: "For more information on the food groups, see:"},
+        NotePartIds.SingleLineBreak,
+        {type: NotePartIds.Link, url: "https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130/resource/56d65830-da14-4d83-92f9-af0beec5a70a", text: "https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130/resource/56d65830-da14-4d83-92f9-af0beec5a70a", openInNewTab: true}
+      ], 
       range: {
         [RbfgRangeFormat.PERCENT]: "% of Total Exposure",
         [RbfgRangeFormat.NUMBER]: "Dietary Exposure",
@@ -1478,7 +1560,7 @@ const LangFR = {
     },
     [GraphTypes.RBASG]: {
       titleByAgeGroups: "Estimation de l'exposition alimentaire par âge, {{ chemical }} Années: {{ selectedYears }}",
-      titleByYears: "Estimation de l'exposition alimentaire âge {{ ageGroups }}, {{ chemical }}",
+      titleByYears: "Estimation de l'exposition alimentaire, âge {{ ageGroups }}, {{ chemical }}",
       title: "Estimation de l'exposition alimentaire par groupe d'âge et de sexe",
       range: "Exposition alimentaire",
       domain: {
@@ -1491,6 +1573,11 @@ const LangFR = {
     },
     [GraphTypes.RBFG]: {
       title: "Estimation de l'exposition alimentaire par groupe d'aliments",
+      titleInfo: [
+        {text: "Pour plus d’informations sur les groupes d’aliments, voir:"},
+        NotePartIds.SingleLineBreak,
+        {type: NotePartIds.Link, url: "https://ouvert.canada.ca/data/fr/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130/resource/5c9eec7f-03f6-40fb-ad21-d74d5b0f6af6", text: "https://ouvert.canada.ca/data/fr/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130/resource/5c9eec7f-03f6-40fb-ad21-d74d5b0f6af6", openInNewTab: true}
+      ], 
       range: {
         [RbfgRangeFormat.PERCENT]: "% de l'exposition totale",
         [RbfgRangeFormat.NUMBER]: "Exposition alimentaire",
