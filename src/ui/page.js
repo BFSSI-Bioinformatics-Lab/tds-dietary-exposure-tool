@@ -24,6 +24,16 @@ import {
   resetChemicalIsSet
 } from "./filter.js";
 
+
+// showAlertPopup(): Shows an popup for the sandbox
+export function showSandBox() {
+  let popup = d3.select('#sandbox-modal');
+  popup.select(".modal .btn-close").attr("aria-label", Translation.translate("close"));
+
+  popup = new bootstrap.Modal('#sandbox-modal', {backdrop: 'static'});
+  popup.show();
+}
+
 /**
  * Initialize all the event listeners related to the page: dropdowns, buttons, etc.
  */
@@ -31,11 +41,11 @@ export function addEventListenersToPage() {
   /* Buttons */
 
   el.filters.sandbox.openButton.addEventListener("click", () => {
-    el.filters.sandbox.container.classList.remove(classes.HIDDEN);
+    showSandBox();
   });
-  el.filters.sandbox.closeButton.addEventListener("click", () => {
-    el.filters.sandbox.container.classList.add(classes.HIDDEN);
-  });
+  // el.filters.sandbox.closeButton.addEventListener("click", () => {
+  //   el.filters.sandbox.container.classList.add(classes.HIDDEN);
+  // });
   el.graphs.saveGraph.addEventListener("click", () => {
     downloadGraph();
   });
@@ -100,7 +110,7 @@ export async function resetPage() {
   hideFilters();
   el.graphs.container.classList.add(classes.HIDDEN);
   el.graphs.saveGraph.classList.add(classes.HIDDEN);
-  el.filters.sandbox.container.classList.add(classes.HIDDEN);
+  //el.filters.sandbox.container.classList.add(classes.HIDDEN);
   el.filters.inputs.chemicalGroup.innerHTML = "";
   el.filters.inputs.chemical.innerHTML = "";
   resetChemicalGroupIsSet();
@@ -157,8 +167,6 @@ export async function initializePageText() {
 
   el.filters.sandbox.openButton.innerHTML =
     translations.filters.sandbox.openButton;
-  el.filters.sandbox.closeButton.innerHTML =
-    translations.filters.sandbox.closeButton;
   el.filters.sandbox.title.innerHTML = translations.filters.sandbox.title;
   el.filters.sandbox.referenceLineTitle.innerHTML =
     translations.filters.sandbox.referenceLineTitle;

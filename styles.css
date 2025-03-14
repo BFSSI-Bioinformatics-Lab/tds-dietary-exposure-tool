@@ -33,6 +33,9 @@
   --onTertiary: #333333;
   --link: #284162;
   --headerTitleColor: #000000;
+
+  --warningTooltipBackground: #ffe680;
+  --warningTooltipBorderColour: #cc9900;
   
   --detected: #C5705D;
   --notDetected: #41B3A2;
@@ -92,6 +95,12 @@ body {
 
   .btn {
       font-size: calc(0.7em + 1vw) !important;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  #sandbox-content {
+    display: inline !important;
   }
 }
 
@@ -291,26 +300,6 @@ Sandbox
 */
 
 #sandbox-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(50rem, 70%);
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  background-color: var(--surface);
-  border-radius: var(--borderRadius);
-  border: 2px solid var(--primary);
-  padding: 3rem;
-  box-shadow:
-    rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px,
-    rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px,
-    rgba(0, 0, 0, 0.09) 0px -3px 5px;
-
   #sandbox-header {
     display: flex;
     flex-direction: row;
@@ -320,13 +309,6 @@ Sandbox
 
   .sandbox-button {
     padding: 0.3rem 0.5rem;
-    background-color: #ffffff;
-    border: 0.1rem solid #ccd1d1;
-    /* align-self: flex-end; */
-  }
-
-  .sandbox-button:hover {
-    background-color: #ccd1d1;
   }
 
   #sandbox-content {
@@ -339,6 +321,7 @@ Sandbox
       flex-direction: column;
       gap: 1rem;
       min-width: 10.5rem;
+      padding: 10px 0;
     }
   }
 
@@ -491,8 +474,6 @@ About Table
 */
 
 #about-container {
-  #about-title {
-  }
   #about-table-container {
     max-height: 35rem;
     overflow: auto;
@@ -619,6 +600,33 @@ About Table
 }
 
 /* =================================================== */
+/* ======== Popup Modals ============================= */
+
+.modal {
+  --bs-modal-bg: var(--surface);
+  --bs-modal-header-border-color: var(--primaryBorderColour);
+  --bs-modal-footer-border-color: var(--primaryBorderColour);
+}
+
+.modal-content {
+  --bs-modal-border-color: var(--primary);
+  --bs-modal-border-width: 2px;
+}
+
+/* The "X" button on the popup */
+.popupExitBtnIcon {
+  color: var(--secondary);
+}
+
+.modal .btn-close {
+  --bs-btn-close-bg: none;
+}
+
+.modal-dialog {
+  max-width: 700px;
+}
+
+/* =================================================== */
 /* =========== Collapsibles/Accordions================= */
 .accordion {
   --bs-accordion-color: var(--fontColour);
@@ -675,6 +683,11 @@ About Table
   border-style: solid;
   color: var(--onTertiary);
   text-align: left;
+}
+
+.warning-tooltip .tooltip-inner {
+  background: var(--warningTooltipBackground) !important;
+  border-color: var(--warningTooltipBorderColour) !important;
 }
 
 .tooltip-arrow {

@@ -413,50 +413,8 @@ Themes[ThemeNames.Light] = {
   notTested: "#cc9900",
   unknown: "#cccccc",
 
-  graphColours: [
-      "#26374a",
-      "#335075",
-      "#d7faff",
-      "#444444",
-      "#753350",
-      "#269abc",
-      "#3B4B5C",
-      "#476182",
-      "#c1e1e5",
-      "#565656",
-      "#824761",
-      "#228aa9",
-      "#515F6E",
-      "#5b7290",
-      "#acc8cc",
-      "#696969",
-      "#905b72",
-      "#1e7b96",
-      "#677380",
-      "#70849e",
-      "#96afb2",
-      "#7c7c7c",
-      "#9e7084",
-      "#1a6b83",
-      "#7C8792",
-      "#8496ac",
-      "#819699",
-      "#8e8e8e",
-      "#ac8496",
-      "#165c70",
-      "#929BA4",
-      "#99a7ba",
-      "#6b7d7f",
-      "#a1a1a1",
-      "#ba99a7",
-      "#134d5e",
-      "#A8AFB6",
-      "#adb9c7",
-      "#566466",
-      "#b4b4b4",
-      "#c7adb9",
-      "#0f3d4b"
-  ]
+  warningTooltipBackground: "#ffe680",
+  warningTooltipBorderColour: "#cc9900"
 };
 
 Themes[ThemeNames.Dark] = {
@@ -491,50 +449,8 @@ Themes[ThemeNames.Dark] = {
   notTested: "#cc9900",
   unknown: "#cccccc",
 
-  graphColours: [
-      "#26374a",
-      "#335075",
-      "#d7faff",
-      "#444444",
-      "#753350",
-      "#269abc",
-      "#3B4B5C",
-      "#476182",
-      "#c1e1e5",
-      "#565656",
-      "#824761",
-      "#228aa9",
-      "#515F6E",
-      "#5b7290",
-      "#acc8cc",
-      "#696969",
-      "#905b72",
-      "#1e7b96",
-      "#677380",
-      "#70849e",
-      "#96afb2",
-      "#7c7c7c",
-      "#9e7084",
-      "#1a6b83",
-      "#7C8792",
-      "#8496ac",
-      "#819699",
-      "#8e8e8e",
-      "#ac8496",
-      "#165c70",
-      "#929BA4",
-      "#99a7ba",
-      "#6b7d7f",
-      "#a1a1a1",
-      "#ba99a7",
-      "#134d5e",
-      "#A8AFB6",
-      "#adb9c7",
-      "#566466",
-      "#b4b4b4",
-      "#c7adb9",
-      "#0f3d4b"
-  ]
+  warningTooltipBackground: "#ffe680",
+  warningTooltipBorderColour: "#cc9900"
 };
 
 // Primary ---> Mountain Haze Theme: https://www.canva.com/colors/color-palettes/mountain-haze/
@@ -560,9 +476,9 @@ Themes[ThemeNames.Blue] = {
   secondaryHover: "#2e8bc0",
   onSecondaryHover: "#c0dce6",
   secondaryBorderColour: "#145da0",
-  tertiary: "#abacca",
+  tertiary: "#d0d0e2",
   tertiaryBorderColour: "#7375a7",
-  onTertiary: "#ffffff",
+  onTertiary: "#333333",
   link: "#284162",
   headerTitleColor: "#333333",
 
@@ -571,50 +487,8 @@ Themes[ThemeNames.Blue] = {
   notTested: "#666699",
   unknown: "#cccccc",
 
-  graphColours: [
-      "#26374a",
-      "#335075",
-      "#d7faff",
-      "#444444",
-      "#753350",
-      "#269abc",
-      "#3B4B5C",
-      "#476182",
-      "#c1e1e5",
-      "#565656",
-      "#824761",
-      "#228aa9",
-      "#515F6E",
-      "#5b7290",
-      "#acc8cc",
-      "#696969",
-      "#905b72",
-      "#1e7b96",
-      "#677380",
-      "#70849e",
-      "#96afb2",
-      "#7c7c7c",
-      "#9e7084",
-      "#1a6b83",
-      "#7C8792",
-      "#8496ac",
-      "#819699",
-      "#8e8e8e",
-      "#ac8496",
-      "#165c70",
-      "#929BA4",
-      "#99a7ba",
-      "#6b7d7f",
-      "#a1a1a1",
-      "#ba99a7",
-      "#134d5e",
-      "#A8AFB6",
-      "#adb9c7",
-      "#566466",
-      "#b4b4b4",
-      "#c7adb9",
-      "#0f3d4b"
-  ]
+  warningTooltipBackground: "#ffcc99",
+  warningTooltipBorderColour: "#ff9933"
 };
 
 // ############################################################
@@ -772,11 +646,17 @@ const LangEN = {
   "websiteTabTitle": "Canadian Total Diet Study 2008-2023 Dietary Exposure Tool",
   "changeLanguage": "Français",
   "changeLanguageValue": language.FR,
+  "close": "Close",
 
   themes: {
     [ThemeNames.Light]: "Light",
     [ThemeNames.Dark]: "Dark",
     [ThemeNames.Blue]: "Blue"
+  },
+
+  errorMsgs: {
+    notANumber: "Please enter a valid number",
+    isNegative: "Please enter a positive number"
   },
 
   header: {
@@ -1436,6 +1316,12 @@ const LangFR = {
   "websiteTabTitle": "Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023",
   "changeLanguage": "English",
   "changeLanguageValue": language.EN,
+  "close": "Fermer",
+
+  errorMsgs: {
+    notANumber: "Veuillez entrer un nombre",
+    isNegative: "Veuillez entrer un nombre positif"
+  },
 
   themes: {
     [ThemeNames.Light]: "Clair",

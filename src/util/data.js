@@ -8,6 +8,56 @@ import {
   getTranslations
 } from "../const.js";
 
+
+// NumberTool: Tools for handling with numbers
+export class NumberTool {
+  // isNumber(num): Checks if 'num' is a number
+  static isNumber(num) {
+      return !Number.isNaN(num);
+  }
+
+  // isNegativeNumber(num): Checks if 'num' is a negative number
+  static isNegative(num) {
+      return (this.isNumber(num) && num < 0);
+  }
+
+  // isNonNegativeNumber(num): Checks if 'num' is a non-negative number
+  static isNonNegativeNumber(num) {
+      return (this.isNumber(num) && num >= 0);
+  }
+
+  // isInteger(num): Checks if 'num' is an integer
+  static isInteger(num) {
+      return Number.isInteger(num);
+  }
+
+  // isNonNegativeInteger: Checks if 'num' is a non-negative integer
+  static isNonNegativeInteger(num) {
+      return (this.isNonNegativeNumber(num) && Number.isInteger(parseFloat(num)));
+  }
+
+  // hasCond(): Checks if there exists a number that satisfies condition 'cond'
+  static hasCond(cond) {
+      let result = false;
+      for (var i = 1; i < arguments.length; ++i) {
+          result ||= cond(arguments[i]);
+      }
+
+      return result;
+  }
+
+  // hasNegative(): Checks if there exists a negative number in the arguments
+  static hasNegative() {
+      return this.hasCond(this.isNegative);
+  }
+
+  // hasNonNegative(): Checks if there exists a non-negative number in the arguments
+  static hasNonNegative() {
+      return this.hasCond(this.isNonNegativeNumber);
+  }
+}
+
+
 /**
  * Return domain specific age-sex group, age group, and sex group from age-sex group found in raw consumption entry
  */

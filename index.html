@@ -312,67 +312,78 @@
   
   
       -->
-  
-      <div id="sandbox-container" class="hidden">
-        <div id="sandbox-header">
-          <div id="sandbox-title" class="bold"></div>
-          <button id="sandbox-close-button" class="sandbox-button"></button>
-        </div>
-  
-        <div id="sandbox-subtitle"></div>
-  
-        <div id="sandbox-content">
-          <div id="reference-line-container" class="sandbox-item">
-            <div id="reference-line-title" class="bold sandbox-item-title"></div>
-            <div class="filters-container">
-              <div class="filter hidden">
-                <label
-                  id="filter-reference-line-title"
-                  for="filter-reference-line-select"
-                ></label>
-                <input id="filter-reference-line-select" type="number" />
-              </div>
+
+      <div class="modal fade" id="sandbox-modal" tabindex="-1" aria-labelledby="alertPopupTitle" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h1 class="modal-title fs-5" id="sandbox-title">Some title for the alert popup</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times fa-lg popupExitBtnIcon"></i>
+              </button>
+              
             </div>
-          </div>
-  
-          <div class="border"></div>
-  
-          <div id="override-container" class="sandbox-item">
-            <div id="override-title" class="bold sandbox-item-title"></div>
-            <div id="override-subtitle"></div>
-            <div class="filters-container">
-              <div class="filter hidden">
-                <label
-                  id="filter-override-food-title"
-                  for="filter-override-food-select"
-                ></label>
-                <select required id="filter-override-food-select"></select>
+            <div class="modal-body" id="sandbox-container">
+
+              <div id="sandbox-subtitle"></div>
+
+              <div id="sandbox-content">
+                <div id="reference-line-container" class="sandbox-item">
+                  <div id="reference-line-title" class="bold sandbox-item-title"></div>
+                  <div class="filters-container">
+                    <div class="filter hidden">
+                      <label
+                        id="filter-reference-line-title"
+                        for="filter-reference-line-select"
+                      ></label>
+                      <input id="filter-reference-line-select" type="number" />
+                    </div>
+                  </div>
+                </div>
+        
+                <div class="border"></div>
+        
+                <div id="override-container" class="sandbox-item">
+                  <div id="override-title" class="bold sandbox-item-title"></div>
+                  <div id="override-subtitle"></div>
+                  <div class="filters-container">
+                    <div class="filter hidden">
+                      <label
+                        id="filter-override-food-title"
+                        for="filter-override-food-select"
+                      ></label>
+                      <select required id="filter-override-food-select"></select>
+                    </div>
+                    <div class="filter hidden">
+                      <label
+                        id="filter-override-value-title"
+                        for="filter-override-value-select"
+                      ></label>
+                      <input id="filter-override-value-select" type="number" />
+                    </div>
+                  </div>
+                  <button id="override-add-button" class="sandbox-button btn btn-primary"></button>
+                  <div id="overrides-list-container"></div>
+                </div>
+        
+                <div class="border"></div>
+        
+                <div id="show-suppressed-container" class="sandbox-item">
+                  <div id="show-suppressed-title" class="bold sandbox-item-title"></div>
+                  <div id="show-suppressed-subtitle"></div>
+                  <div class="filters-container">
+                    <div class="filter hidden">
+                      <button
+                        type="button"
+                        id="filter-show-suppressed-button"
+                        class="sandbox-button btn btn-primary"
+                      ></button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="filter hidden">
-                <label
-                  id="filter-override-value-title"
-                  for="filter-override-value-select"
-                ></label>
-                <input id="filter-override-value-select" type="number" />
-              </div>
-            </div>
-            <button id="override-add-button" class="sandbox-button"></button>
-            <div id="overrides-list-container"></div>
-          </div>
-  
-          <div class="border"></div>
-  
-          <div id="show-suppressed-container" class="sandbox-item">
-            <div id="show-suppressed-title" class="bold sandbox-item-title"></div>
-            <div id="show-suppressed-subtitle"></div>
-            <div class="filters-container">
-              <div class="filter hidden">
-                <button
-                  type="button"
-                  id="filter-show-suppressed-button"
-                  class="sandbox-button"
-                ></button>
-              </div>
+
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { classes, el } from "./const.js";
-import { getTranslations } from "../const.js";
+import { getTranslations, Translation } from "../const.js";
 import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
@@ -20,11 +20,23 @@ import {
   getOverrideText,
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
+import { NumberTool } from "../util/data.js";
 import { tdsData } from "../data/dataTranslator.js";
 
 
 let ChemicalGroupIsSet = false;
 let ChemicalIsSet = false;
+
+const InputChecks = {
+  ReferenceLine: [
+    [(input) => { return input === "" || !NumberTool.isNumber(input) }, Translation.translate("errorMsgs.notANumber")],
+    [(input) => { return NumberTool.isNegative(input) }, Translation.translate("errorMsgs.isNegative")]
+  ],
+
+  OverrideValue: [
+    [(input) => { return input === "" || !NumberTool.isNumber(input) }, Translation.translate("errorMsgs.notANumber")]
+  ]
+}
 
 
 /**
@@ -161,6 +173,56 @@ function displayNonChemFilters() {
   }
 }
 
+// displayErrorTooltip(element, text): Displays the tooltip when there is an error
+function displayErrorTooltip(element, text, tooltipPlacement = "bottom") {
+  d3.select(element)
+    .attr("title", text)
+    .attr("data-bs-html", "true")
+    .attr("data-toggle", "tooltip")
+    .attr("data-placement", "right");
+
+  let inputElement = $(element);
+  inputElement.tooltip({placement: tooltipPlacement, container: "body", trigger: "manual"});
+  inputElement.tooltip("show");
+
+  const tooltipId = d3.select(element).attr("aria-describedby");
+  if (!tooltipId) return;
+
+  d3.select(`#${tooltipId}`).classed("warning-tooltip", true);
+}
+
+// displayError(element, checkKey): Displays the error for input element
+function displayError(element, checkKey, tooltipPlacement = "bottom") {
+  let errorMsgs = [];
+  const checks = InputChecks[checkKey];
+
+  // get all the error messages
+  for (const checkData of checks) {
+    const checkFunc = checkData[0];
+
+    if (checkFunc(element.value)) {
+      const errorMsg = checkData[1];
+      errorMsgs.push(errorMsg);
+    }
+  }
+
+  let text = "<ul>"
+  for (const msg of errorMsgs) {
+    text += `<li>${msg}</li>`
+  }
+  text += "</ul>"
+
+  let inputElement = $(element);
+  inputElement.tooltip('dispose');
+
+  // display the error
+  if (errorMsgs.length > 0) {
+    displayErrorTooltip(element, text, tooltipPlacement);
+  }
+
+  return errorMsgs;
+}
+
 /**
  * Initialize all the event listeners related to the filters.
  */
@@ -189,7 +251,6 @@ function addEventListenersToFilters() {
     el.filters.inputs.years,
     el.filters.inputs.lod,
     el.filters.inputs.consumptionUnits,
-    el.filters.inputs.referenceLine,
     ...Object.values(el.graphs[GraphTypes.RBASG].filters),
     ...Object.values(el.graphs[GraphTypes.RBF].filters),
     ...Object.values(el.graphs[GraphTypes.RBFG].filters),
@@ -200,6 +261,19 @@ function addEventListenersToFilters() {
         displayGraph(getFilteredTdsData());
       }
     });
+  });
+
+  el.filters.inputs.referenceLine.addEventListener('input', (event) => {
+    const errorMsgs = displayError(el.filters.inputs.referenceLine, "ReferenceLine"); 
+
+    if (errorMsgs.length == 0 && selectionsCompleted()) {
+      showFilters();
+      displayGraph(getFilteredTdsData());
+    }
+  });
+
+  el.filters.inputs.overrideValue.addEventListener("input", (event) => {
+    displayError(el.filters.inputs.overrideValue, "OverrideValue", "right"); 
   });
 
   el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
