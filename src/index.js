@@ -163,15 +163,15 @@ class App {
         const toolTipId = ToolTipIdDict.title;
         this.removeToolTips(`#${toolTipId}`);
 
+        showFilters();
+        displayGraph(getFilteredTdsData());
+
         if (this.activePage == GraphTypes.RBFG) {
-            const toolTipElements = d3.selectAll([el.graphs.titleContainer]);
+            const toolTipElements = d3.select(`.${classes.GRAPH_LEGEND_TITLE}`);
             const toolTipTextFunc = (data) => { return Translation.translateWebNotes(`graphs.${GraphTypes.RBFG}.titleInfo`); };
 
             this.drawToolTips(ToolTipIdDict.title, toolTipElements, toolTipTextFunc);
         }
-
-        showFilters();
-        displayGraph(getFilteredTdsData());
     }
 
     // setSelectedGraph(selectedOpt, activeOpt, data, onSelected): Sets the selected graph choice to be
