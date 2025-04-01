@@ -627,6 +627,41 @@ About Table
 }
 
 /* =================================================== */
+/* ======== Multiselect ============================== */
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder {
+  color: var(--secondary);
+  background-color: var(--surface);
+  transition: var(--defaultTransition);
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder:hover {
+  color: var(--secondaryHover);
+}
+
+.btn-light {
+  --bs-btn-bg: var(--onSecondary);
+  --bs-btn-color: var(--secondary);
+  --bs-btn-border-color: var(--secondaryBorderColour);
+  --bs-btn-active-bg: var(--surface);
+  --bs-btn-hover-color: var(--secondaryHover);
+  --bs-btn-hover-bg: var(--onSecondaryHover);
+}
+
+.btn.show {
+  color: var(--secondaryHover);
+}
+
+.bootstrap-select .form-control {
+  margin-bottom: 15px;
+}
+
+.bootstrap-select .no-results {
+  background-color: var(--surface);
+  color: var(--error);
+}
+
+/* =================================================== */
 /* =========== Collapsibles/Accordions================= */
 .accordion {
   --bs-accordion-color: var(--fontColour);
