@@ -843,6 +843,7 @@ About Table
   background-color: var(--primary) !important;
   color: var(--onPrimary);
   text-align: center !important;
+  vertical-align: middle;
 }
 
 
