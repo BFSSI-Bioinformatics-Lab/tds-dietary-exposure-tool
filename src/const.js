@@ -1355,12 +1355,12 @@ const LangFR = {
       selectGraphType: "Sélectionnez le type de graphique:",
       selectChemical: "Sélectionnez le produit chimique:",
       chemicalGroup: "Groupe chimique",
-      chemical: "Chimique",
+      chemical: "Produit chimique",
       years: "Année(s)",
       multiSelSubtitle: "Multi-sélection avec Ctrl",
-      multiSelAllSubtitle: "Select all with Ctrl-a (TODO)",
+      multiSelAllSubtitle: "Tout sélectionner avec Ctrl-a",
       lod: "Traitement des valeurs <LD",
-      lodSubtitle: "Période LD : ",
+      lodSubtitle: "Fourchette LD: ",
       units: "Unités",
       ageGroup: "Groupes d'âge",
       domain: "Voir par",
@@ -1488,7 +1488,7 @@ const LangFR = {
       calculations: "Calculs d’exposition alimentaire",
     },
     headers: {
-      [DataTableHeader.CHEMICAL]: "Chimique",
+      [DataTableHeader.CHEMICAL]: "Produit chimique",
       [DataTableHeader.AGE_SEX_GROUP]: "Groupe âge-sexe",
       [DataTableHeader.FOOD_GROUP]: "Groupe d’aliments d’EAT",
       [DataTableHeader.COMPOSITE_NAME]: "Nom de l'aliment",
@@ -1502,11 +1502,11 @@ const LangFR = {
       [DataTableHeader.TREATMENT]: "Traitement de <LD",
       [DataTableHeader.MODIFIED]: "Valeurs modifiées par l'utilisateur",
       [DataTableHeader.FLAGGED]:
-        "Drapeau 'E' : Marginal - CV > 16,6 % mais CV < 33,3 %",
+        "Indicateur 'E' : Marginal - CV > 16,6 % mais CV < 33,3 %",
       [DataTableHeader.SUPPRESSED]:
-        "Drapeau 'F' : Inacceptable, données supprimées",
+        "Indicateur 'F' : Inacceptable, données supprimées",
       [DataTableHeader.INCLUDED_SUPPRESSED]:
-        "Valeurs incluses avec CV du drapeau 'F' > 33,3%.",
+        "Valeurs incluses avec CV du indicateur 'F' > 33,3%",
     },
     values: {
       occurrence: "Occurrence",
