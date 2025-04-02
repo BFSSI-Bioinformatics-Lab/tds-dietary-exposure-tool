@@ -45,6 +45,7 @@ export function updateTable(selector, columnInfo, data, dataTableKwargs = undefi
     const dataTableTranslations = Translation.translate("dataTableTemplate", { returnObjects: true });
     if (dataTableKwargs === undefined) {
       dataTableKwargs = {
+        autoWidth: false,
         language: dataTableTranslations,
         columns: columnInfo,
         scrollCollapse: true,
@@ -145,6 +146,27 @@ export async function displayDataTable(data, filters) {
   });
 
   updateTable(tableId, tableColInfo, data);
+
+  // adjust the column widths
+  const tableColInfoLen = tableColInfo.length;
+  const columnWidths = [];
+
+  for (let i = 0; i < tableColInfoLen; ++i) {
+    columnWidths.push("250px");
+  }
+
+  columnWidths[tableColInfoLen - 1] = "500px";
+  columnWidths[tableColInfoLen - 2] = "500px";
+  columnWidths[tableColInfoLen - 3] = "500px";
+
+  for (let i = 0; i < tableColInfoLen; ++i) {
+    const columnWidth = columnWidths[i];
+    d3.selectAll(`.dataTable th:nth-child(${i + 1})`)
+      .style("min-width", columnWidth);
+
+    d3.selectAll(`.dataTable td:nth-child(${i + 1})`)
+      .style("min-width", columnWidth);
+  }
 }
 
 /*
