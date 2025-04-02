@@ -150,7 +150,8 @@ export async function initializePageText() {
     (multi) =>
       (multi.innerHTML = translations.filters.titles.multiSelAllSubtitle),
   );
-  el.filters.titles.lod.innerHTML = translations.filters.titles.lod;
+
+  el.filters.titles.lod.innerText = Translation.translate("filters.titles.lod");
   el.filters.titles.lodSubtitle.innerHTML =
     translations.filters.titles.lodSubtitle;
   el.filters.titles.consumptionUnits.innerHTML =
