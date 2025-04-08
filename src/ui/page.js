@@ -168,6 +168,8 @@ export async function initializePageText() {
 
   el.filters.sandbox.openButton.innerHTML =
     translations.filters.sandbox.openButton;
+  el.filters.sandbox.resetButton.innerText = Translation.translate("filters.sandbox.resetButton");
+  el.filters.resetButton.innerText = Translation.translate("filters.titles.reset");
   el.filters.sandbox.title.innerHTML = translations.filters.sandbox.title;
   el.filters.sandbox.referenceLineTitle.innerHTML =
     translations.filters.sandbox.referenceLineTitle;

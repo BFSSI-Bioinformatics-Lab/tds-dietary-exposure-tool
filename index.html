@@ -216,12 +216,12 @@
             id="filter-chemical-group-title"
             for="filter-chemical-group-select"
           ></label>
-          <select required id="filter-chemical-group-select"></select>
+          <select class="form-select" required id="filter-chemical-group-select"></select>
         </div>
   
         <div class="filter">
           <label id="filter-chemical-title" for="filter-chemical-select"></label>
-          <select required id="filter-chemical-select"></select>
+          <select class="form-select" required id="filter-chemical-select"></select>
         </div>
   
         <div class="filter hidden">
@@ -233,7 +233,7 @@
   
         <div class="filter hidden">
           <label id="filter-lod-title" for="filter-lod-select"></label>
-          <select id="filter-lod-select"></select>
+          <select class="form-select" id="filter-lod-select"></select>
           <div id="filter-lod-subtitle" class="small"></div>
         </div>
   
@@ -256,7 +256,7 @@
             id="filter-rbf-age-sex-group-title"
             for="filter-rbf-age-sex-group-select"
           ></label>
-          <select id="filter-rbf-age-sex-group-select"></select>
+          <select class="form-select" id="filter-rbf-age-sex-group-select"></select>
         </div>
   
         <div class="filter hidden filter-additional filter-additional-rbfg">
@@ -274,7 +274,7 @@
             id="filter-consumption-units-title"
             for="filter-consumption-units-select"
           ></label>
-          <select id="filter-consumption-units-select"></select>
+          <select class="form-select" id="filter-consumption-units-select"></select>
         </div>
   
         <div class="hidden border filter-border"></div>
@@ -286,7 +286,7 @@
             id="filter-rbasg-domain-title"
             for="filter-rbasg-domain-select"
           ></label>
-          <select id="filter-rbasg-domain-select"></select>
+          <select class="form-select" id="filter-rbasg-domain-select"></select>
         </div>
   
         <div class="filter hidden filter-additional filter-additional-rbf">
@@ -294,7 +294,7 @@
             id="filter-rbf-sort-by-title"
             for="filter-rbf-sort-by-select"
           ></label>
-          <select id="filter-rbf-sort-by-select"></select>
+          <select class="form-select" id="filter-rbf-sort-by-select"></select>
         </div>
   
         <div class="filter hidden filter-additional filter-additional-rbfg">
@@ -302,11 +302,15 @@
             id="filter-rbfg-range-title"
             for="filter-rbfg-range-select"
           ></label>
-          <select id="filter-rbfg-range-select"></select>
+          <select class="form-select" id="filter-rbfg-range-select"></select>
         </div>
   
         <div class="filter hidden">
-          <button id="sandbox-open-button"></button>
+          <button class="btn btn-primary filter-button" id="sandbox-open-button"></button>
+        </div>
+
+        <div class="filter hidden">
+          <button class="btn btn-danger filter-button" id="filter-reset-button"></button>
         </div>
       </div>
   
@@ -389,6 +393,9 @@
                 </div>
               </div>
 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" id="sandbox-reset-button"></button>
             </div>
           </div>
         </div>

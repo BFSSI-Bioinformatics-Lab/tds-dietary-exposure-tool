@@ -280,7 +280,7 @@ Filters
       cursor: pointer;
     }
   }
-  #sandbox-open-button {
+  .filter-button {
     margin-top: 1rem;
   }
 
@@ -613,6 +613,10 @@ About Table
   --bs-modal-border-width: 2px;
 }
 
+.modal-footer {
+  justify-content: flex-start;
+}
+
 /* The "X" button on the popup */
 .popupExitBtnIcon {
   color: var(--secondary);
@@ -624,6 +628,24 @@ About Table
 
 .modal-dialog {
   max-width: 1000px;
+}
+
+/* =================================================== */
+/* ======== Form Selection =========================== */
+
+.form-select option {
+  transition: var(--defaultTransition);
+  background-color: var(--surface);
+  color: var(--fontColour)
+}
+
+.form-select:focus {
+  box-shadow: 0px 0px 10px var(--primary);
+}
+
+.form-select option:hover {
+  background-color: var(--primary);
+  color: var(--onPrimary);
 }
 
 /* =================================================== */
