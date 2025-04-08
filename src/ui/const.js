@@ -114,9 +114,11 @@ export const el = {
       overrideValue: document.getElementById("filter-override-value-title"),
     },
     borders: document.querySelectorAll("." + classes.FILTER_BORDER),
+    resetButton: document.getElementById("filter-reset-button"),
     sandbox: {
       openButton: document.getElementById("sandbox-open-button"),
       closeButton: document.getElementById("sandbox-close-button"),
+      resetButton: document.getElementById("sandbox-reset-button"),
       container: document.getElementById("sandbox-container"),
       title: document.getElementById("sandbox-title"),
       subtitle: document.getElementById("sandbox-subtitle"),

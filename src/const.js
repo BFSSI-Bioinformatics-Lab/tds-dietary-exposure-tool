@@ -704,6 +704,7 @@ const LangEN = {
       referenceLine: "Limit",
       overrideFood: "Food",
       overrideValue: "New Value",
+      reset: "Reset"
     },
     placeholders: {
       select: "Select",
@@ -734,6 +735,7 @@ const LangEN = {
     sandbox: {
       openButton: "Modify Graph/Values",
       closeButton: "Close",
+      resetButton: "Reset",
       title: "Modify Graph/Values",
       subtitle:
         "Any new values that are added will apply to all three graphs.",
@@ -1370,6 +1372,7 @@ const LangFR = {
       referenceLine: "Limite",
       overrideFood: "Aliment",
       overrideValue: "Nouvelle valeur",
+      reset: "Réinitialiser"
     },
     placeholders: {
       select: "Sélectionner",
@@ -1400,6 +1403,7 @@ const LangFR = {
     sandbox: {
       openButton: "Modifier le graphique/les valeurs",
       closeButton: "Fermer",
+      resetButton: "Réinitialiser",
       title: "Modifier le graphique/les valeurs",
       subtitle:
         "Toute nouvelle valeur ajoutée s'appliquera aux trois graphiques.",
