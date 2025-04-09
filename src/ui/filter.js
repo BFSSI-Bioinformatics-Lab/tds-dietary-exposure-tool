@@ -29,12 +29,12 @@ let ChemicalIsSet = false;
 
 const InputChecks = {
   ReferenceLine: [
-    [(input) => { return input === "" || !NumberTool.isNumber(input) }, Translation.translate("errorMsgs.notANumber")],
-    [(input) => { return NumberTool.isNegative(input) }, Translation.translate("errorMsgs.isNegative")]
+    [(input) => { return input === "" || !NumberTool.isNumber(input) }, () => Translation.translate("errorMsgs.notANumber")],
+    [(input) => { return NumberTool.isNegative(input) }, () => Translation.translate("errorMsgs.isNegative")]
   ],
 
   OverrideValue: [
-    [(input) => { return input === "" || !NumberTool.isNumber(input) }, Translation.translate("errorMsgs.notANumber")]
+    [(input) => { return input === "" || !NumberTool.isNumber(input) }, () => Translation.translate("errorMsgs.notANumber")]
   ]
 }
 
@@ -191,6 +191,12 @@ function displayErrorTooltip(element, text, tooltipPlacement = "bottom") {
   d3.select(`#${tooltipId}`).classed("warning-tooltip", true);
 }
 
+// clearError(element): Clears the errors for an input element
+function clearError(element) {
+  let inputElement = $(element);
+  inputElement.tooltip('dispose');
+}
+
 // displayError(element, checkKey): Displays the error for input element
 function displayError(element, checkKey, tooltipPlacement = "bottom") {
   let errorMsgs = [];
@@ -201,7 +207,7 @@ function displayError(element, checkKey, tooltipPlacement = "bottom") {
     const checkFunc = checkData[0];
 
     if (checkFunc(element.value)) {
-      const errorMsg = checkData[1];
+      const errorMsg = checkData[1]();
       errorMsgs.push(errorMsg);
     }
   }
@@ -212,8 +218,7 @@ function displayError(element, checkKey, tooltipPlacement = "bottom") {
   }
   text += "</ul>"
 
-  let inputElement = $(element);
-  inputElement.tooltip('dispose');
+  clearError(element);
 
   // display the error
   if (errorMsgs.length > 0) {
@@ -233,6 +238,8 @@ function addEventListenersToFilters() {
 
   el.filters.sandbox.resetButton.addEventListener("click", () => {
     clearSandbox();
+    clearError(el.filters.inputs.referenceLine);
+    clearError(el.filters.inputs.overrideValue);
     displayGraph(getFilteredTdsData());
   });
 
