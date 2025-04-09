@@ -34,7 +34,8 @@ const InputChecks = {
   ],
 
   OverrideValue: [
-    [(input) => { return input === "" || !NumberTool.isNumber(input) }, () => Translation.translate("errorMsgs.notANumber")]
+    [(input) => { return input === "" || !NumberTool.isNumber(input) }, () => Translation.translate("errorMsgs.notANumber")],
+    [(input) => { return NumberTool.isNegative(input) }, () => Translation.translate("errorMsgs.isNegative")]
   ]
 }
 
@@ -197,9 +198,9 @@ function clearError(element) {
   inputElement.tooltip('dispose');
 }
 
-// displayError(element, checkKey): Displays the error for input element
-function displayError(element, checkKey, tooltipPlacement = "bottom") {
-  let errorMsgs = [];
+// getErrorMsgs(element, checkKey): Retrieves the error messages for a certain input
+function getErrorMsgs(element, checkKey) {
+  const errorMsgs = [];
   const checks = InputChecks[checkKey];
 
   // get all the error messages
@@ -211,6 +212,13 @@ function displayError(element, checkKey, tooltipPlacement = "bottom") {
       errorMsgs.push(errorMsg);
     }
   }
+
+  return errorMsgs;
+}
+
+// displayError(element, checkKey): Displays the error for input element
+function displayError(element, checkKey, tooltipPlacement = "bottom") {
+  const errorMsgs = getErrorMsgs(element, checkKey);
 
   let text = "<ul>"
   for (const msg of errorMsgs) {
@@ -294,7 +302,9 @@ function addEventListenersToFilters() {
 
   el.filters.sandbox.addOverrideButton.addEventListener("click", () => {
     const { override } = getActiveFilters();
-    if (override.composite && !isNaN(override.occurrence)) {
+    const errorMsgs = getErrorMsgs(el.filters.inputs.overrideValue, "OverrideValue");
+
+    if (errorMsgs.length == 0) {
       Array.from(el.filters.inputs.overrideFood.options).find(
         (option) =>
           JSON.parse(option.value || null)?.composite == override.composite,
@@ -327,6 +337,7 @@ function addEventListenersToFilters() {
       el.filters.sandbox.overridesList.appendChild(itemContainer);
       el.filters.inputs.overrideValue.value = null;
     }
+
     displayGraph(getFilteredTdsData());
   });
 
