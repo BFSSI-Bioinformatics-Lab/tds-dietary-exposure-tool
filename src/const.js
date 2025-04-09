@@ -1333,7 +1333,7 @@ const LangFR = {
 
   header: {
     title:
-      "<b>Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023</b> de la Direction de l'alimentation et de la nutrition de Santé Canada",
+      "<b>Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023</b> de la Direction des aliments et de la nutrition de Santé Canada",
     information: {
       moreInfoButton: "Sources de données",
       moreInfoContent: [
@@ -1510,7 +1510,7 @@ const LangFR = {
       [DataTableHeader.SUPPRESSED]:
         "Indicateur 'F' : Inacceptable, données supprimées",
       [DataTableHeader.INCLUDED_SUPPRESSED]:
-        "Valeurs incluses avec CV du indicateur 'F' > 33,3%",
+        "Valeurs incluses avec CV indicateur 'F' > 33,3%",
     },
     values: {
       occurrence: "Occurrence",
