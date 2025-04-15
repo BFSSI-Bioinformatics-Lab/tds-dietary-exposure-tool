@@ -162,8 +162,8 @@ export async function initializePageText() {
   el.filters.titles.rbfSortBy.innerHTML = translations.filters.titles.sortBy;
   el.filters.titles.rbfAgeSexGroup.innerHTML =
     translations.filters.titles.ageSexGroup;
-  el.filters.titles.rbfgAgeSexGroup.innerHTML =
-    translations.filters.titles.ageSexGroup;
+  el.filters.titles.rbfgAge.innerHTML = Translation.translate("filters.titles.age");
+  el.filters.titles.rbfgSex.innerHTML = Translation.translate("filters.titles.sex");
   el.filters.titles.rbfgRange.innerHTML = translations.filters.titles.range;
 
   el.filters.sandbox.openButton.innerHTML =

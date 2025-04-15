@@ -105,9 +105,8 @@ export const el = {
       rbasgDomain: document.getElementById("filter-rbasg-domain-title"),
       rbfAgeSexGroup: document.getElementById("filter-rbf-age-sex-group-title"),
       rbfSortBy: document.getElementById("filter-rbf-sort-by-title"),
-      rbfgAgeSexGroup: document.getElementById(
-        "filter-rbfg-age-sex-group-title",
-      ),
+      rbfgAge: document.getElementById("filter-rbfg-age-title"),
+      rbfgSex: document.getElementById("filter-rbfg-sex-title"),
       rbfgRange: document.getElementById("filter-rbfg-range-title"),
       referenceLine: document.getElementById("filter-reference-line-title"),
       overrideFood: document.getElementById("filter-override-food-title"),
@@ -179,7 +178,7 @@ export const el = {
       ),
       filters: {
         sortBy: document.getElementById("filter-rbf-sort-by-select"),
-        ageSexGroup: document.getElementById("filter-rbf-age-sex-group-select"),
+        ageSexGroup: document.getElementById("filter-rbf-age-sex-group-select")
       },
     },
 
@@ -190,9 +189,8 @@ export const el = {
       ),
       filters: {
         range: document.getElementById("filter-rbfg-range-select"),
-        ageSexGroup: document.getElementById(
-          "filter-rbfg-age-sex-group-select",
-        ),
+        age: document.getElementById("filter-rbfg-age-select"),
+        sex: document.getElementById("filter-rbfg-sex-select")
       },
     },
 
