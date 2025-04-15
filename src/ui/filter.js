@@ -18,6 +18,8 @@ import {
   getAgeSexDisplay,
   getExposureUnit,
   getOverrideText,
+  getAgeAndSex,
+  getAgeSex
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
 import { NumberTool } from "../util/data.js";
@@ -90,6 +92,30 @@ export function selectionsCompleted() {
   );
 }
 
+// getAgeSexGroup(graphType): Retrieves the age-sex group for a graph
+function getAgeSexGroup(graphType) {
+  if (!graphType) {
+    return [];
+  } else if (graphType != GraphTypes.RBFG) {
+    return Array.from(el.graphs[graphType]?.filters.ageSexGroup.selectedOptions).map((option) => option.value)
+  }
+
+  // translate the age and sex from the second graph to the corresponding age-sex group
+  const sexes = Array.from(el.graphs[GraphTypes.RBFG]?.filters.sex.selectedOptions).map((option) => option.value);
+  const ages = Array.from(el.graphs[GraphTypes.RBFG]?.filters.age.selectedOptions).map((option) => option.value);
+  const result = [];
+  
+  for (const age of ages) {
+    for (const sex of sexes) {
+      const ageSexGroup = getAgeSex(age, sex);
+      if (!(ageSexGroup in ageSexGroups)) continue;
+      result.push(ageSexGroup);
+    }
+  }
+
+  return result;
+}
+
 /**
  * Get all the currently selected filters from the user.
  * Used throughout the application for displaying other filters, executing calculations, displaying/updating graphs, etc.
@@ -119,11 +145,7 @@ export function getActiveFilters() {
           getTranslations().filters.lods[LODs.Exclude]
         ? LODs.Exclude
         : LODs[0],
-    ageSexGroups: graphType
-      ? Array.from(
-          el.graphs[graphType]?.filters.ageSexGroup.selectedOptions,
-        ).map((option) => option.value)
-      : [],
+    ageSexGroups: getAgeSexGroup(graphType),
     ageSexGroupsIsAgeGroups: graphType == GraphTypes.RBASG,
     showByAgeSexGroup:
       el.graphs[GraphTypes.RBASG].filters.domain.value ==
@@ -583,17 +605,47 @@ function displayRbasgDomainFilter() {
   });
 }
 
-function displayRbfgAgeSexGroupFilter() {
-  const ageSexGroupEl = el.graphs[GraphTypes.RBFG].filters.ageSexGroup;
-  ageSexGroupEl.innerHTML = "";
+function displayRbfgAgeGroupFilter(ages) {
+  const ageGroupEl = el.graphs[GraphTypes.RBFG].filters.age;
+  ageGroupEl.innerHTML = "";
 
-  Object.keys(ageSexGroups).forEach((asg) => {
+  for (const age of ages) {
     const oe = document.createElement("option");
-    oe.value = asg;
-    oe.text = getAgeSexDisplay(asg);
+    oe.value = age;
+    oe.text = age;
     oe.selected = true;
-    ageSexGroupEl.appendChild(oe);
-  });
+    ageGroupEl.appendChild(oe);
+  }
+}
+
+function displayRbfgSexFilter(sexes) {
+  const sexGroupEl = el.graphs[GraphTypes.RBFG].filters.sex;
+  sexGroupEl.innerHTML = "";
+
+  for (const sex of sexes) {
+    const oe = document.createElement("option");
+    oe.value = sex;
+    oe.text = Translation.translate(`misc.sexGroups.${sex}`);
+    oe.selected = true;
+    sexGroupEl.appendChild(oe);
+  }
+}
+
+function displayRbfgAgeSexGroupFilter() {
+  let ages = new Set();
+  let sexes = new Set();
+
+  for (const ageSexGroup in ageSexGroups) {
+    const ageSexGroupData = getAgeAndSex(ageSexGroup);
+    ages.add(ageSexGroupData[0]);
+    sexes.add(ageSexGroupData[1]);
+  }
+
+  ages = Array.from(ages);
+  sexes = Array.from(sexes);
+
+  displayRbfgAgeGroupFilter(ages);
+  displayRbfgSexFilter(sexes);
 }
 
 function displayRbfgRangeFilter() {
@@ -811,7 +863,6 @@ export function getFilteredTdsData() {
   });
 
   filteredTdsData.contaminant = filteredContaminantData;
-
   return filteredTdsData;
 }
 
