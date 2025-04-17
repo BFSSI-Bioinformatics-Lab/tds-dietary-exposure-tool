@@ -96,9 +96,7 @@ export function displayGraph(data) {
       hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBF].title}, ${
-        filters.chemical
-      }, ${getAgeSexDisplay(filters.ageSexGroups[0])}`,
+      graphTitle: Translation.translate(`graphs.${GraphTypes.RBF}.title`, {chemical: filters.chemical, ageSex: getAgeSexDisplay(filters.ageSexGroups[0]), selectedYears: filters.years.join(", ")}),
       colorLegendMappings: [
         colorLegendMapping.foodGroup,
         colorLegendMapping.sexGroupText,
@@ -110,9 +108,7 @@ export function displayGraph(data) {
       hasReferenceLine: false,
     },
     [GraphTypes.RBFG]: {
-      graphTitle: `${getTranslations().graphs[GraphTypes.RBFG].title}, ${
-        filters.chemical
-      }`,
+      graphTitle: Translation.translate(`graphs.${GraphTypes.RBFG}.title`, {chemical: filters.chemical, selectedYears: filters.years.join(", ")}),
       colorLegendMappings: [
         colorLegendMapping.foodGroup,
         colorLegendMapping.sexGroupText,

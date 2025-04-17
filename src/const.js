@@ -797,10 +797,10 @@ const LangEN = {
       },
     },
     [GraphTypes.RBF]: {
-      title: "Dietary Exposure Estimate by Food",
+      title: "Dietary Exposure Estimate by Food, {{ chemical }}, {{ ageSex }} Years: {{ selectedYears }}",
     },
     [GraphTypes.RBFG]: {
-      title: "Dietary Exposure Estimate by Food Group",
+      title: "Dietary Exposure Estimate by Food Group, {{ chemical }} Years: {{ selectedYears }}",
       titleInfo: [
         {text: "For more information on the food groups, see:"},
         NotePartIds.SingleLineBreak,
@@ -1463,10 +1463,10 @@ const LangFR = {
       },
     },
     [GraphTypes.RBF]: {
-      title: "Estimation de l'exposition alimentaire par aliment",
+      title: "Estimation de l'exposition alimentaire par aliment, {{ chemical }}, {{ ageSex }} Années: {{ selectedYears }}",
     },
     [GraphTypes.RBFG]: {
-      title: "Estimation de l'exposition alimentaire par groupe d'aliments",
+      title: "Estimation de l'exposition alimentaire par groupe d'aliments, {{ chemical }} Années: {{ selectedYears }}",
       titleInfo: [
         {text: "Pour plus d’informations sur les groupes d’aliments, voir:"},
         NotePartIds.SingleLineBreak,
