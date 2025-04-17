@@ -394,6 +394,7 @@ export function displayFilterText() {
   addPlaceholderToSelect(el.filters.inputs.chemical, "...");
   displayChemicals();
   displayLods();
+  displayNonChemFilters();
   displayConsumptionUnits();
   displayRbasgDomainFilter();
   displayRbfSortByFilter();
