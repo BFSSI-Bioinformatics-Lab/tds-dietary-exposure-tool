@@ -64,6 +64,7 @@ const contaminantFile = {
     "Total Diet Study Radionuclides results 2000-2020.csv",
     "Total Diet Study Radionuclides results 2021.csv",
     "Total Diet Study Radionuclides results 2022.csv",
+    "Total Diet Study Radionuclides results 2023.csv",
     "Total Diet Study Trace Elements results 1993-2018.csv",
     "Total Diet Study Volatile Organic Compounds (VOCs) results 2015_fixedGG17PD.csv",
     "2016 PFAS TDS_Public CANLINE Export w acronyms 2024-04-17.csv",
@@ -179,7 +180,7 @@ export const MeanFlag = {
   SUPPRESSED_HIGH_CV: "SUPPRESSED_HIGH_CV",
 };
 
-export const YearMax = 2022; // The maximum year the tool will consider for data
+export const YearMax = 2023; // The maximum year the tool will consider for data
 export const YearMin = 2008;
 
 export const ageGroups = {
