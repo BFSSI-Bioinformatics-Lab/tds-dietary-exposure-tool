@@ -35,6 +35,13 @@ The CSV files used by the application are from the following sources:
 - Consumption Data: [TDS 2008-2022 Consumption Tables (CCHS 2015)](https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130). Includes the “TDS Composite Descriptions” file, which maps food composites to food groups and the “Daily intake per capita, per person” and “Daily intake per capita, in kg bodyweight” files for food consumption findings. The two files are identical but they store consumption findings in different units.
 - Contaminant Occurrence Data (only data from the years 2008-2022 is used): [Trace Elements](https://open.canada.ca/data/en/dataset/83934503-cfae-4773-b258-e336896c2c53), [Radionuclides](https://open.canada.ca/data/en/dataset/062c769f-57d7-432e-9d33-1e333a87d6d0), [Bisphenol A (BPA)](https://open.canada.ca/data/en/dataset/0497695c-dd4c-42d6-8201-45d63509f416), [Polychlorinated biphenyls (PCBs)](https://open.canada.ca/data/en/dataset/b8e42fb0-98fe-4c99-935c-4c36221b1ee6), [DEHA, DEHP and other Phthalates](https://open.canada.ca/data/en/dataset/e52388ed-fb02-4292-b79c-b2f564ec1945), [Volatile Organic Chemicals (VOC)](https://open.canada.ca/data/en/dataset/66cc9542-bc08-46c9-8ebb-805d34f0e30e), [Ochratoxin A (OTA)](https://open.canada.ca/data/en/dataset/71fa9c90-f690-4928-9239-69b4ecbeccee).
 
+### Add New Data
+
+- Check file headings to match with files already in the tool.
+- Add .csv file in corresponding folder
+- Add name of .csv file in the corresponding list inside the `const.js` file
+- Change YearMax value inside `const.js` if needed (if adding new data more recent than 2023)
+
 ### Graphs
 
 For each graph, similiar steps for calculations are performed. The data is filtered and/or grouped by chemical group, chemical, age-sex group, etc. The dietary exposure estimate is calculated for each grouping by calculating the mean of all contaminant occurrence values in the grouping, and multiplying by the mean consumption for a given age-sex group $\frac{ng}{g} * \frac{g}{person/day} = \frac{ng}{person/day}$.
