@@ -227,6 +227,10 @@ export function formatRbfgToDataTable(rbfgData, filters) {
  * - An object adhering to the contract specified in stackedBar.js
  */
 export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
+  if ($.isEmptyObject(rbfgData)) {
+    return {};
+  }
+
   const contaminantUnit = Object.values(Object.values(rbfgData)[0])[0]
     .contaminantUnit;
 
