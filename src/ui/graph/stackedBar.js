@@ -17,7 +17,7 @@
  * - Generated stacked bar SVG as a string
  */
 export function getStackedBarSvg(data) {
-  if (!data) return;
+  if ($.isEmptyObject(data)) return;
   let dataExists = false;
 
   const width = 1500;

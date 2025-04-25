@@ -96,7 +96,7 @@ export function displayGraph(data) {
       hasReferenceLine: true,
     },
     [GraphTypes.RBF]: {
-      graphTitle: Translation.translate(`graphs.${GraphTypes.RBF}.title`, {chemical: filters.chemical, ageSex: getAgeSexDisplay(filters.ageSexGroups[0]), selectedYears: filters.years.join(", ")}),
+      graphTitle: Translation.translate(`graphs.${GraphTypes.RBF}.title`, {chemical: filters.chemical, ageSex: (filters.ageSexGroups[0] !== undefined) ? getAgeSexDisplay(filters.ageSexGroups[0]) : "", selectedYears: filters.years.join(", ")}),
       colorLegendMappings: [
         colorLegendMapping.foodGroup,
         colorLegendMapping.sexGroupText,

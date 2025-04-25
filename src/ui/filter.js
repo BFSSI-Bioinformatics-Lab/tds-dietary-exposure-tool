@@ -1,5 +1,5 @@
 import { classes, el } from "./const.js";
-import { getTranslations, Translation } from "../const.js";
+import { getTranslations, sexGroups, Translation } from "../const.js";
 import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
@@ -307,6 +307,46 @@ function addEventListenersToFilters() {
         displayGraph(getFilteredTdsData());
       }
     });
+  });
+
+  el.graphs[GraphTypes.RBFG].filters.age.addEventListener("change", () => {
+    const ages = Array.from(el.graphs[GraphTypes.RBFG]?.filters.age.selectedOptions).map((option) => option.value);
+    const selectedSexes = new Set(Array.from(el.graphs[GraphTypes.RBFG]?.filters.sex.selectedOptions).map((option) => option.value));
+    let availableSexes = new Set();
+    
+    // get the available sexes based off the selected age groups
+    for (const age of ages) {
+      for (const sexKey in sexGroups) {
+        const sex = sexGroups[sexKey];
+        const ageSexGroup = getAgeSex(age, sex);
+
+        if (!(ageSexGroup in ageSexGroups)) {
+          if (selectedSexes.has(sex)) {
+            selectedSexes.delete(sex);
+          }
+
+          continue;
+        }
+
+        availableSexes.add(sex);
+      }
+    }
+
+    const sexSelection = {};
+    availableSexes.forEach((sex) => {
+      sexSelection[sex] = selectedSexes.has(sex);
+    });
+
+    if (availableSexes.size == 0) {
+      availableSexes = new Set(Object.values(sexGroups));
+    }
+
+    displayRbfgSexFilter(Array.from(availableSexes), sexSelection);
+
+    if (selectionsCompleted()) {
+      showFilters();
+      displayGraph(getFilteredTdsData());
+    }
   });
 
   el.filters.inputs.referenceLine.addEventListener('input', (event) => {
@@ -619,7 +659,7 @@ function displayRbfgAgeGroupFilter(ages) {
   }
 }
 
-function displayRbfgSexFilter(sexes) {
+function displayRbfgSexFilter(sexes, selected = undefined) {
   const sexGroupEl = el.graphs[GraphTypes.RBFG].filters.sex;
   sexGroupEl.innerHTML = "";
 
@@ -627,7 +667,7 @@ function displayRbfgSexFilter(sexes) {
     const oe = document.createElement("option");
     oe.value = sex;
     oe.text = Translation.translate(`misc.sexGroups.${sex}`);
-    oe.selected = true;
+    oe.selected = (selected === undefined) ? true : Boolean(selected[sex]);
     sexGroupEl.appendChild(oe);
   }
 }
