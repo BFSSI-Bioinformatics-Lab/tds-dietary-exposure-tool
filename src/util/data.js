@@ -5,7 +5,9 @@ import {
   ageGroups,
   browserLanguage,
   sexGroups,
-  getTranslations
+  getTranslations,
+  ageGroups1To8,
+  Translation
 } from "../const.js";
 
 
@@ -54,6 +56,25 @@ export class NumberTool {
   // hasNonNegative(): Checks if there exists a non-negative number in the arguments
   static hasNonNegative() {
       return this.hasCond(this.isNonNegativeNumber);
+  }
+}
+
+
+// DictTool: Tools for handling dictionaries
+export class DictTool {
+
+  // getMapSorted(dict, compareFn): Retrieves a corresponding map
+  //  to the sorted dictionarys
+  static getMapSorted(dict, compareFn) {
+    const keys = Object.keys(dict);
+    keys.sort((item1, item2) => compareFn(item1, item2, dict));
+
+    const result = new Map();
+    for (const key of keys) {
+      result.set(key, dict[key]);
+    }
+
+    return result;
   }
 }
 
@@ -112,7 +133,14 @@ export function getAgeSex(age, sex) {
  * Return domain specific age group and sex group from domain-specific age-sex group (the opposite of the function getAgeSex)
  */
 export function getAgeAndSex(ageSexGroup) {
-  return ageSexGroup.split(" ");
+  return ageSexGroup.split(" ", 2);
+}
+
+// getSexDisplay: Retrieves the display for a particular sex
+export function getSexDisplay(sex, age) {
+  if (sex != sexGroups.B) return Translation.translate(`misc.sexGroups.${sex}`);
+  if (ageGroups1To8.has(age)) return Translation.translate(`misc.sexGroups.Both1To8`);
+  return Translation.translate(`misc.sexGroups.Both9Plus`);
 }
 
 /**

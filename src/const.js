@@ -197,11 +197,36 @@ export const ageGroups = {
   "71+": "71+",
 };
 
+export const ageGroupOrder = {
+  [ageGroups["1-3"]]: 0,
+  [ageGroups["4-8"]]: 1,
+  [ageGroups["9-13"]]: 2,
+  [ageGroups["14-18"]]: 3,
+  [ageGroups["19-30"]]: 4,
+  [ageGroups["31-50"]]: 5,
+  [ageGroups["51-70"]]: 6,
+  [ageGroups["1-18"]]: 7,
+  [ageGroups["1+"]]: 8,
+  [ageGroups["19+"]]: 9,
+  [ageGroups["71+"]]: 10,
+}
+
+export const ageGroups1To8 = new Set([
+  ageGroups["1-3"],
+  ageGroups["4-8"]
+]); 
+
 export const sexGroups = {
   B: "B",
   F: "F",
   M: "M",
 };
+
+export const sexGroupOrder = {
+  [sexGroups.B]: 0,
+  [sexGroups.F]: 1,
+  [sexGroups.M]: 2
+}
 
 export const suppressedAgeSexGroups = [
   getAgeSex(ageGroups["1-3"], sexGroups.F),
@@ -212,10 +237,9 @@ export const suppressedAgeSexGroups = [
 
 export const ageSexGroups = Object.keys(ageGroups).reduce((result, ageKey) => {
   Object.keys(sexGroups).forEach((sexKey) => {
-    const ageSexGroup = getAgeSex(ageKey, sexKey);
-    if (!suppressedAgeSexGroups.includes(ageSexGroup)) {
-      result[ageSexGroup] = ageSexGroup;
-    }
+    let ageSexGroup = getAgeSex(ageKey, sexKey);
+    if (suppressedAgeSexGroups.includes(ageSexGroup)) return;
+    result[ageSexGroup] = ageSexGroup;
   });
   return result;
 }, {});
@@ -891,6 +915,8 @@ const LangEN = {
       [sexGroups.F]: "F",
       [sexGroups.M]: "M",
       [sexGroups.B]: "M/F",
+      "Both1To8": "M/F (1-8 yrs)",
+      "Both9Plus": "M/F (9+ yrs)"
     },
     noDataMsg: "No results above LOD",
     na: "NA",
@@ -1548,6 +1574,8 @@ const LangFR = {
       [sexGroups.F]: "F",
       [sexGroups.M]: "H",
       [sexGroups.B]: "H/F",
+      "Both1To8": "H/F (1-8 ans)",
+      "Both9Plus": "H/F (9+ ans)"
     },
     noDataMsg: "Aucun résultat supérieur à LD",
     na: "NA",
