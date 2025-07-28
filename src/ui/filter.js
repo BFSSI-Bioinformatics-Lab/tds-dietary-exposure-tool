@@ -1,5 +1,5 @@
 import { classes, el } from "./const.js";
-import { getTranslations, sexGroups, Translation } from "../const.js";
+import { ageGroupOrder, getTranslations, sexGroupOrder, sexGroups, Translation } from "../const.js";
 import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
@@ -19,7 +19,9 @@ import {
   getExposureUnit,
   getOverrideText,
   getAgeAndSex,
-  getAgeSex
+  getAgeSex,
+  getSexDisplay,
+  DictTool
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
 import { NumberTool } from "../util/data.js";
@@ -101,7 +103,10 @@ function getAgeSexGroup(graphType) {
   }
 
   // translate the age and sex from the second graph to the corresponding age-sex group
-  const sexes = Array.from(el.graphs[GraphTypes.RBFG]?.filters.sex.selectedOptions).map((option) => option.value);
+  let sexOptions = Array.from(el.graphs[GraphTypes.RBFG]?.filters.sex.selectedOptions);
+  const sexes = sexOptions.map((option) => option.value);
+  sexOptions = new Set(sexOptions.map((option) => option.text));
+
   const ages = Array.from(el.graphs[GraphTypes.RBFG]?.filters.age.selectedOptions).map((option) => option.value);
   const result = [];
   
@@ -109,6 +114,10 @@ function getAgeSexGroup(graphType) {
     for (const sex of sexes) {
       const ageSexGroup = getAgeSex(age, sex);
       if (!(ageSexGroup in ageSexGroups)) continue;
+      
+      const sexDisplay = getSexDisplay(sex, age);
+      if (!sexOptions.has(sexDisplay)) continue;
+
       result.push(ageSexGroup);
     }
   }
@@ -311,37 +320,43 @@ function addEventListenersToFilters() {
 
   el.graphs[GraphTypes.RBFG].filters.age.addEventListener("change", () => {
     const ages = Array.from(el.graphs[GraphTypes.RBFG]?.filters.age.selectedOptions).map((option) => option.value);
-    const selectedSexes = new Set(Array.from(el.graphs[GraphTypes.RBFG]?.filters.sex.selectedOptions).map((option) => option.value));
-    let availableSexes = new Set();
+    
+    let selectedSexOptions = Array.from(el.graphs[GraphTypes.RBFG]?.filters.sex.selectedOptions);
+    const selectedSexes = new Set(selectedSexOptions.map((option) => option.value));
+    selectedSexOptions = new Set(selectedSexOptions.map((option) => option.text));
+
+    let availableSexes = {};
     
     // get the available sexes based off the selected age groups
     for (const age of ages) {
       for (const sexKey in sexGroups) {
         const sex = sexGroups[sexKey];
         const ageSexGroup = getAgeSex(age, sex);
+        const sexDisplay = getSexDisplay(sex, age);
 
         if (!(ageSexGroup in ageSexGroups)) {
           if (selectedSexes.has(sex)) {
             selectedSexes.delete(sex);
+            selectedSexOptions.delete(sexDisplay);
           }
 
           continue;
         }
 
-        availableSexes.add(sex);
+        availableSexes[sexDisplay] = sex;
       }
     }
 
     const sexSelection = {};
-    availableSexes.forEach((sex) => {
-      sexSelection[sex] = selectedSexes.has(sex);
-    });
+    for (const sexDisplay in availableSexes) {
+      sexSelection[sexDisplay] = selectedSexOptions.has(sexDisplay);
+    }
 
     if (availableSexes.size == 0) {
       availableSexes = new Set(Object.values(sexGroups));
     }
 
-    displayRbfgSexFilter(Array.from(availableSexes), sexSelection);
+    displayRbfgSexFilter(availableSexes, sexSelection);
 
     if (selectionsCompleted()) {
       showFilters();
@@ -624,13 +639,16 @@ function displayRbasgAgeGroupFilter() {
     ageGroupEl.removeAttribute("multiple");
   }
 
-  Object.values(ageGroups).forEach((a) => {
+  const sortedAgeGroups = Object.values(ageGroups);
+  sortedAgeGroups.sort(compareAge);
+
+  for (const ageGroup of sortedAgeGroups) {
     const oe = document.createElement("option");
-    oe.value = a;
-    oe.text = a;
+    oe.value = ageGroup;
+    oe.text = ageGroup;
     oe.selected = showByAgeSexGroup;
     ageGroupEl.appendChild(oe);
-  });
+  }
 }
 
 function displayRbasgDomainFilter() {
@@ -646,9 +664,17 @@ function displayRbasgDomainFilter() {
   });
 }
 
+function compareAge(age1, age2) {
+  const ageOrder1 = ageGroupOrder[age1];
+  const ageOrder2 = ageGroupOrder[age2];
+  return ageOrder1 - ageOrder2;
+}
+
 function displayRbfgAgeGroupFilter(ages) {
   const ageGroupEl = el.graphs[GraphTypes.RBFG].filters.age;
   ageGroupEl.innerHTML = "";
+
+  ages.sort(compareAge);
 
   for (const age of ages) {
     const oe = document.createElement("option");
@@ -659,31 +685,47 @@ function displayRbfgAgeGroupFilter(ages) {
   }
 }
 
+
+function compareSex(sexDisplay1, sexDisplay2, sexes) {
+  const sex1 = sexes[sexDisplay1];
+  const sex2 = sexes[sexDisplay2];
+  const sexOrder1 = sexGroupOrder[sex1];
+  const sexOrder2 = sexGroupOrder[sex2];
+
+  if (sexOrder1 != sexOrder2 || sex1 != sexGroups.B) return sexOrder1 - sexOrder2;
+
+  if (sexDisplay1 > sexDisplay2) return 1;
+  else if (sexDisplay1 < sexDisplay2) return -1;
+  return 0;
+}
+
 function displayRbfgSexFilter(sexes, selected = undefined) {
   const sexGroupEl = el.graphs[GraphTypes.RBFG].filters.sex;
   sexGroupEl.innerHTML = "";
+  sexes = DictTool.getMapSorted(sexes, compareSex);
 
-  for (const sex of sexes) {
+  for (const [sexDisplay, sex] of sexes) {
     const oe = document.createElement("option");
     oe.value = sex;
-    oe.text = Translation.translate(`misc.sexGroups.${sex}`);
-    oe.selected = (selected === undefined) ? true : Boolean(selected[sex]);
+    oe.text = sexDisplay;
+    oe.selected = (selected === undefined) ? true : Boolean(selected[sexDisplay]);
     sexGroupEl.appendChild(oe);
   }
 }
 
 function displayRbfgAgeSexGroupFilter() {
   let ages = new Set();
-  let sexes = new Set();
+  let sexes = {};
 
   for (const ageSexGroup in ageSexGroups) {
-    const ageSexGroupData = getAgeAndSex(ageSexGroup);
-    ages.add(ageSexGroupData[0]);
-    sexes.add(ageSexGroupData[1]);
+    const [age, sex] = getAgeAndSex(ageSexGroup);
+    const sexDisplay = getSexDisplay(sex, age);
+
+    ages.add(age);
+    sexes[sexDisplay] = sex;
   }
 
   ages = Array.from(ages);
-  sexes = Array.from(sexes);
 
   displayRbfgAgeGroupFilter(ages);
   displayRbfgSexFilter(sexes);
