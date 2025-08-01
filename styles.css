@@ -1143,6 +1143,10 @@ About Table
   font-size: 18px;
 }
 
+.graph-select-subtitle {
+  font-size: 16px;
+}
+
 #graph-title-container {
   display: flex;
 }

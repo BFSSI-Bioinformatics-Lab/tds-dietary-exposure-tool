@@ -86,6 +86,9 @@ export const el = {
     },
     titles: {
       graphSelectTitle: document.getElementById("graph-select-title"),
+      rbasgGraphSelectSubtitle: document.querySelector("#rbasg-graph-select .graph-select-subtitle"),
+      rbfgGraphSelectSubtitle: document.querySelector("#rbfg-graph-select .graph-select-subtitle"),
+      rbfGraphSelectSubtitle: document.querySelector("#rbf-graph-select .graph-select-subtitle"),
       filtersTitle: document.getElementById("filters-title"),
       chemicalGroup: document.getElementById("filter-chemical-group-title"),
       chemical: document.getElementById("filter-chemical-title"),

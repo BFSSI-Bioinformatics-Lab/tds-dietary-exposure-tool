@@ -138,6 +138,9 @@ export async function initializePageText() {
 
   el.filters.titles.graphSelectTitle.innerHTML = translations.filters.titles.selectGraphType;
   el.filters.titles.filtersTitle.innerHTML = translations.filters.titles.selectChemical;
+  el.filters.titles.rbasgGraphSelectSubtitle.innerHTML = Translation.translate("filters.titles.rbasgGraphSelectTitle");
+  el.filters.titles.rbfgGraphSelectSubtitle.innerHTML = Translation.translate("filters.titles.rbfgGraphSelectTitle");
+  el.filters.titles.rbfGraphSelectSubtitle.innerHTML = Translation.translate("filters.titles.rbfGraphSelectTitle");
 
   el.filters.titles.chemicalGroup.innerHTML =
     translations.filters.titles.chemicalGroup;
