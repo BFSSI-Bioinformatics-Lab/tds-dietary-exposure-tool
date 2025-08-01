@@ -712,6 +712,9 @@ const LangEN = {
     },
     titles: {
       selectGraphType: "Select Graph Type:",
+      rbasgGraphSelectTitle: "Results by age-sex group",
+      rbfgGraphSelectTitle: "Results by Food Group",
+      rbfGraphSelectTitle: "Results by Food",
       selectChemical: "Select Chemical:",
       chemicalGroup: "Chemical Group",
       chemical: "Chemical",
@@ -1384,6 +1387,9 @@ const LangFR = {
     },
     titles: {
       selectGraphType: "Sélectionnez le type de graphique:",
+      rbasgGraphSelectTitle: "Résultat par groupe d’âge-sexe",
+      rbfgGraphSelectTitle: "Résultat par groupe d’aliments",
+      rbfGraphSelectTitle: "Résultat par aliment",
       selectChemical: "Sélectionnez le produit chimique:",
       chemicalGroup: "Groupe chimique",
       chemical: "Produit chimique",
