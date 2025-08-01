@@ -16,7 +16,7 @@
  * - Generated sunburst SVG as a string
  */
 export function getGroupedBarSvg(data) {
-  if (!data) return;
+  if ($.isEmptyObject(data)) return;
   let dataExists = false;
 
   const width = 1500;

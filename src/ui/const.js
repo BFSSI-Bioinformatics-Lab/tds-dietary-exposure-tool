@@ -105,6 +105,7 @@ export const el = {
       rbasgAgeGroup: document.getElementById(
         "filter-rbasg-age-group-filter-title",
       ),
+      rbasgSexGroup: document.getElementById("filter-rbasg-sex-title"),
       rbasgDomain: document.getElementById("filter-rbasg-domain-title"),
       rbfAgeSexGroup: document.getElementById("filter-rbf-age-sex-group-title"),
       rbfSortBy: document.getElementById("filter-rbf-sort-by-title"),
@@ -169,7 +170,8 @@ export const el = {
         "." + classes.FILTER_ADDITIONAL_RBASG,
       ),
       filters: {
-        ageSexGroup: document.getElementById("filter-rbasg-age-group-select"),
+        age: document.getElementById("filter-rbasg-age-group-select"),
+        sex: document.getElementById("filter-rbasg-sex-select"),
         domain: document.getElementById("filter-rbasg-domain-select"),
       },
     },

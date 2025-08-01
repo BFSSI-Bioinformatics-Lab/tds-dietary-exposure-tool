@@ -15,6 +15,7 @@ import {
 import {
   formatNumber,
   formatPercent,
+  getAgeAndSex,
   getAgeSexDisplay,
   getExposureUnit,
   getUserModifiedValueText,
@@ -46,7 +47,7 @@ export function getRbasg(tdsData, filters) {
   const rbasgData = {};
 
   const domain = filters.showByAgeSexGroup
-    ? filters.ageSexGroups
+    ? filters.ageGroups
     : filters.years;
 
   domain.forEach((entry) => {
@@ -69,10 +70,11 @@ export function getRbasg(tdsData, filters) {
       Object.keys(tdsData.consumption).forEach((foodGroup) => {
         Object.keys(tdsData.consumption[foodGroup]).forEach((composite) => {
           const consumptions = tdsData.consumption[foodGroup][composite].filter(
-            (row) =>
-              filters.ageSexGroups.includes(row.age) &&
+            (row) => {
+              return filters.ageSexGroups.includes(row.ageSexGroup) &&
               (filters.showByAgeSexGroup ? entry == row.age : true) &&
-              sex == row.sex,
+              sex == row.sex
+            }
           );
 
           if (consumptions.length == 0) return;
@@ -228,6 +230,8 @@ export function formatRbsagToDataTable(rbasgData, filters) {
  * - An object adhering to the contract specified in groupedBar.js
  */
 export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
+  if ($.isEmptyObject(rbasgData)) return {};
+
   const contaminantUnit = Object.values(Object.values(rbasgData)[0])[0]
     .contaminantUnit;
 

@@ -87,7 +87,7 @@ export function displayGraph(data) {
 
   const graphMapping = {
     [GraphTypes.RBASG]: {
-      graphTitle: filters.showByAgeSexGroup? Translation.translate(`graphs.${GraphTypes.RBASG}.titleByAgeGroups`, {chemical: filters.chemical, selectedYears: filters.years.join(", ")}) : Translation.translate(`graphs.${GraphTypes.RBASG}.titleByYears`, {chemical: filters.chemical, ageGroups: filters.ageSexGroups.join(", ")}),
+      graphTitle: filters.showByAgeSexGroup? Translation.translate(`graphs.${GraphTypes.RBASG}.titleByAgeGroups`, {chemical: filters.chemical, selectedYears: filters.years.join(", ")}) : Translation.translate(`graphs.${GraphTypes.RBASG}.titleByYears`, {chemical: filters.chemical, ageGroups: filters.ageGroups.join(", ")}),
       colorLegendMappings: [colorLegendMapping.sexGroup],
       getDataFn: getRbasg,
       getGraphDataFn: formatRbasgToGroupedBar,
