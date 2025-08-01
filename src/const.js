@@ -216,11 +216,38 @@ export const ageGroups1To8 = new Set([
   ageGroups["4-8"]
 ]); 
 
+
+export const ageSuperGroups = {
+  Age1To8: "Age1To8",
+  Age9Plus: "Age9Plus"
+}
+
+export const ageSuperGroupsByAgeGroup = {
+  [ageGroups["1-3"]]: new Set([ageSuperGroups.Age1To8]),
+  [ageGroups["4-8"]]: new Set([ageSuperGroups.Age1To8]),
+  [ageGroups["9-13"]]: new Set([ageSuperGroups.Age9Plus]),
+  [ageGroups["14-18"]]: new Set([ageSuperGroups.Age9Plus]),
+  [ageGroups["19-30"]]: new Set([ageSuperGroups.Age9Plus]),
+  [ageGroups["31-50"]]: new Set([ageSuperGroups.Age9Plus]),
+  [ageGroups["51-70"]]: new Set([ageSuperGroups.Age9Plus]),
+  [ageGroups["1-18"]]: new Set([ageSuperGroups.Age1To8, ageSuperGroups.Age9Plus]),
+  [ageGroups["1+"]]: new Set([ageSuperGroups.Age1To8, ageSuperGroups.Age9Plus]),
+  [ageGroups["19+"]]: new Set([ageSuperGroups.Age9Plus]),
+  [ageGroups["71+"]]: new Set([ageSuperGroups.Age9Plus]),
+}
+
 export const sexGroups = {
   B: "B",
   F: "F",
   M: "M",
 };
+
+export const sexSubGroups = {
+  Both1To8: "B1To8",
+  Both9Plus: "B9Plus",
+  Female: "F",
+  Male: "M"
+}
 
 export const sexGroupOrder = {
   [sexGroups.B]: 0,
