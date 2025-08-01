@@ -20,8 +20,9 @@ import {
   getOverrideText,
   getAgeAndSex,
   getAgeSex,
-  getSexDisplay,
-  DictTool
+  getSexDisplays as getSexDisplays,
+  DictTool,
+  SetTools
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
 import { NumberTool } from "../util/data.js";
@@ -115,8 +116,9 @@ function getAgeSexGroup(graphType) {
       const ageSexGroup = getAgeSex(age, sex);
       if (!(ageSexGroup in ageSexGroups)) continue;
       
-      const sexDisplay = getSexDisplay(sex, age);
-      if (!sexOptions.has(sexDisplay)) continue;
+      const sexDisplays = getSexDisplays(sex, age);
+      const hasSexDisplays = SetTools.intersection(sexOptions, sexDisplays);
+      if (hasSexDisplays.size == 0) continue;
 
       result.push(ageSexGroup);
     }
@@ -332,18 +334,21 @@ function addEventListenersToFilters() {
       for (const sexKey in sexGroups) {
         const sex = sexGroups[sexKey];
         const ageSexGroup = getAgeSex(age, sex);
-        const sexDisplay = getSexDisplay(sex, age);
+
+        const sexDisplays = getSexDisplays(sex, age);
 
         if (!(ageSexGroup in ageSexGroups)) {
           if (selectedSexes.has(sex)) {
             selectedSexes.delete(sex);
-            selectedSexOptions.delete(sexDisplay);
+            SetTools.difference([selectedSexOptions, sexDisplays], false);
           }
 
           continue;
         }
 
-        availableSexes[sexDisplay] = sex;
+        for (const sexDisplay of sexDisplays) {
+          availableSexes[sexDisplay] = sex;
+        }
       }
     }
 
@@ -719,10 +724,12 @@ function displayRbfgAgeSexGroupFilter() {
 
   for (const ageSexGroup in ageSexGroups) {
     const [age, sex] = getAgeAndSex(ageSexGroup);
-    const sexDisplay = getSexDisplay(sex, age);
-
     ages.add(age);
-    sexes[sexDisplay] = sex;
+
+    const sexDisplays = getSexDisplays(sex, age);
+    for (const sexDisplay of sexDisplays) {
+      sexes[sexDisplay] = sex;
+    }
   }
 
   ages = Array.from(ages);
