@@ -100,7 +100,7 @@ function getAgeSexGroup(graphType) {
   if (!graphType) {
     return [];
   } else if (graphType != GraphTypes.RBFG && graphType != GraphTypes.RBASG) {
-    const result = Array.from(el.graphs[graphType]?.filters.age.selectedOptions).map((option) => option.value);
+    const result = Array.from(el.graphs[graphType]?.filters.ageSexGroup.selectedOptions).map((option) => option.value);
     return result
   }
 
@@ -288,9 +288,8 @@ function displayError(element, checkKey, tooltipPlacement = "bottom") {
 
 // updateSexFilterFromAges(ages, selectedSexOptions): Updates the sex options based off the current selected ages
 function updateSexFilterFromAges(ages, selectedSexOptions, displaySexFilterFunc) {
-  const selectedSexes = new Set(selectedSexOptions.map((option) => option.value));
   selectedSexOptions = new Set(selectedSexOptions.map((option) => option.text));
-
+  let newSelectedSexOptions = new Set();
   let availableSexes = {};
   
   // get the available sexes based off the selected age groups
@@ -302,23 +301,23 @@ function updateSexFilterFromAges(ages, selectedSexOptions, displaySexFilterFunc)
       const sexDisplays = getSexDisplays(sex, age);
 
       if (!(ageSexGroup in ageSexGroups)) {
-        if (selectedSexes.has(sex)) {
-          selectedSexes.delete(sex);
-          SetTools.difference([selectedSexOptions, sexDisplays], false);
-        }
-
         continue;
       }
 
+      SetTools.union(newSelectedSexOptions, sexDisplays, false);
       for (const sexDisplay of sexDisplays) {
         availableSexes[sexDisplay] = sex;
       }
     }
   }
 
+  if (selectedSexOptions.size > 0) {
+    newSelectedSexOptions = SetTools.intersection(selectedSexOptions, selectedSexOptions);
+  }
+
   const sexSelection = {};
   for (const sexDisplay in availableSexes) {
-    sexSelection[sexDisplay] = selectedSexOptions.has(sexDisplay);
+    sexSelection[sexDisplay] = newSelectedSexOptions.has(sexDisplay);
   }
 
   if (availableSexes.size == 0) {
@@ -327,6 +326,14 @@ function updateSexFilterFromAges(ages, selectedSexOptions, displaySexFilterFunc)
 
   displaySexFilterFunc(availableSexes, sexSelection);
 
+  if (selectionsCompleted()) {
+    showFilters();
+    displayGraph(getFilteredTdsData());
+  }
+}
+
+// updateGraph: Rerenders the graph based off the new selection options
+function updateGraph() {
   if (selectionsCompleted()) {
     showFilters();
     displayGraph(getFilteredTdsData());
@@ -362,28 +369,17 @@ function addEventListenersToFilters() {
     displayNonChemFilters();
   });
 
-  el.graphs[GraphTypes.RBASG].filters.age.addEventListener("change", () => {
-    const ages = Array.from(el.graphs[GraphTypes.RBASG]?.filters.age.selectedOptions).map((option) => option.value);
-    let selectedSexOptions = Array.from(el.graphs[GraphTypes.RBASG]?.filters.sex.selectedOptions);
-
-    updateSexFilterFromAges(ages, selectedSexOptions, displayRbasgSexFilter);
-  });
-
   [
     el.filters.inputs.chemicalGroup,
     el.filters.inputs.chemical,
-    el.filters.inputs.years,
     el.filters.inputs.lod,
     el.filters.inputs.consumptionUnits,
-    ...Object.values(el.graphs[GraphTypes.RBASG].filters),
+    el.graphs[GraphTypes.RBASG].filters.domain,
     ...Object.values(el.graphs[GraphTypes.RBF].filters),
-    ...Object.values(el.graphs[GraphTypes.RBFG].filters),
+    el.graphs[GraphTypes.RBFG].filters.range,
   ].forEach((filter) => {
     filter.addEventListener("change", () => {
-      if (selectionsCompleted()) {
-        showFilters();
-        displayGraph(getFilteredTdsData());
-      }
+      updateGraph();
     });
   });
 
@@ -567,6 +563,15 @@ export function resetChemicalIsSet() {
   ChemicalIsSet = false;
 }
 
+// createMultiselect(element): Creates the multiselect widget
+function createMultiselect(element) {
+  return $(element).selectpicker({
+    deselectAllText: Translation.translate("deselectAll"), 
+    selectAllText: Translation.translate("selectAll"),
+    noneSelectedText: Translation.translate("noneSelected"),
+    noneResultsText: Translation.translate("noResultsFound")});
+}
+
 // displayChemicalGroups(flush): Displays all the chemical group options
 //  for the chemical group dropdown selection
 function displayChemicalGroups(flush = true) {
@@ -622,16 +627,26 @@ function displayChemicals(flush = true) {
 
 function displayYears() {
   const filters = getActiveFilters();
-  el.filters.inputs.years.innerHTML = "";
+
+  let dropdown = $(el.filters.inputs.years);
+  dropdown.selectpicker('destroy');
+
   const years = Object.keys(
     tdsData.contaminant[filters.chemicalGroup][filters.chemical],
   ).sort();
+
+  el.filters.inputs.years.innerHTML = "";
   years.forEach((year) => {
     const oe = document.createElement("option");
     oe.value = year;
     oe.text = year;
     oe.selected = true;
     el.filters.inputs.years.appendChild(oe);
+  });
+
+  dropdown = createMultiselect(el.filters.inputs.years);
+  dropdown.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      updateGraph();
   });
 }
 
@@ -659,6 +674,10 @@ function displayConsumptionUnits() {
 
 function displayRbasgAgeGroupFilter(ages) {
   const ageGroupEl = el.graphs[GraphTypes.RBASG].filters.age;
+
+  let dropdown = $(ageGroupEl);
+  dropdown.selectpicker('destroy');
+
   ageGroupEl.innerHTML = "";
   const { showByAgeSexGroup } = getActiveFilters();
 
@@ -679,10 +698,27 @@ function displayRbasgAgeGroupFilter(ages) {
     oe.selected = showByAgeSexGroup;
     ageGroupEl.appendChild(oe);
   }
+
+  dropdown = createMultiselect(ageGroupEl);
+  dropdown.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    const ages = Array.from(el.graphs[GraphTypes.RBASG]?.filters.age.selectedOptions).map((option) => option.value);
+    let selectedSexOptions = Array.from(el.graphs[GraphTypes.RBASG]?.filters.sex.selectedOptions);
+
+    console.log("AGES: ", ages);
+    console.log("SELECTED SEX: ", selectedSexOptions);
+
+    updateSexFilterFromAges(ages, selectedSexOptions, displayRbasgSexFilter);
+
+      updateGraph();
+  });
 }
 
 function displayRbasgSexFilter(sexes, selected = undefined) {
   const sexGroupEl = el.graphs[GraphTypes.RBASG].filters.sex;
+
+  let dropdown = $(sexGroupEl);
+  dropdown.selectpicker('destroy');
+
   sexGroupEl.innerHTML = "";
   sexes = DictTool.getMapSorted(sexes, compareSex);
 
@@ -693,6 +729,11 @@ function displayRbasgSexFilter(sexes, selected = undefined) {
     oe.selected = (selected === undefined) ? true : Boolean(selected[sexDisplay]);
     sexGroupEl.appendChild(oe);
   }
+
+  dropdown = createMultiselect(sexGroupEl);
+  dropdown.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      updateGraph();
+  });
 }
 
 function displayRbasgAgeSexGroupFilter() {
@@ -736,8 +777,11 @@ function compareAge(age1, age2) {
 
 function displayRbfgAgeGroupFilter(ages) {
   const ageGroupEl = el.graphs[GraphTypes.RBFG].filters.age;
-  ageGroupEl.innerHTML = "";
 
+  let dropdown = $(ageGroupEl);
+  dropdown.selectpicker('destroy');
+
+  ageGroupEl.innerHTML = "";
   ages.sort(compareAge);
 
   for (const age of ages) {
@@ -747,6 +791,11 @@ function displayRbfgAgeGroupFilter(ages) {
     oe.selected = true;
     ageGroupEl.appendChild(oe);
   }
+
+  dropdown = createMultiselect(ageGroupEl);
+  dropdown.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      updateGraph();
+  });
 }
 
 
@@ -763,8 +812,13 @@ function compareSex(sexDisplay1, sexDisplay2, sexes) {
   return 0;
 }
 
+
 function displayRbfgSexFilter(sexes, selected = undefined) {
   const sexGroupEl = el.graphs[GraphTypes.RBFG].filters.sex;
+
+  let dropdown = $(sexGroupEl);
+  dropdown.selectpicker('destroy');
+
   sexGroupEl.innerHTML = "";
   sexes = DictTool.getMapSorted(sexes, compareSex);
 
@@ -775,6 +829,11 @@ function displayRbfgSexFilter(sexes, selected = undefined) {
     oe.selected = (selected === undefined) ? true : Boolean(selected[sexDisplay]);
     sexGroupEl.appendChild(oe);
   }
+
+  dropdown = createMultiselect(sexGroupEl);
+  dropdown.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+      updateGraph();
+  });
 }
 
 function displayRbfgAgeSexGroupFilter() {
