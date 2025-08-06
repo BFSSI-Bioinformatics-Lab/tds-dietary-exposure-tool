@@ -700,6 +700,10 @@ const LangEN = {
   "changeLanguageValue": language.FR,
   "close": "Close",
 
+  "selectAll": "Select All",
+  "deselectAll": "Deselect All",
+  "noneSelected": "Nothing Selected",
+
   themes: {
     [ThemeNames.Light]: "Light",
     [ThemeNames.Dark]: "Dark",
@@ -1373,11 +1377,17 @@ French
 */
 
 
+const REMPLACER_MOI = "REMPLACER MOI"
+
 const LangFR = {
   "websiteTabTitle": "Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023",
   "changeLanguage": "English",
   "changeLanguageValue": language.EN,
   "close": "Fermer",
+
+  "selectAll": REMPLACER_MOI,
+  "deselectAll": REMPLACER_MOI,
+  "noneSelected": REMPLACER_MOI,
 
   errorMsgs: {
     notANumber: "Veuillez entrer un nombre",

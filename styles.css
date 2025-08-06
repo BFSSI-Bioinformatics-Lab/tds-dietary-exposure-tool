@@ -258,7 +258,6 @@ Filters
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-    width: 8.5rem;
 
     select,
     input {
@@ -1146,7 +1145,7 @@ About Table
 .graph-select-subtitle {
   font-size: 14px;
   font-weight: bold;
-  text-align: centers;
+  text-align: center;
 }
 
 #graph-title-container {
