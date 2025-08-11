@@ -664,6 +664,14 @@ export class Translation {
       return this.translate("Number", translateArgs);
   }
 
+  // translateScientificNum(numStr, decimalPlaces): Translates a number to its scientific notation
+  static translateScientificNum(numStr, decimalPlaces = 1) {
+    let result = Number.parseFloat(numStr).toExponential(decimalPlaces);
+    return result.replace(/[0-9]+(.[0-9]+)?/, function(match) {
+        return Translation.translateNum(match, decimalPlaces);
+    })
+  }
+
   // clearTranslationCache(): Clears any cached data related to translations
   static clearTranslationCache() {
     WebNotesCache = {};
@@ -694,6 +702,8 @@ const LangEN = {
   /**
    * Introductory Text
    */
+
+  Number: "{{num, number}}",
 
   "websiteTabTitle": "Canadian Total Diet Study 2008-2023 Dietary Exposure Tool",
   "changeLanguage": "Français",
@@ -1381,6 +1391,8 @@ French
 const REMPLACER_MOI = "REMPLACER MOI"
 
 const LangFR = {
+  Number: "{{num, number}}",
+
   "websiteTabTitle": "Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023",
   "changeLanguage": "English",
   "changeLanguageValue": language.EN,

@@ -145,6 +145,16 @@ export async function displayDataTable(data, filters) {
       return {"title": headerTranslations[columnKey], "data": columnKey};
   });
 
+  // any display adjustments to the data
+  if (filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides")) {
+    for (const row of data) {
+      const exposure = row[DataTableHeader.EXPOSURE];
+      if (exposure == undefined) continue;
+
+      row[DataTableHeader.EXPOSURE] = Translation.translateScientificNum(exposure);
+    }
+  }
+
   updateTable(tableId, tableColInfo, data);
 
   // adjust the column widths
