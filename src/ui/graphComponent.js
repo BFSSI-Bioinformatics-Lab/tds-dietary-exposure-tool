@@ -28,6 +28,7 @@ import {
   getSelectedGraphType,
   updateLodFilterDescription,
   updateSandbox,
+  rbfgLegendOnClick
 } from "./filter.js";
 import { displayDataTable } from "./dataTableComponent.js";
 import { getAgeSexDisplay } from "../util/data.js";
@@ -50,6 +51,12 @@ export function displayGraph(data) {
       return acc;
     }, {}),
   );
+
+  if (graphType == GraphTypes.RBFG) {
+    const allFoodGroups = Translation.translate("graphs.legend.allFoodGroups");
+    foodGroupColorMapping[allFoodGroups] = {label: allFoodGroups, color: "#A1A1A1" };
+  }
+
   const sexGroupColorMapping = generateColorMapping(
     Object.keys(sexGroups).reduce((acc, sex) => {
       acc[sex] = {
@@ -140,25 +147,29 @@ export function displayGraph(data) {
     filters,
     colorLegendMappings[0].mapping,
   );
+
   if (filters.referenceLine && hasReferenceLine) {
     graphData.hr = filters.referenceLine;
   }
-  const graphSvg = getSvgFn(graphData);
 
   el.graphs.container.classList.remove(classes.HIDDEN);
-
-  el.graphs.title.innerHTML = graphTitle;
-  el.graphs.graph.innerHTML = "";
-  el.graphs.graph.append(graphSvg || getTranslations().misc.noDataMsg);
 
   el.graphs.legend.container.innerHTML = "";
   colorLegendMappings.forEach((legendMapping) => {
     if (legendMapping.type == GraphLegendTypes.COLOR) {
-      displayColorLegendSection(legendMapping.mapping, legendMapping.title);
+      const legendOnClick = (graphType == GraphTypes.RBFG) ? rbfgLegendOnClick : undefined;
+      displayColorLegendSection(legendMapping.mapping, legendMapping.title, legendOnClick);
+
     } else {
       displayTextLegendSection(legendMapping.mapping, legendMapping.title);
     }
   });
+
+  const graphSvg = getSvgFn(graphData);
+
+  el.graphs.title.innerHTML = graphTitle;
+  el.graphs.graph.innerHTML = "";
+  el.graphs.graph.append(graphSvg || getTranslations().misc.noDataMsg);
 
   el.graphs.saveGraph.classList.remove(classes.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);

@@ -1,6 +1,6 @@
 import { loadTdsData } from "./data/dataTranslator.js";
 import { classes, el, TooltipIds, TooTipIdsStr, ToolTipIdDict } from "./ui/const.js";
-import { initializeFilters, selectionsCompleted, showFilters, getFilteredTdsData, setDefaultChemicalGroup  } from "./ui/filter.js";
+import { initializeFilters, selectionsCompleted, showFilters, getFilteredTdsData, FilteredFoodGroups  } from "./ui/filter.js";
 import { displayGraph } from "./ui/graphComponent.js";
 import { addEventListenersToPage, initializePageText, resetPage, showLoadingPage, hideLoadingPage } from "./ui/page.js";
 import { ThemeNames, DefaultTheme, userLanguage, Translation, Themes, DefaultPage, GraphTypes } from "./const.js";
@@ -192,6 +192,7 @@ class App {
         website.attr("lang", newLanguage);
         Translation.changeLanguage(newLanguage);
         this.lang = newLanguage;
+        FilteredFoodGroups.clear();
 
         this.loadMainPage();
     }

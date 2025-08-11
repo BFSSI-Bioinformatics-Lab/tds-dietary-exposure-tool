@@ -838,6 +838,7 @@ const LangEN = {
         [sexGroups.F]: "Female",
         [sexGroups.M]: "Male",
       },
+      allFoodGroups: "All Food Groups (Reset)"
     },
     saveGraph: {
       button: "Save Graph",
@@ -1515,6 +1516,7 @@ const LangFR = {
         [sexGroups.F]: "Femme",
         [sexGroups.M]: "Homme",
       },
+      allFoodGroups: "Tous les groupes d’aliments (réinitialiser)"
     },
     saveGraph: {
       button: "Enregistrer le graphique",
