@@ -143,7 +143,7 @@ export function getStackedBarSvg(data) {
   svg
     .append("g")
     .attr("transform", `translate(${marginLeft}, 0)`)
-    .call(d3.axisLeft(y).ticks(null, "s"))
+    .call(d3.axisLeft(y).tickFormat((tickVal) => tickVal).ticks(null, "s"))
     .call((g) => g.selectAll(".domain").remove())
     .selectAll("text")
     .attr("class", "graph-y-axis-text");

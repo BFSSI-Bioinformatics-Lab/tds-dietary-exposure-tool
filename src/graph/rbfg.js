@@ -173,6 +173,18 @@ export function getRbfg(tdsData, filters) {
     });
   });
 
+  if (filters.filteredFoodGroups.size == 0) return rbfgData;
+  
+  for (const ageSexGroup in rbfgData) {
+    const foodGroupData = rbfgData[ageSexGroup];
+
+    for (const foodGroup in foodGroupData) {
+      if (!filters.filteredFoodGroups.has(foodGroup)) {
+        delete foodGroupData[foodGroup];
+      }
+    }
+  }
+
   return rbfgData;
 }
 

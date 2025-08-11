@@ -29,6 +29,8 @@ import { NumberTool } from "../util/data.js";
 import { tdsData } from "../data/dataTranslator.js";
 
 
+export const FilteredFoodGroups = new Set();
+
 let ChemicalGroupIsSet = false;
 let ChemicalIsSet = false;
 
@@ -206,6 +208,7 @@ export function getActiveFilters() {
       column: DataTableHeader.AGE_SEX_GROUP,
       dir: SortByDir.ASC,
     },
+    filteredFoodGroups: FilteredFoodGroups
   };
 }
 
@@ -338,6 +341,18 @@ function updateGraph() {
     showFilters();
     displayGraph(getFilteredTdsData());
   }
+}
+
+// rbfgLegendOnClick(foodGroup): Event listener to filter the graph when the legend item is being clicked
+export function rbfgLegendOnClick(foodGroup) {
+  const showAllFoodGroups = (foodGroup == Translation.translate("graphs.legend.allFoodGroups") || FilteredFoodGroups.has(foodGroup));
+
+  FilteredFoodGroups.clear();
+  if (!showAllFoodGroups) {
+    FilteredFoodGroups.add(foodGroup);
+  }
+
+  displayGraph(getFilteredTdsData());
 }
 
 /**
@@ -703,9 +718,6 @@ function displayRbasgAgeGroupFilter(ages) {
   dropdown.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
     const ages = Array.from(el.graphs[GraphTypes.RBASG]?.filters.age.selectedOptions).map((option) => option.value);
     let selectedSexOptions = Array.from(el.graphs[GraphTypes.RBASG]?.filters.sex.selectedOptions);
-
-    console.log("AGES: ", ages);
-    console.log("SELECTED SEX: ", selectedSexOptions);
 
     updateSexFilterFromAges(ages, selectedSexOptions, displayRbasgSexFilter);
 
@@ -1081,6 +1093,8 @@ export function resetFilters() {
   resetChemicalGroupIsSet();
   resetChemicalIsSet();
   clearSandbox();
+
+  FilteredFoodGroups.clear();
 
   displayFilterText();
   displayGraph(getFilteredTdsData());

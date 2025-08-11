@@ -1,3 +1,4 @@
+import { Translation } from "../../const.js";
 import { classes, el } from "../const.js";
 
 /*
@@ -7,7 +8,7 @@ import { classes, el } from "../const.js";
  * - data: An object mapping labels to colors for display
  * - title: The titleEl of the legend section
  */
-export function displayColorLegendSection(data, title) {
+export function displayColorLegendSection(data, title, onClick) {
   const legendSection = document.createElement("div");
   legendSection.classList.add(classes.GRAPH_LEGEND_SECTION);
 
@@ -17,10 +18,20 @@ export function displayColorLegendSection(data, title) {
 
   const contentEl = document.createElement("div");
   contentEl.classList.add(classes.GRAPH_LEGEND_CONTENT);
+  
+  const allItems = new Set([Translation.translate("graphs.legend.allFoodGroups")]);
 
   Object.values(data).forEach((mapping) => {
     const itemEl = document.createElement("div");
     itemEl.classList.add(classes.GRAPH_LEGEND_ITEM);
+
+    if (onClick) {
+      itemEl.classList.add(classes.GRAPH_LEGEND_CLICKALBE_ITEM);
+    }
+
+    if (allItems.has(mapping.label)) {
+      itemEl.classList.add("mt-4");
+    }
 
     const colorEl = document.createElement("div");
     const labelEl = document.createElement("div");
@@ -32,6 +43,11 @@ export function displayColorLegendSection(data, title) {
 
     itemEl.append(colorEl);
     itemEl.append(labelEl);
+
+    if (onClick) {
+      itemEl.addEventListener("click", (event) => onClick(mapping.label, event));
+    }
+
     contentEl.appendChild(itemEl);
   });
 
