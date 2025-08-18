@@ -1,5 +1,5 @@
 import { GraphLegendTypes, GraphTypes, sexGroups, getTranslations, Translation } from "../const.js";
-import { classes, el } from "./const.js";
+import { classes, el, ToolTipIdDict } from "./const.js";
 import {
   formatRbasgToGroupedBar,
   formatRbsagToDataTable,
@@ -28,7 +28,8 @@ import {
   getSelectedGraphType,
   updateLodFilterDescription,
   updateSandbox,
-  rbfgLegendOnClick
+  rbfgLegendOnClick,
+  drawToolTips
 } from "./filter.js";
 import { displayDataTable } from "./dataTableComponent.js";
 import { getAgeSexDisplay } from "../util/data.js";
@@ -159,6 +160,14 @@ export function displayGraph(data) {
     if (legendMapping.type == GraphLegendTypes.COLOR) {
       const legendOnClick = (graphType == GraphTypes.RBFG) ? rbfgLegendOnClick : undefined;
       displayColorLegendSection(legendMapping.mapping, legendMapping.title, legendOnClick);
+
+      if (graphType == GraphTypes.RBFG) {
+        const toolTipElements = d3.select(`.${classes.GRAPH_LEGEND_TITLE}`);
+        const toolTipTextFunc = (data) => { return Translation.translateWebNotes(`graphs.${GraphTypes.RBFG}.titleInfo`); };
+
+        drawToolTips(ToolTipIdDict.title, toolTipElements, toolTipTextFunc);
+      }
+
 
     } else {
       displayTextLegendSection(legendMapping.mapping, legendMapping.title);

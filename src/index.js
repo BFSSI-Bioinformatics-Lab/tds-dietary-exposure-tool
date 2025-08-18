@@ -165,13 +165,6 @@ class App {
 
         showFilters();
         displayGraph(getFilteredTdsData());
-
-        if (this.activePage == GraphTypes.RBFG) {
-            const toolTipElements = d3.select(`.${classes.GRAPH_LEGEND_TITLE}`);
-            const toolTipTextFunc = (data) => { return Translation.translateWebNotes(`graphs.${GraphTypes.RBFG}.titleInfo`); };
-
-            this.drawToolTips(ToolTipIdDict.title, toolTipElements, toolTipTextFunc);
-        }
     }
 
     // setSelectedGraph(selectedOpt, activeOpt, data, onSelected): Sets the selected graph choice to be
@@ -250,75 +243,11 @@ class App {
         });
     }
 
-    // drawToolTips(toolTipId, elementsWithInfoIcons, toolTipTextFunc): Draws the tooltips
-    drawToolTips(toolTipId, elementsWithInfoIcons, toolTipTextFunc = undefined) {
-        // ----------- draw the tool tips ---------------
-        
-        const infoIconGroups = elementsWithInfoIcons.append("span");
-        const icons = infoIconGroups.append("i")
-            .attr("class", "fa fa-info-circle infoIcon")
-            .attr("aria-hidden", true); // used for accessibility purposes
-
-        if (toolTipTextFunc == undefined) {
-            toolTipTextFunc = (data) => { return data; };
-        }
-
-        icons.attr("id", toolTipId)
-            .attr("title", toolTipTextFunc)
-            .attr("data-bs-html", "true")
-            .attr("data-toggle", "tooltip")
-            .attr("data-placement", "right")
-            .each((data, index, elements) => { $(elements[index]).tooltip({placement: "right", container: "body", trigger: "manual"}); })
-
-            // rewrite the title again since creating a Bootstrap tooltip will set the 'title' attribute to null
-            //   and transfer the content of the 'title' attribute to a new attribute called 'data-bs-original-title'
-            //
-            // Comment out the line below if we want to add back the title attribute.
-            // Its used for the hover text of the icon, but the user can see the same text if they click the icon
-            //
-            // The 'title' attribute seems to be for some assessbility purposes
-            // https://fontawesome.com/v5/docs/web/other-topics/accessibility
-            //
-            // .attr("title", toolTipTextFunc);
-
-        // add the hidden text needed for screen readers
-        for (const element of icons._groups[0]) {
-            d3.select(element.parentNode).append("span")
-                .classed("sr-only", true)
-                .text(toolTipTextFunc);
-        }
-
-        icons.on("mouseenter", (event) => { 
-            this.infoIconOnHover(event.target)
-        });
-        icons.on("mouseleave", (event) => { this.infoIconUnHover(event.target)});
-
-        // ----------------------------------------------
-    }
-
     // removeToolTips(toolTipSelector): Removes the tooltips
     removeToolTips(toolTipSelector) {
         const toolTips = d3.selectAll(toolTipSelector);
         toolTips.each((data, index, elements) => { $(elements[index]).tooltip('dispose'); });
         toolTips.remove();
-    }
-
-    // infoIconHover(element): When the info icon is being hovered over
-    infoIconOnHover(element) {
-        element = d3.select(element);
-        element.classed("infoIcon-enabled", true);
-        element.classed("infoIcon-disabled", false);
-    }
-
-    // infoIconUnHover(element): when the info icon is unhovered
-    infoIconUnHover(element) {
-        element = d3.select(element);
-
-        // do not change back the color if the icon has already been clicked
-        if (element.attr("infoIconClicked") == null) {
-            element.classed("infoIcon-enabled", false);
-            element.classed("infoIcon-disabled", true);
-        }
     }
 
     // toggleToolTip(icon): Toggles the tooltip to either show/hide
