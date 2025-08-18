@@ -258,3 +258,185 @@ export const el = {
     loader: document.getElementById("loader"),
   },
 };
+
+
+export class Visuals {
+    // getNextTextY(textY, numOfTextLines): Retrives the next y-position for the texts
+    //  in a text box
+    static getNextTextY(textY, numOfTextLines, fontSize, lineSpacing) {
+        return textY +  (numOfTextLines + 1) * fontSize + numOfTextLines * lineSpacing;
+    }
+
+    // drawWrappedText(text, numLines):
+    //   Draws the text to be wrapped around the textbox by creating
+    //      tspan elements to fit text into a given width
+    static drawWrappedText({textGroup = null, text = "", width = 0, textX = 0, textY = 0, 
+                            numLines = [0], fontSize = 12, lineSpacing = 1, clear = true} = {}) {
+        let textAnchor = textGroup.attr("text-anchor");
+        if (textAnchor == "middle") {
+            textX += width / 2;
+        }
+
+        // remove any existing text
+        if (clear) {
+            textGroup.selectAll("tspan").remove();
+        }
+
+        let textParts = text;
+        if ((typeof text === 'string')) {
+          textParts = [{text: text, atts: {}}];
+        }
+
+        const tspanXPos = textX;
+        let currentTextY = textY;
+        const textPartsLen = textParts.length;
+        let prevTextNodeLen = 0;
+        let textNodes = [textGroup.append("tspan").attr("y", currentTextY).attr("x", tspanXPos + prevTextNodeLen)];
+
+        for (let i = 0; i < textPartsLen; ++i) {
+          const textPart = textParts[i];
+          const textPartIsString = typeof textPart === 'string';
+          const currentText = (textPartIsString) ? textPart : textPart.text;
+
+          const words = currentText.split(" ");
+          const wordsLen = words.length;
+          let textNode = textNodes[textNodes.length - 1];
+
+
+          for (let j = 0; j < wordsLen; ++j) {
+            const word = words[j];
+            textNode = textNodes[textNodes.length - 1];
+            const line = textNode.text();
+            const lineArr = line.split(" ");
+
+            lineArr.push(word);
+            textNode.text(lineArr.join(" "));
+
+            if (textNode.node().getComputedTextLength() > width - prevTextNodeLen) {
+              lineArr.pop();
+              currentTextY = Visuals.getNextTextY(textY, numLines[0], fontSize, lineSpacing);
+              const joinedLines = (i == 0 && j == 0) ? "" : lineArr.join(" ");
+
+              textNode.text(joinedLines);
+              textNode = textGroup.append("tspan")
+                  .attr("x", tspanXPos)
+                  .attr("y", currentTextY)
+                  .text(word);
+
+              textNodes.push(textNode);
+              numLines[0]++;
+
+            } else {
+              const joinedLines = (i == 0 && j == 0) ? word : lineArr.join(" ");
+              textNode.text(joinedLines);
+              textNodes[textNodes.length - 1] = textNode;
+            }
+
+            prevTextNodeLen = textNode.node().getComputedTextLength();
+          }
+        }
+
+        numLines[0]++;
+    }  
+
+    // drawSingleLineText(text, TextY): Draws the text on a single line in the textbox
+    static drawSingleLineText({textGroup = null, text = "", textX = 0, textY = 0, clear = true, letterSpacing = 1} = {}) {
+        let textAnchor = textGroup.attr("text-anchor");
+        if (textAnchor == "middle") {
+            textX += width / 2;
+        }
+
+        // remove any existing text
+        if (clear) {
+            textGroup.selectAll("tspan").remove();
+        }
+
+        let textParts = text;
+        if ((typeof text === 'string')) {
+          textParts = [{text: text, atts: {}}];
+        }
+
+        let totalWidth = 0;
+
+        for (const textPart of textParts) {
+          const textPartIsString = typeof textPart === 'string';
+          const currentText = (textPartIsString) ? textPart : textPart.text;
+          const atts = (textPartIsString) ? {} : textPart.atts;
+
+          const textNode = textGroup.append("tspan")
+            .attr("x", textX)
+            .attr("y", textY)
+            .text(currentText);
+
+          for (const attName in atts) {
+            textNode.attr(attName, atts[attName]);
+          }
+
+          const textWidth = textNode.node().getComputedTextLength();
+          totalWidth += textWidth;
+          textX += textWidth + letterSpacing;
+        }
+
+        return totalWidth;
+    }
+
+    // drawText(): Draws text on 'textGroup'
+    // Note: 'text' is either a string or a list of strings
+    static drawText({textGroup = null, text = "", textX = 0, textY = 0, width = 0, 
+                    fontSize = 12, lineSpacing = 1, textWrap = "Wrap", paddingLeft = 0, paddingRight = 0} = {}) {
+
+        const origTextY = textY;
+        let textLines = text;
+        let linesWritten = 0;
+        let clear = true;
+        let line = "";
+
+        if (typeof textLines === 'string') {
+            textLines = [textLines];
+        }
+
+        const textLinesLen = textLines.length;
+
+        // draws many lines of wrapped text that are each seperated by a newline
+        if (textWrap == "Wrap") {
+            let numLines = [0];
+
+            for (let i = 0; i < textLinesLen; ++i) {
+                line = textLines[i];
+                numLines = [0];
+
+                if (i > 0) {
+                    clear = false;
+                }
+
+                Visuals.drawWrappedText({textGroup, text: line, width, textX, textY, numLines, fontSize, lineSpacing, clear});
+                numLines = numLines.filter((line) => !isNaN(line));
+                linesWritten += numLines[0];
+                textY = Visuals.getNextTextY(origTextY, linesWritten, fontSize, lineSpacing) - fontSize;
+            }
+
+            textY -= fontSize;
+
+        // draws many lines of text on a single line with each text seperated by a newline
+        } else if (textWrap == "NoWrap") {
+            textY += fontSize;
+
+            for (let i = 0; i < textLinesLen; ++i) {
+                line = textLines[i];
+
+                if (i > 0) {
+                    clear = false;
+                }
+
+                let lineWidth = Visuals.drawSingleLineText({textGroup, text: line, textX, textY, clear});
+                width = Math.max(paddingLeft + lineWidth + paddingRight, width);
+
+                linesWritten += 1;
+                textY = Visuals.getNextTextY(origTextY, linesWritten, fontSize, lineSpacing);
+            }
+        }
+
+        return {width, textBottomYPos: textY - lineSpacing - fontSize};
+    }
+
+}
