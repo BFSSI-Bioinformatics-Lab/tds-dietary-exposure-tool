@@ -464,6 +464,17 @@ About Table
   }
 }
 
+/*
+
+Legend
+
+*/
+
+.legend-title {
+  font-weight: bold;
+}
+
+
 /* ################ GENERAL STYLES ########################## */
 
 /* URL Links in the site*/
