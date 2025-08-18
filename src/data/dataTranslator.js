@@ -7,7 +7,8 @@ import {
   ConsumptionUnits,
   getConsumptionFiles,
   PFASGroupings,
-  getTranslations
+  getTranslations,
+  Translation
 } from "../const.js";
 import { readCSV } from "./dataLoader.js";
 import {
@@ -284,6 +285,8 @@ export async function loadTdsData() {
  */
 export async function getRawFilteredConsumptionData() {
   const filters = getActiveFilters();
+  const ageSexGroups = new Set(filters.ageSexGroups);
+  const tdsAllPeople = Translation.translate("tdsData.values.allPeople");
 
   let filtered = [];
 
@@ -303,13 +306,12 @@ export async function getRawFilteredConsumptionData() {
       const [ageSexGroup, age, _] = getAgeSexGroupInfoForConsumptionEntry(
         row[getTranslations().tdsData.headers[DataColumn.POPULATION]],
       );
-      return (
-        row[getTranslations().tdsData.headers[DataColumn.POPULATION_GROUP]] ==
-          getTranslations().tdsData.values.allPeople &&
-        filters.ageSexGroups.includes(
-          filters.ageSexGroupsIsAgeGroups ? age : ageSexGroup,
-        )
-      );
+
+      const populationGroup = row[getTranslations().tdsData.headers[DataColumn.POPULATION_GROUP]];
+      const isAllPeople = populationGroup == tdsAllPeople;
+
+      if (!isAllPeople) return false;
+      return ageSexGroups.has(ageSexGroup);
     });
 
     data.filename = fileInfo.filename;

@@ -175,7 +175,6 @@ export function getActiveFilters() {
     ageSexGroups: ageSexGroups,
     ageGroups: ageGroups,
     sexGroups: sexGroups,
-    ageSexGroupsIsAgeGroups: graphType == GraphTypes.RBASG,
     showByAgeSexGroup:
       el.graphs[GraphTypes.RBASG].filters.domain.value ==
       getTranslations().filters.rbasgDomainFormat[RbasgDomainFormat.AGESEX],

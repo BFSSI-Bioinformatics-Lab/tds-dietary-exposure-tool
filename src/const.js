@@ -958,6 +958,7 @@ const LangEN = {
       downloadContaminantData: "Download Occurrence Data",
       downloadConsumptionData: "Download Consumption Data",
       downloadDataTable: "Download Exposure Estimates",
+      downloadTemplate: "Download Template .csv"
     },
     exportNames: {
       [ConsumptionUnits.PERSON]: "Food Consumption per Person per Day",
@@ -1656,6 +1657,7 @@ const LangFR = {
       downloadContaminantData: "Télécharger les données d'occurrence",
       downloadConsumptionData: "Télécharger les données de consommation",
       downloadDataTable: "Télécharger les estimations d'exposition",
+      downloadTemplate: "Télécharger Modèle .csv"
     },
     exportNames: {
       [ConsumptionUnits.PERSON]:
