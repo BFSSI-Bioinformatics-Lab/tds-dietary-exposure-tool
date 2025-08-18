@@ -229,6 +229,7 @@ export const el = {
         "download-contaminant-data-button",
       ),
       downloadDataTable: document.getElementById("download-data-table-button"),
+      downloadTemplate: document.getElementById("download-template-button")
     },
   },
 

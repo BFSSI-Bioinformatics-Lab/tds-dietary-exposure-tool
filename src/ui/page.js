@@ -212,6 +212,8 @@ export async function initializePageText() {
     translations.dataTable.buttons.downloadContaminantData;
   el.dataTable.buttons.downloadDataTable.innerHTML =
     translations.dataTable.buttons.downloadDataTable;
+  el.dataTable.buttons.downloadTemplate.innerHTML = 
+    Translation.translate("dataTable.buttons.downloadTemplate");
 
   el.about.title.innerHTML = translations.about.title;
   displayAboutTable();
