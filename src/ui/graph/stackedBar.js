@@ -1,3 +1,7 @@
+import { GraphTypes, VisualDims, Translation } from "../../const.js";
+import { Visuals } from "../const.js";
+
+
 /**
  * Generate a stacked bar SVG based on input data
  *
@@ -16,16 +20,19 @@
  * Returns:
  * - Generated stacked bar SVG as a string
  */
-export function getStackedBarSvg(data) {
-  if ($.isEmptyObject(data)) return;
+export function getStackedBarSvg(data, selector) {
+  if ($.isEmptyObject(data)) return false;
   let dataExists = false;
 
-  const width = 1500;
-  const height = 600;
-  const marginTop = 10;
-  const marginRight = 10;
-  const marginBottom = 140;
-  const marginLeft = 100;
+  const graphType = GraphTypes.RBFG;
+  const dimensions = VisualDims[graphType];
+
+  const width = VisualDims[graphType].width;
+  const height = VisualDims[graphType].height;
+  const marginTop = VisualDims[graphType].marginTop;
+  const marginRight = VisualDims[graphType].marginRight;
+  const marginBottom = VisualDims[graphType].marginBottom;
+  const marginLeft = VisualDims[graphType].marginLeft;
 
   const series = d3
     .stack()
@@ -48,7 +55,7 @@ export function getStackedBarSvg(data) {
   );
 
   if (!dataExists) {
-    return;
+    return false;
   }
 
   const x = d3
@@ -76,8 +83,8 @@ export function getStackedBarSvg(data) {
     )
     .rangeRound([height - marginBottom, marginTop]);
 
-  const svg = d3
-    .create("svg")
+  const svg = d3.select(selector)
+    .append("svg")
     .attr("width", width)
     .attr("height", height)
     .attr("viewBox", [0, 0, width, height])
@@ -109,9 +116,13 @@ export function getStackedBarSvg(data) {
 
   /* Horizontal Axis */
 
-  svg
+  const graphBottom = svg.append("g")
+    .attr("transform", `translate(0, ${height - marginBottom})`);
+
+  const horizontalAxis = graphBottom.append("g");
+
+  horizontalAxis
     .append("g")
-    .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(x).tickSizeOuter(0))
     .call((g) => g.selectAll(".domain").remove())
     .selectAll("text")
@@ -121,19 +132,18 @@ export function getStackedBarSvg(data) {
     .attr("dy", ".8em")
     .attr("transform", "rotate(-45)");
 
-  svg
+  horizontalAxis
     .append("line")
     .attr("x1", marginLeft)
-    .attr("y1", height - marginBottom + 1)
     .attr("x2", marginLeft)
-    .attr("y2", marginTop)
+    .attr("y2", -marginTop)
     .attr("stroke", "black")
     .attr("stroke-width", 2);
 
-  svg
+  horizontalAxis
     .append("text")
     .attr("x", width / 2)
-    .attr("y", height - marginTop)
+    .attr("y", dimensions.horizontalAxisLabelYPos)
     .text(data.titleX)
     .attr("class", "graph-axis-title")
     .attr("fill", "var(--fontColour)");
@@ -180,5 +190,17 @@ export function getStackedBarSvg(data) {
       .attr("stroke-width", 2);
   }
 
-  return svg.node();
+  /* footer */
+  const footer = graphBottom
+    .append("g")
+    .attr("transform", `translate(0, ${dimensions.footerYPos})`);
+
+  const footerText = footer.append("text").attr("font-size", dimensions.footerFontSize);
+  Visuals.drawText({textGroup: footerText, text: Translation.translate(`graphs.${graphType}.footer.units`, {returnObjects: true}), fontSize: dimensions.footerFontSize, lineSpacing: dimensions.footerLineSpacing, width: 150, textWrap: "NoWrap"});
+
+
+  svg.append("g")
+    .attr("transform", `translate(${marginLeft}, 0)`);
+
+  return true;
 }

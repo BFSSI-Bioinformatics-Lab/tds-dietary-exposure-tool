@@ -1,3 +1,6 @@
+import { GraphTypes, VisualDims } from "../../const.js";
+
+
 /**
  * Generate a sunburst SVG based on input data
  *
@@ -13,14 +16,17 @@
  * Returns:
  * - Generated sunburst SVG as a string
  */
-export function getSunburstSvg(data) {
-  if (!data) return;
+export function getSunburstSvg(data, selector) {
+  if (!data) return false;
   let dataExists = false;
 
-  const width = 700;
-  const height = width;
-  const arcPadding = 1;
-  const margin = 1;
+  const graphType = GraphTypes.RBF;
+  const dimensions = VisualDims[graphType];
+
+  const width = VisualDims[graphType].width;
+  const height = VisualDims[graphType].height;
+  const arcPadding = VisualDims[graphType].arcPadding;
+  const margin = VisualDims[graphType].margin;
 
   const root = d3.hierarchy(data, (d) => d.children);
 
@@ -32,7 +38,7 @@ export function getSunburstSvg(data) {
   });
 
   if (!dataExists) {
-    return;
+    return false;
   }
 
   root.sort((a, b) => {
@@ -56,8 +62,8 @@ export function getSunburstSvg(data) {
     .innerRadius((d) => d.y0)
     .outerRadius((d) => d.y1 - arcPadding);
 
-  const svg = d3
-    .create("svg")
+  const svg = d3.select(selector)
+    .append("svg")
     .attr("viewBox", [
       2 * margin - width / 2,
       2 * margin - height / 2,
@@ -107,5 +113,5 @@ export function getSunburstSvg(data) {
 
   cell.append("title").text((d) => d.data.info);
 
-  return svg.node();
+  return true;
 }

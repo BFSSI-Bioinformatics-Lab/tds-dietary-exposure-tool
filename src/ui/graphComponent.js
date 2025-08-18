@@ -165,11 +165,13 @@ export function displayGraph(data) {
     }
   });
 
-  const graphSvg = getSvgFn(graphData);
-
   el.graphs.title.innerHTML = graphTitle;
   el.graphs.graph.innerHTML = "";
-  el.graphs.graph.append(graphSvg || getTranslations().misc.noDataMsg);
+
+  const graphSvg = getSvgFn(graphData, el.graphs.graph);
+  if (!graphSvg) {
+    el.graphs.graph.append(getTranslations().misc.noDataMsg);
+  }
 
   el.graphs.saveGraph.classList.remove(classes.HIDDEN);
   const dataTableData = getDataTableDataFn(specificData, filters);
