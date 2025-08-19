@@ -61,8 +61,8 @@ export function getGroupedBarSvg(data, selector) {
     .nice()
     .rangeRound([height - marginBottom, marginTop]);
 
-  const svg = d3.select(selector)
-    .append("svg")
+  const svgContainer = d3.select(selector);
+  const svg = svgContainer.append("svg")
     .attr("width", width)
     .attr("height", height)
     .attr("viewBox", [0, 0, width, height])
@@ -91,6 +91,7 @@ export function getGroupedBarSvg(data, selector) {
     .text((d) => d.info);
 
   if (!dataExists) {
+    svgContainer.html(null);
     return false;
   }
 

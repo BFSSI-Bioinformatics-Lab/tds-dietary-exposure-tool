@@ -1079,6 +1079,7 @@ const LangEN = {
     values: {
       allPeople: "All people",
       radionuclides: "Radionuclides",
+      totalRadionuclides: "Total Radionuclides",
       PFAS: "Perfluorinated chemicals (PFCs)",
       PFASGroupings: {
         [PFASGroupings.TOTAL_PFAS]:
@@ -1470,9 +1471,9 @@ const LangFR = {
   "changeLanguageValue": language.EN,
   "close": "Fermer",
 
-  "selectAll": REMPLACER_MOI,
-  "deselectAll": REMPLACER_MOI,
-  "noneSelected": REMPLACER_MOI,
+  "selectAll": "Tout Sélectionner",
+  "deselectAll": "Désélectionner Tout",
+  "noneSelected": "Aucun Sélectionné",
 
   errorMsgs: {
     notANumber: "Veuillez entrer un nombre",
@@ -1776,6 +1777,7 @@ const LangFR = {
     values: {
       allPeople: "Toutes les personnes",
       radionuclides: "Radionucléides",
+      totalRadionuclides: "Radionucléides Totales",
       PFAS: "Produits chimiques perfluorés (PFC) ",
       PFASGroupings: {
         [PFASGroupings.TOTAL_PFAS]:

@@ -621,11 +621,12 @@ function displayChemicals(flush = true) {
       tdsData.contaminant[el.filters.inputs.chemicalGroup.value],
     ).sort((a, b) => a.localeCompare(b));
   
-    if (filters.chemicalGroup == getTranslations().tdsData.values.PFAS) {
-      const first = Object.values(getTranslations().tdsData.values.PFASGroupings);
-      chemicals = first.concat(
-        chemicals.filter((chemical) => !first.includes(chemical)),
-      );
+    if (filters.chemicalGroup == Translation.translate("tdsData.values.PFAS")) {
+      const first = Object.values(Translation.translate("tdsData.values.PFASGroupings", {returnObjects: true}));
+      chemicals = first.concat(chemicals.filter((chemical) => !first.includes(chemical)));
+
+    } else if (filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides")) {
+      chemicals.unshift(Translation.translate("tdsData.values.totalRadionuclides"));
     }
   
     chemicals.forEach((chemical) => {
@@ -645,9 +646,8 @@ function displayYears() {
   let dropdown = $(el.filters.inputs.years);
   dropdown.selectpicker('destroy');
 
-  const years = Object.keys(
-    tdsData.contaminant[filters.chemicalGroup][filters.chemical],
-  ).sort();
+  let years = tdsData.contaminant[filters.chemicalGroup][filters.chemical];
+  years = (years ==undefined) ? [] : Object.keys(years).sort();
 
   el.filters.inputs.years.innerHTML = "";
   years.forEach((year) => {
@@ -1105,9 +1105,12 @@ export function getFilteredTdsData() {
     contaminant: {},
   };
 
-  Object.keys(
-    tdsData.contaminant[filters.chemicalGroup][filters.chemical],
-  ).forEach((year) => {
+  let chemicalData = tdsData.contaminant[filters.chemicalGroup][filters.chemical];
+  if (chemicalData == undefined) {
+    chemicalData = {}
+  }
+
+  Object.keys(chemicalData).forEach((year) => {
     if (filters.years.includes(year)) {
       filteredTdsData.contaminant[year] =
         tdsData.contaminant[filters.chemicalGroup][filters.chemical][year];

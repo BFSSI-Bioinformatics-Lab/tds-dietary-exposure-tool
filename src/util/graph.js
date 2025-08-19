@@ -1,4 +1,4 @@
-import { IDCs, LODs, ageGroupToIDCAgeGroup, getTranslations } from "../const.js";
+import { IDCs, LODs, ageGroupToIDCAgeGroup, getTranslations, Translation } from "../const.js";
 import { lodOrMdlIsValid } from "./data.js";
 
 /**
@@ -42,18 +42,17 @@ export function getContaminantExposure(
   filters,
   age,
 ) {
-  // Special case when calculating radionuclide occurrence
-  if (filters.chemicalGroup == getTranslations().tdsData.values.radionuclides) {
-    const IDC = IDCs[filters.chemical][ageGroupToIDCAgeGroup[age]];
-    return (
-      // Unit: mSv/year
-      ((meanContaminantOccurrence * meanConsumptionOfFoodComposite) / 1000) *
-      IDC *
-      365
-    );
-  }
 
-  return meanConsumptionOfFoodComposite * meanContaminantOccurrence;
+  const baseExposure = meanConsumptionOfFoodComposite * meanContaminantOccurrence;
+  if (filters.chemicalGroup != Translation.translate("tdsData.values.radionuclides")) return baseExposure;
+
+  const chemicalIDC = IDCs[filters.chemical];
+  if (chemicalIDC == undefined) return baseExposure;
+
+  const IDC = chemicalIDC[ageGroupToIDCAgeGroup[age]];
+
+  // Unit: mSv/year
+  return (baseExposure / 1000) * IDC * 365;
 }
 
 /**
