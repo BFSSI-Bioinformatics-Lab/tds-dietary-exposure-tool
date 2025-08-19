@@ -665,6 +665,10 @@ Legend
   color: var(--error);
 }
 
+.bs-actionsbox .btn-group button {
+  font-size: 12px;
+}
+
 /* =================================================== */
 /* =========== Collapsibles/Accordions================= */
 .accordion {
