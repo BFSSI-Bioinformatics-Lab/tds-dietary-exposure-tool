@@ -10,6 +10,7 @@ import {
   displayDataTable,
   downloadDataTable,
   downloadTDSData,
+  downloadTemplate
 } from "./dataTableComponent.js";
 import { classes, el } from "./const.js";
 import { downloadGraph } from "./graphComponent.js";
@@ -57,6 +58,9 @@ export function addEventListenersToPage() {
   });
   el.dataTable.buttons.downloadDataTable.addEventListener("click", () => {
     downloadDataTable(getFilteredTdsData(), getSelectedGraphType());
+  });
+  el.dataTable.buttons.downloadTemplate.addEventListener("click", () => {
+    downloadTemplate();
   });
 }
 

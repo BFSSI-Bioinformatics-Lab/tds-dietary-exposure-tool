@@ -143,6 +143,37 @@ export class SetTools {
 }
 
 
+// TableTools: Class for handling any table-like data ex. list of lists/matrices, list of dictionaries
+//    dictionaries of dictionaries, dictionaries of lists, etc...
+export class TableTools {
+
+  // createCSVContent(matrix): Creates the string needed for exporting to CSV
+  static createCSVContent(matrix) {
+      let result = "";
+      for (const row of matrix) {
+          const colLen = row.length;
+          const csvRow = [];
+
+          // clean up the text for each cell
+          for (let i = 0; i < colLen; ++i) {
+              let cell = row[i];
+              if (Number.isNaN(cell) || cell === undefined || cell === null) {
+                  cell = "";
+              }
+
+              let cleanedText = `${cell}`.replace(/"/g, "'").replace('"', "'");
+              cleanedText = `"${cleanedText}"`;
+              csvRow.push(cleanedText);
+          }
+
+          result += csvRow.join(",") + "\r\n";
+      }
+
+      return result;
+  }
+}
+
+
 /**
  * Return domain specific age-sex group, age group, and sex group from age-sex group found in raw consumption entry
  */
