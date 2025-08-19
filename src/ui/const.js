@@ -66,6 +66,10 @@ export const el = {
         arrowDown: document.getElementById("more-info-arrow-down"),
         arrowRight: document.getElementById("more-info-arrow-right"),
       },
+      addData: {
+        dropdownHeaderText: document.getElementById("addDataDropdownHeaderText"),
+        content: document.getElementById("addDataContent")
+      }
     },
     languageButton: document.getElementById("language-button"),
     subtitle: document.getElementById("subtitle"),
