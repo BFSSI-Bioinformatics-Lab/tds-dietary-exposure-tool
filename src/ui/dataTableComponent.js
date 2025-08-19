@@ -1,5 +1,5 @@
-import { DataType, GraphTypes, SortByDir, getTranslations, Translation, DataTableHeader } from "../const.js";
-import { downloadCSV } from "../data/dataDownloader.js";
+import { DataType, GraphTypes, getTranslations, Translation, DataTableHeader } from "../const.js";
+import { downloadCSVFromData, formatDownloadName, downloadCSV } from "../data/dataDownloader.js";
 import {
   getRawFilteredConsumptionData,
   getRawFilteredContaminantData,
@@ -7,9 +7,9 @@ import {
 import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
 import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
-import { classes, el, text } from "./const.js";
+import { el} from "./const.js";
 import { getActiveFilters } from "./filter.js";
-import { addEventListernToDataTableHeader } from "./page.js";
+import { TableTools } from "../util/data.js";
 
 /**
  * Download raw filtered TDS data
@@ -24,9 +24,23 @@ export async function downloadTDSData(dataToDownload) {
 
   const data = await getData[dataToDownload]();
 
-  data.forEach((d) => {
-    downloadCSV(d);
+  data.forEach((d, ind) => {
+    const freePreviousObjects = ind == 0;
+    downloadCSVFromData(d, freePreviousObjects);
   });
+}
+
+export async function downloadTemplate() {
+  const [consumptionData, contaminantData] = await Promise.all([
+    d3.csv(`data/consumption/${i18next.language}/template.csv`),
+    d3.csv(`data/contaminant/${i18next.language}/template.csv`)
+  ]);
+
+  const consumptionCSVContent = TableTools.createCSVContent([consumptionData.columns]);
+  const contaminantCSVContent = TableTools.createCSVContent([contaminantData.columns]);
+
+  downloadCSV({fileName: Translation.translate("dataTable.exportNames.consumptionTemplate"), csvContent: consumptionCSVContent});
+  downloadCSV({fileName: Translation.translate("dataTable.exportNames.contaminantTemplate"), csvContent: contaminantCSVContent, freePreviousObjects: false});
 }
 
 
@@ -93,7 +107,9 @@ export function downloadDataTable(tdsData, graphType) {
   const data = {
     filename: getTranslations().dataTable.exportNames.calculations,
     rows: getDataTableDataFn(specificData, filters),
+    csvFilename: ""
   };
+
   data.rows = data.rows.map((row) => {
     return Object.keys(row).reduce((acc, column) => {
       acc[getTranslations().dataTable.headers[column]] = row[column];
@@ -101,7 +117,8 @@ export function downloadDataTable(tdsData, graphType) {
     }, {});
   });
 
-  downloadCSV(data);
+  data.csvFilename = formatDownloadName(data.filename);
+  downloadCSVFromData(data);
 }
 
 /**

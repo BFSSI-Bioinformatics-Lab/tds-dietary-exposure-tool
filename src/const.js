@@ -965,6 +965,8 @@ const LangEN = {
       [ConsumptionUnits.KGBW]: "Food Consumption per kg Bodyweight per Day",
       dataExport: "Data Export",
       calculations: "Dietary Exposure Calculations",
+      consumptionTemplate: "Consumption Template",
+      contaminantTemplate: "Contaminant Template"
     },
     headers: {
       [DataTableHeader.CHEMICAL]: "Chemical",
@@ -1666,6 +1668,8 @@ const LangFR = {
         "Consommation alimentaire par kg de poids corporel par jour",
       dataExport: "Exportation de données",
       calculations: "Calculs d’exposition alimentaire",
+      consumptionTemplate: "Modèle de Consommation",
+      contaminantTemplate: "Modèle de Contaminant"
     },
     headers: {
       [DataTableHeader.CHEMICAL]: "Produit chimique",

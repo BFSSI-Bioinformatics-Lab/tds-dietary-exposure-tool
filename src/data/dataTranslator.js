@@ -11,6 +11,7 @@ import {
   Translation
 } from "../const.js";
 import { readCSV } from "./dataLoader.js";
+import { formatDownloadName } from "./dataDownloader.js";
 import {
   getAgeSexGroupInfoForConsumptionEntry,
   getCompositeDescForConsumptionEntry,
@@ -315,6 +316,7 @@ export async function getRawFilteredConsumptionData() {
     });
 
     data.filename = fileInfo.filename;
+    data.csvFilename = formatDownloadName(data.filename);
     filtered.push(data);
   }
 
@@ -337,6 +339,7 @@ export async function getRawFilteredContaminantData() {
   let data = {
     filename: filters.chemicalGroup + " - " + filters.chemical,
     rows: [],
+    csvFilename: ""
   };
 
   for (const file of getContaminantFiles()) {
@@ -375,5 +378,6 @@ export async function getRawFilteredContaminantData() {
       .forEach((row) => data.rows.push(row));
   }
 
+  data.csvFilename = formatDownloadName(data.filename);
   return [data];
 }
