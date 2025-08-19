@@ -140,6 +140,9 @@ export async function initializePageText() {
   el.header.information.moreInfo.content.innerHTML =
     translations.header.information.moreInfoContent.join("<br/>");
 
+  el.header.information.addData.dropdownHeaderText.innerHTML = Translation.translate("header.information.addDataHeaderText");
+  el.header.information.addData.content.innerHTML = Translation.translate("header.information.addDataContent", {returnObjects: true}).join("<br/>");
+
   el.filters.titles.graphSelectTitle.innerHTML = translations.filters.titles.selectGraphType;
   el.filters.titles.filtersTitle.innerHTML = translations.filters.titles.selectChemical;
   el.filters.titles.rbasgGraphSelectSubtitle.innerHTML = Translation.translate("filters.titles.rbasgGraphSelectTitle");

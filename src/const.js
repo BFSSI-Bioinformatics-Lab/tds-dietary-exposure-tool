@@ -777,6 +777,11 @@ const LangEN = {
         '- The Canadian Total Diet Study results from the 2008-2023 collection years. Available on the <a href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c" target="_blank">Canadian Laboratory Information Network.</a>',
         '- <a href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130" target="_blank">The 2008-2023 Total Diet Study Food Consumption Tables (2015 CCHS-Nutrition).</a>',
       ],
+      addDataHeaderText: "Add Customized Data",
+      addDataContent: [
+        "For testing purposes you can add a dummy set of data.",
+        "Please download and use the .csv template provided here."
+      ]
     },
     language: "Français",
     subtitle:
@@ -1490,6 +1495,10 @@ const LangFR = {
         '- Résultats de l\'Étude canadienne sur l\'alimentation totale pour les années de collecte 2008-2023. Disponible sur le <a href="https://open.canada.ca/data/en/dataset/01c12f93-d14c-4005-b671-e40030a3aa2c" target="_blank">Réseau canadien d\'information sur les laboratoires</a>',
         '- <a href="https://open.canada.ca/data/en/dataset/ac573724-2f77-4f75-a2f4-c416d79cf130" target="_blank">Les tableaux de consommation alimentaire de l\'étude de l\'alimentation totale 2008-2023 (2015 ESCC-Nutrition).</a>',
       ],
+      addDataHeaderText: REMPLACER_MOI,
+      addDataContent: [
+        REMPLACER_MOI
+      ]
     },
     language: "English",
     subtitle:
