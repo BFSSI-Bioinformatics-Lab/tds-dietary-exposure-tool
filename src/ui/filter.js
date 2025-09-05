@@ -646,8 +646,22 @@ function displayYears() {
   let dropdown = $(el.filters.inputs.years);
   dropdown.selectpicker('destroy');
 
-  let years = tdsData.contaminant[filters.chemicalGroup][filters.chemical];
-  years = (years ==undefined) ? [] : Object.keys(years).sort();
+  let years = [];
+  if (filters.chemical == Translation.translate("tdsData.values.totalRadionuclides")) {
+    years = new Set();
+    const chemicalGroupData = tdsData.contaminant[filters.chemicalGroup];
+
+    for (const chemical in chemicalGroupData) {
+      const chemicalData = chemicalGroupData[chemical];
+      SetTools.union(years, new Set(Object.keys(chemicalData)), false);
+    }
+
+    years = Array.from(years).sort();
+
+  } else {
+    years = tdsData.contaminant[filters.chemicalGroup][filters.chemical];
+    years = (years == undefined) ? [] : Object.keys(years).sort();
+  }
 
   el.filters.inputs.years.innerHTML = "";
   years.forEach((year) => {
@@ -1105,15 +1119,44 @@ export function getFilteredTdsData() {
     contaminant: {},
   };
 
-  let chemicalData = tdsData.contaminant[filters.chemicalGroup][filters.chemical];
+  let chemicalData = {};
+  let chemicals = new Set([filters.chemical]);
+  let chemicalUnits = {};
+
+  if (filters.chemical == Translation.translate("tdsData.values.totalRadionuclides")) {
+    const chemicalGroupData = tdsData.contaminant[filters.chemicalGroup];
+    chemicals.clear();
+
+    for (const chemical in chemicalGroupData) {
+      chemicals.add(chemical);
+      const currentChemicalData = chemicalGroupData[chemical];
+
+        for (const year in currentChemicalData) {
+          const yearData = currentChemicalData[year];
+
+          if (yearData.length > 0 && chemicalUnits[chemical] == undefined) {
+            chemicalUnits[chemical] = yearData[0].units
+          }
+
+          if (chemicalData[year] == undefined) {
+            chemicalData[year] = structuredClone(yearData); 
+          } else {
+            chemicalData[year] = chemicalData[year].concat(yearData);
+          }
+        }
+    }
+
+  } else {
+    chemicalData = tdsData.contaminant[filters.chemicalGroup][filters.chemical];
+  }
+
   if (chemicalData == undefined) {
     chemicalData = {}
   }
 
   Object.keys(chemicalData).forEach((year) => {
     if (filters.years.includes(year)) {
-      filteredTdsData.contaminant[year] =
-        tdsData.contaminant[filters.chemicalGroup][filters.chemical][year];
+      filteredTdsData.contaminant[year] = chemicalData[year];
     }
   });
 
@@ -1123,6 +1166,7 @@ export function getFilteredTdsData() {
     filters.override.list = filters.override.list.map((override) => {
       return { ...override, entryFound: false };
     });
+
     filteredTdsData.contaminant[year].forEach((row) => {
       const modifiedRow = { ...row };
       filters.override.list.forEach((override) => {
@@ -1135,13 +1179,15 @@ export function getFilteredTdsData() {
     });
 
     filters.override.list.forEach((override) => {
-      if (!override.entryFound) {
+      if (override.entryFound) return;
+
+      for (const chemical of chemicals) {
         filteredContaminantData[year].push({
-          chemical: filters.chemical,
+          chemical: chemical,
           chemicalGroup: filters.chemicalGroup,
           compositeInfo: override.composite,
           lod: 0,
-          units: filteredTdsData.contaminant[year][0].units,
+          units: chemicalUnits[chemical],
           occurrence: override.occurrence,
           year: year,
         });
