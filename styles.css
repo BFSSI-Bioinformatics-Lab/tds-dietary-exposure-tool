@@ -158,6 +158,10 @@ Header
   gap: 0.3rem;
 }
 
+.titleContainer {
+  padding: 20px 40px;
+}
+
 /*
 
 Graph Selects

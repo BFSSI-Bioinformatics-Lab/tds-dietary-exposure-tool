@@ -769,7 +769,7 @@ const LangEN = {
 
   header: {
     title:
-      "<b> Canadian Total Diet Study 2008-2023 Dietary Exposure Tool </b> from Health Canada’s Food and Nutrition Directorate",
+      "<b> Canadian Total Diet Study 2008-2023 Dietary Exposure Tool </b><br> from Health Canada’s Food and Nutrition Directorate",
     information: {
       moreInfoButton: "Data Sources",
       moreInfoContent: [
@@ -1478,7 +1478,7 @@ const LangFR = {
 
   header: {
     title:
-      "<b>Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023</b> de la Direction des aliments et de la nutrition de Santé Canada",
+      "<b>Outil d'exposition alimentaire de l'Étude canadienne sur l'alimentation totale 2008-2023</b><br> de la Direction des aliments et de la nutrition de Santé Canada",
     information: {
       moreInfoButton: "Sources de données",
       moreInfoContent: [
