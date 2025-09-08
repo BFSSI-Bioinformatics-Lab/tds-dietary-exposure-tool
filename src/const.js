@@ -1462,7 +1462,7 @@ const LangFR = {
   "close": "Fermer",
 
   "selectAll": "Tout Sélectionner",
-  "deselectAll": "Désélectionner Tout",
+  "deselectAll": "Tout Désélectionner",
   "noneSelected": "Aucun Sélectionné",
 
   errorMsgs: {
@@ -1572,8 +1572,8 @@ const LangFR = {
         "Les valeurs de consommation ayant un CV élevé ont été supprimées par défaut. Vous pouvez choisir de les inclure dans le calcul des expositions estimées.",
       confirmShowSuppressedValues:
         "Avertissement de Statistique Canada : L'utilisateur est avisé que les valeurs de consommation dont le CV est supérieur à 33,3 % ne satisfont pas aux lignes directrices de Statistique Canada en matière de qualité pour ce programme statistique. Les conclusions basées sur ces données ne seront pas fiables et très probablement invalides. Ces données et les résultats qui en découlent ne doivent pas être publiés. Si l'utilisateur choisit de publier ces résultats, cet avertissement doit être publié avec les données.",
-      showSuppressed: "Include (TODO)",
-      dontShowSuppressed: "Exclude (TODO)",
+      showSuppressed: "Inclure",
+      dontShowSuppressed: "Exclure",
     },
   },
 
