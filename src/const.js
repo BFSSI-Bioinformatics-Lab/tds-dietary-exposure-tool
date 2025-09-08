@@ -205,10 +205,10 @@ export const ageGroupOrder = {
   [ageGroups["19-30"]]: 4,
   [ageGroups["31-50"]]: 5,
   [ageGroups["51-70"]]: 6,
-  [ageGroups["1-18"]]: 7,
+  [ageGroups["1-18"]]: 9,
   [ageGroups["1+"]]: 8,
-  [ageGroups["19+"]]: 9,
-  [ageGroups["71+"]]: 10,
+  [ageGroups["19+"]]: 10,
+  [ageGroups["71+"]]: 7,
 }
 
 export const ageGroups1To8 = new Set([
