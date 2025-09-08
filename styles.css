@@ -309,6 +309,14 @@ Sandbox
   }
 }
 
+#filter-reference-line-select {
+  max-width: 150px;
+}
+
+#filter-override-food-select {
+  max-width: 200px;
+}
+
 /*
 
 Graph
