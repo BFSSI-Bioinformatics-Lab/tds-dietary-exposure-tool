@@ -914,13 +914,8 @@ const LangEN = {
       },
       footer: {
         units: [
-          ["Radionuclides m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Elements k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Food packaging k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Perfluorinated chemical m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Phthalates  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Polychlorinated Biphenols  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Volatile organic compounds k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
+          ["m = 10", {text: "-3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "-6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}},
+           "; k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}]
         ]
       }
     },
@@ -941,13 +936,8 @@ const LangEN = {
       domain: "Age-Sex Group",
       footer: {
         units: [
-          ["Radionuclides m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Elements k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Food packaging k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Perfluorinated chemical m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Phthalates  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Polychlorinated Biphenols  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Volatile organic compounds k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
+          ["m = 10", {text: "-3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "-6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}},
+           "; k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
         ]
       }
     },
@@ -1624,13 +1614,8 @@ const LangFR = {
       },
       footer: {
         units: [
-          ["Radionucléides m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Éléments k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Produits chimiques dans les emballages alimentaires k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Produits chimiques perfluorés m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Phtalates  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Biphényles polychlorés  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Composés organiques volatils k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}]
+          ["m = 10", {text: "-3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "-6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}},
+           "; k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}]
         ]
       }
     },
@@ -1651,13 +1636,8 @@ const LangFR = {
       domain: "Groupe d'âge et de sexe",
       footer: {
         units: [
-          ["Radionucléides m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Éléments k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Produits chimiques dans les emballages alimentaires k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Produits chimiques perfluorés m = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Phtalates  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Biphényles polychlorés  k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}],
-          ["Composés organiques volatils k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}]
+          ["m = 10", {text: "-3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; µ = 10", {text: "-6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}},
+           "; k = 10", {text: "3", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}, "; M = 10", {text: "6", atts: {"dy": VisualDims.superScriptYOffset, "font-size": VisualDims.smallScriptFontSize}}]
         ]
       }
     },
