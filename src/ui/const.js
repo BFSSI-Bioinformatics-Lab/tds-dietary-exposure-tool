@@ -38,7 +38,8 @@ export const classes = {
   DATA_TABLE_HEADER_ARROWS_INACTIVE: "data-table-header-arrows-inactive",
   MULTI_SEL_SUBTITLE: "multi-sel-subtitle",
   MULTI_SEL_ALL_SUBTITLE: "multi-sel-all-subtitle",
-  NOTE_ELEMENT: "note-element"
+  NOTE_ELEMENT: "note-element",
+  GRAPH_SOURCE_TEXT: "graph-source-text"
 };
 
 export const text = {
@@ -269,7 +270,7 @@ export class Visuals {
     // getNextTextY(textY, numOfTextLines): Retrives the next y-position for the texts
     //  in a text box
     static getNextTextY(textY, numOfTextLines, fontSize, lineSpacing) {
-        return textY +  (numOfTextLines + 1) * fontSize + numOfTextLines * lineSpacing;
+        return textY +  (numOfTextLines + 1) * (fontSize + lineSpacing);
     }
 
     // drawWrappedText(text, numLines):

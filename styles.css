@@ -397,6 +397,10 @@ Graph
   font-size: 1.3rem;
 }
 
+#graph-content {
+  padding: 0 0 0 15px;
+}
+
 /*
 
 Data Table

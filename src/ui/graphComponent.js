@@ -192,15 +192,16 @@ export function displayGraph(data) {
  * Capturing and downloading the currently displayed graph
  *
  */
-export function downloadGraph() {
-  const footer = document.createElement("div");
-  footer.innerText = getTranslations().graphs.saveGraph.footer;
-  el.graphs.saveGraphContainer.appendChild(footer);
-
+export async function downloadGraph() {
   const styles = getComputedStyle(document.querySelector(':root'));
   const backgroundColour = styles.getPropertyValue('--background');
 
-  html2canvas(el.graphs.saveGraphContainer, { logging: false, backgroundColor: backgroundColour }).then(
+  let sourceText = d3.select(el.graphs.container);
+  sourceText = sourceText.select(`.${classes.GRAPH_SOURCE_TEXT}`);
+
+  await sourceText.attr("visibility", "visible");
+
+  await html2canvas(el.graphs.container, { logging: false, backgroundColor: backgroundColour }).then(
     function (canvas) {
       var link = document.createElement("a");
       link.download = getTranslations().graphs.saveGraph.filename;
@@ -209,5 +210,5 @@ export function downloadGraph() {
     },
   );
 
-  el.graphs.saveGraphContainer.removeChild(footer);
+  await sourceText.attr("visibility", "hidden");
 }

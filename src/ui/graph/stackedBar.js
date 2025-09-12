@@ -1,5 +1,5 @@
 import { GraphTypes, VisualDims, Translation } from "../../const.js";
-import { Visuals } from "../const.js";
+import { Visuals, classes } from "../const.js";
 
 
 /**
@@ -195,9 +195,16 @@ export function getStackedBarSvg(data, selector) {
     .append("g")
     .attr("transform", `translate(0, ${dimensions.footerYPos})`);
 
-  const footerText = footer.append("text").attr("font-size", dimensions.footerFontSize);
-  Visuals.drawText({textGroup: footerText, text: Translation.translate(`graphs.${graphType}.footer.units`, {returnObjects: true}), fontSize: dimensions.footerFontSize, lineSpacing: dimensions.footerLineSpacing, width: 150, textWrap: "NoWrap"});
+  const footnoteText = footer.append("text").attr("font-size", dimensions.footerFontSize);
+  const footnoteTextData = Visuals.drawText({textGroup: footnoteText, text: Translation.translate(`graphs.${graphType}.footer.units`, {returnObjects: true}), fontSize: dimensions.footerFontSize, lineSpacing: dimensions.footerLineSpacing, textWrap: "NoWrap"});
 
+  const sourceText = footer.append("text")
+    .classed(classes.GRAPH_SOURCE_TEXT, true)
+    .attr("font-size", dimensions.footerFontSize)
+    .attr("visibility", "hidden")
+    .attr("transform", `translate(0, ${footnoteTextData.textBottomYPos + dimensions.sourceTextMarginTop})`);
+
+  Visuals.drawText({textGroup: sourceText, text: Translation.translate(`graphs.saveGraph.footer`), fontSize: dimensions.footerFontSize, lineSpacing: dimensions.footerLineSpacing, textWrap: "NoWrap"});
 
   svg.append("g")
     .attr("transform", `translate(${marginLeft}, 0)`);
