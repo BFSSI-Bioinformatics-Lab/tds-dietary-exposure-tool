@@ -1,4 +1,5 @@
-import { GraphTypes, VisualDims } from "../../const.js";
+import { GraphTypes, VisualDims, Translation } from "../../const.js";
+import { Visuals, classes } from "../const.js";
 
 
 /**
@@ -23,10 +24,11 @@ export function getSunburstSvg(data, selector) {
   const graphType = GraphTypes.RBF;
   const dimensions = VisualDims[graphType];
 
-  const width = VisualDims[graphType].width;
-  const height = VisualDims[graphType].height;
-  const arcPadding = VisualDims[graphType].arcPadding;
-  const margin = VisualDims[graphType].margin;
+  const width = dimensions.width;
+  const height = dimensions.height;
+  const arcPadding = dimensions.arcPadding;
+  const margin = dimensions.margin;
+  const diameter = dimensions.diameter;
 
   const root = d3.hierarchy(data, (d) => d.children);
 
@@ -50,7 +52,7 @@ export function getSunburstSvg(data, selector) {
 
   const startAngle = 0;
   const endAngle = 2 * Math.PI;
-  const radius = Math.min(width - 2 * margin, height - 2 * margin) / 2;
+  const radius = (diameter - 2 * margin) / 2;
   d3.partition().size([endAngle - startAngle, radius])(root);
 
   const arc = d3
@@ -112,6 +114,18 @@ export function getSunburstSvg(data, selector) {
     });
 
   cell.append("title").text((d) => d.data.info);
+  
+  /* footer */
+  const footer = svg
+    .append("g")
+    .attr("transform", `translate(0, ${dimensions.footerYPos})`);
+
+  const sourceText = footer.append("text")
+    .classed(classes.GRAPH_SOURCE_TEXT, true)
+    .attr("visibility", "hidden")
+    .attr("font-size", dimensions.footerFontSize);
+
+  Visuals.drawText({textGroup: sourceText, text: Translation.translate(`graphs.saveGraph.footer`), fontSize: dimensions.footerFontSize, lineSpacing: dimensions.footerLineSpacing, width: dimensions.footerWidth});
 
   return true;
 }

@@ -702,8 +702,9 @@ export const VisualDims = {
 
       horizontalAxisLabelYPos: 100,
       footerYPos: 140,
-      footerFontSize: 12,
+      footerFontSize: 15,
       footerLineSpacing: 5,
+      sourceTextMarginTop: 20
   },
 
   [GraphTypes.RBFG] : {
@@ -716,15 +717,22 @@ export const VisualDims = {
 
     horizontalAxisLabelYPos: 120,
     footerYPos: 140,
-    footerFontSize: 12,
+    footerFontSize: 15,
     footerLineSpacing: 5,
+    sourceTextMarginTop: 20
   },
 
   [GraphTypes.RBF]: {
-    width: 700,
-    height: 700,
+    width: 750,
+    height: 850,
+    diameter: 700,
     arcPadding: 1,
-    margin: 1
+    margin: 1,
+
+    footerYPos: 375,
+    footerFontSize: 15,
+    footerLineSpacing: 5,
+    footerWidth: 1200
   },
 
   superScriptYOffset: -5,
