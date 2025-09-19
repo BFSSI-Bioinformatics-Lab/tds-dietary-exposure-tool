@@ -21,7 +21,7 @@ import {
   getAgeAndSex,
   getAgeSex,
   getSexDisplays as getSexDisplays,
-  DictTool,
+  DictTools,
   SetTools
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
@@ -745,7 +745,7 @@ function displayRbasgSexFilter(sexes, selected = undefined) {
   dropdown.selectpicker('destroy');
 
   sexGroupEl.innerHTML = "";
-  sexes = DictTool.getMapSorted(sexes, compareSex);
+  sexes = DictTools.getMapSorted(sexes, compareSex);
 
   for (const [sexDisplay, sex] of sexes) {
     const oe = document.createElement("option");
@@ -845,7 +845,7 @@ function displayRbfgSexFilter(sexes, selected = undefined) {
   dropdown.selectpicker('destroy');
 
   sexGroupEl.innerHTML = "";
-  sexes = DictTool.getMapSorted(sexes, compareSex);
+  sexes = DictTools.getMapSorted(sexes, compareSex);
 
   for (const [sexDisplay, sex] of sexes) {
     const oe = document.createElement("option");

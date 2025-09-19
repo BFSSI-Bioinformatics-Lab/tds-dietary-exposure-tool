@@ -63,7 +63,7 @@ export class NumberTool {
 
 
 // DictTool: Tools for handling dictionaries
-export class DictTool {
+export class DictTools {
 
   // getMapSorted(dict, compareFn): Retrieves a corresponding map
   //  to the sorted dictionarys
@@ -74,6 +74,63 @@ export class DictTool {
     const result = new Map();
     for (const key of keys) {
       result.set(key, dict[key]);
+    }
+
+    return result;
+  }
+
+  // toStr(dict, end): Converts a dictionary to a string
+  static toStr(dict, end = "\n") {
+    let result = [];
+    for (const key in dict) {
+      result.push(`${key}: ${dict[key]}`);
+    }
+
+    return result.join(end);
+  }
+
+  // toWebStr(dict): Converts a dictionary to a string to be displayed on a webpage
+  static toWebStr(dict) {
+    const dictKeys = Object.keys(dict);
+    const dictLen = dictKeys.length;
+    
+    if (dictLen == 0) return "";
+    else if (dictLen > 1) return DictTools.toStr(dict, "<br>");
+    return dict[dictKeys[0]];
+  }
+
+  // merge(dicts, keys): Merges multiple dictionaries toghether
+  static merge(dicts, keys = null) {
+    const result = {};
+    const dictsLen = dicts.length;
+
+    for (let i = 0; i < dictsLen; ++i) {
+      const dict = dicts[i];
+
+      for (const key in dict) {
+        if (result[key] == undefined) {
+          result[key] = keys == null ? [] : {};
+        }
+
+        if (keys == null) {
+          result[key].push(dict[key]);
+        } else {
+          const dictKey = keys[i];
+          result[key][dictKey] = dict[key];
+        }
+      }
+    }
+
+    return result;
+  }
+
+  // getDistribution(dict): Retrieves a probability distribution for a given values
+  static getDistribution(dict) {
+    const total = Object.values(dict).reduce((acc, prob) => acc + prob);
+    const result = {};
+
+    for (const key in dict) {
+      result[key] = total != 0 ? dict[key] / total : 0;
     }
 
     return result;

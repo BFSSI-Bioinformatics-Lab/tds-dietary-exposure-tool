@@ -21,12 +21,14 @@ import {
   getExposureUnit,
   getUserModifiedValueText,
   SetTools,
+  DictTools
 } from "../util/data.js";
+import { breakDownFormatNumbers, getBreakdownDistribution, groupContaminantsByChecmical } from "../data/dataTranslator.js";
 
 
 // getChemicalRbasg(tdsData, filters): Retrieves the data for results by age-sex group
 //  for a particular chemical
-function getChecmicalRbasg(tdsData, filters) {
+function getChemicalRbasg(tdsData, filters) {
   const rbasgData = {};
   const domain = filters.showByAgeSexGroup
     ? filters.ageGroups
@@ -164,22 +166,6 @@ function getChecmicalRbasg(tdsData, filters) {
   return rbasgData;
 }
 
-// groupContaminantsByChemical(contaminant): Groups the contaminants by their chemicals
-function groupContaminantsByChecmical(contaminant) {
-  const result = {};
-
-  for (const year in contaminant) {
-    for (const row of contaminant[year]) {
-      const chemical = row.chemical;
-      if (result[chemical] == undefined) result[chemical] = {};
-      if (result[chemical][year] == undefined) result[chemical][year] = [];
-
-      result[chemical][year].push(row);
-    }
-  }
-
-  return result;
-}
 
 /**
  * Take in filtered TDS data and return data which has been strictly filtered and formatted
@@ -205,7 +191,7 @@ function groupContaminantsByChecmical(contaminant) {
  */
 export function getRbasg(tdsData, filters) {
   if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
-    return getChecmicalRbasg(tdsData, filters);
+    return getChemicalRbasg(tdsData, filters);
   }
 
   const allContaminants = tdsData.contaminant;
@@ -217,7 +203,7 @@ export function getRbasg(tdsData, filters) {
   for (const chemical in groupedContaminants) {
     currentFilters.chemical = chemical;
     tdsData.contaminant = groupedContaminants[chemical];
-    resultByChemicals[chemical] = getChecmicalRbasg(tdsData, currentFilters);
+    resultByChemicals[chemical] = getChemicalRbasg(tdsData, currentFilters);
   }
 
   tdsData.contaminant = allContaminants;
@@ -231,9 +217,11 @@ export function getRbasg(tdsData, filters) {
  * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
 export function formatRbsagToDataTable(rbasgData, filters) {
-  const dataTableData = [];
+  let dataTableData = {};
+  const isRadionuclide = filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides");
+  const isTotalRadionuclide = filters.chemical == Translation.translate("tdsData.values.totalRadionuclides");
 
-  if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
+  if (!isTotalRadionuclide) {
     rbasgData = {[filters.chemical]: rbasgData}
   }
 
@@ -246,33 +234,53 @@ export function formatRbsagToDataTable(rbasgData, filters) {
           return;
         }
 
-        dataTableData.push({
-          [DataTableHeader.CHEMICAL]: chemical,
-          [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
-          [DataTableHeader.EXPOSURE]: formatNumber(row.exposure, filters),
-          [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(
-            row.contaminantUnit,
-            filters,
-          ),
-          [DataTableHeader.YEARS]: row.years.join(", "),
-          [DataTableHeader.PERCENT_NOT_TESTED]: formatPercent(
-            row.percentNotTested,
-          ),
-          [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
-          [DataTableHeader.TREATMENT]: filters.lod,
-          [DataTableHeader.MODIFIED]: filters.override.list
-            .map((override) =>
-              getUserModifiedValueText(override, row.contaminantUnit),
-            )
-            .join("; "),
-          [DataTableHeader.FLAGGED]: row.consumptionsFlagged.join("; "),
-          [DataTableHeader.SUPPRESSED]: row.consumptionsSuppressed.join("; "),
-          [DataTableHeader.INCLUDED_SUPPRESSED]: filters.useSuppressedHighCvValues
-            ? row.consumptionsSuppressedWithHighCv.join("; ")
-            : [],
-        });
+        const dataTableRow = dataTableData[row.ageSexGroup];
+        if (dataTableRow == undefined) {
+          dataTableData[row.ageSexGroup] = {
+            [DataTableHeader.CHEMICAL]: filters.chemical,
+            [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
+            [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
+            [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
+            [DataTableHeader.YEARS]: new Set(row.years),
+            [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: formatPercent(row.percentNotTested)},
+            [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: formatPercent(row.percentUnderLod)},
+            [DataTableHeader.TREATMENT]: filters.lod,
+            [DataTableHeader.MODIFIED]: filters.override.list.map((override) => getUserModifiedValueText(override, row.contaminantUnit)).join("; "),
+            [DataTableHeader.FLAGGED]: new Set(row.consumptionsFlagged),
+            [DataTableHeader.SUPPRESSED]: new Set(row.consumptionsSuppressed),
+            [DataTableHeader.INCLUDED_SUPPRESSED]: new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : [])
+          }
+          return;
+        }
+
+        dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
+        dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
+        SetTools.union(dataTableRow[DataTableHeader.YEARS], new Set(row.years), false);
+        dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = formatPercent(row.percentNotTested);
+        dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = formatPercent(row.percentUnderLod);
+        SetTools.union(dataTableRow[DataTableHeader.FLAGGED], new Set(row.consumptionsFlagged), false);
+        SetTools.union(dataTableRow[DataTableHeader.SUPPRESSED], new Set(row.consumptionsSuppressed), false);
+        SetTools.union(dataTableRow[DataTableHeader.INCLUDED_SUPPRESSED], new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : []));
       });
     });
+  }
+
+  dataTableData = Object.values(dataTableData);
+  for (const row of dataTableData) {
+    if (!isTotalRadionuclide) {
+      row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
+    } else {
+      row[DataTableHeader.EXPOSURE] = getBreakdownDistribution(row[DataTableHeader.EXPOSURE]);
+    }
+
+    row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT]);
+    row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED]);
+    row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD]);
+
+    row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS]).join(", ");
+    row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");
+    row[DataTableHeader.SUPPRESSED] = Array.from(row[DataTableHeader.SUPPRESSED]).join("; ");
+    row[DataTableHeader.INCLUDED_SUPPRESSED] = Array.from(row[DataTableHeader.INCLUDED_SUPPRESSED]).join("; ");
   }
 
   return dataTableData;
@@ -300,7 +308,7 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
     rbasgData = {[filters.chemical]: rbasgData}
   }
 
-  const contaminantUnit = Object.values(Object.values(rbasgData)[0])[0].contaminantUnit;
+  const contaminantUnit = Object.values(Object.values(Object.values(rbasgData)[0])[0])[0].contaminantUnit;
   const exposureUnit = getExposureUnit(contaminantUnit, filters);
 
   const groupedBarData = {

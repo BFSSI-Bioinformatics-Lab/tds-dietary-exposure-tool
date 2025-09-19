@@ -9,7 +9,7 @@ import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
 import { el} from "./const.js";
 import { getActiveFilters } from "./filter.js";
-import { TableTools } from "../util/data.js";
+import { DictTools, TableTools } from "../util/data.js";
 
 /**
  * Download raw filtered TDS data
@@ -168,7 +168,19 @@ export async function displayDataTable(data, filters) {
       const exposure = row[DataTableHeader.EXPOSURE];
       if (exposure == undefined) continue;
 
-      row[DataTableHeader.EXPOSURE] = Translation.translateScientificNum(exposure);
+      if (exposure.constructor != Object) {
+        row[DataTableHeader.EXPOSURE] = Translation.translateScientificNum(exposure);
+        continue;
+      }
+
+      const display = {};
+      for (const chemical in exposure) {
+        const chemicalExposure = exposure[chemical];
+        chemicalExposure["value"] = Translation.translateScientificNum(chemicalExposure["value"]);
+        display[chemical] = `${chemicalExposure["value"]} (${chemicalExposure["distribution"]})`;
+      }
+  
+      row[DataTableHeader.EXPOSURE] = DictTools.toStr(display, "<br>");
     }
   }
 
