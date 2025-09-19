@@ -21,6 +21,9 @@ import {
   getOccurrenceForContaminantEntry,
   getUnitForContaminantEntry,
   getYearForContaminantEntry,
+  DictTools,
+  formatNumber,
+  formatPercent
 } from "../util/data.js";
 import { getActiveFilters } from "../ui/filter.js";
 
@@ -380,4 +383,41 @@ export async function getRawFilteredContaminantData() {
 
   data.csvFilename = formatDownloadName(data.filename);
   return [data];
+}
+
+
+// groupContaminantsByChemical(contaminant): Groups the contaminants by their chemicals
+export function groupContaminantsByChecmical(contaminant) {
+  const result = {};
+
+  for (const year in contaminant) {
+    for (const row of contaminant[year]) {
+      const chemical = row.chemical;
+      if (result[chemical] == undefined) result[chemical] = {};
+      if (result[chemical][year] == undefined) result[chemical][year] = [];
+
+      result[chemical][year].push(row);
+    }
+  }
+
+  return result;
+}
+
+// breakDownFormatNumbers(breakDown, filters): Formats all the values in some breakdown in a table cell to numbers
+export function breakDownFormatNumbers(breakDown, filters) {
+    for (const key in breakDown) {
+      breakDown[key] = formatNumber(breakDown[key], filters);
+    }
+
+    return breakDown;
+}
+
+// getBreakdownDistribution(breakdown): Retrieves the distribution from some breakdown in some cell of a table
+export function getBreakdownDistribution(breakDown) {
+    let distribution = DictTools.getDistribution(breakDown);
+    for (const chemical in distribution) {
+      distribution[chemical] = formatPercent(distribution[chemical] *  100);
+    }
+
+    return DictTools.merge([breakDown, distribution], {0: "value", 1: "distribution"});
 }
