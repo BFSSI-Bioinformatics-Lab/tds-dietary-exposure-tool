@@ -34,6 +34,13 @@ import {
 import { displayDataTable } from "./dataTableComponent.js";
 import { getAgeSexDisplay } from "../util/data.js";
 
+
+const SexGroupColours = {
+  [sexGroups.B]: "var(--bothSexColour)",
+  [sexGroups.F]: "var(--femaleColour)",
+  [sexGroups.M]: "var(--maleColour)"
+}
+
 /**
  *
  * Display a graph based on the selected type
@@ -58,15 +65,14 @@ export function displayGraph(data) {
     foodGroupColorMapping[allFoodGroups] = {label: allFoodGroups, color: "#A1A1A1" };
   }
 
-  const sexGroupColorMapping = generateColorMapping(
-    Object.keys(sexGroups).reduce((acc, sex) => {
+  const sexGroupColorMapping = Object.keys(sexGroups).reduce((acc, sex) => {
       acc[sex] = {
         label: getTranslations().graphs.legend.sexGroups[sex],
-        color: null,
+        color: SexGroupColours[sex],
       };
       return acc;
-    }, {}),
-  );
+    }, {});
+
   const sexGroupTextMapping = Object.keys(sexGroups).reduce((acc, sex) => {
     acc[sex] = {
       label: getTranslations().graphs.legend.sexGroups[sex],

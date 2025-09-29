@@ -37,10 +37,9 @@
   --warningTooltipBackground: #ffe680;
   --warningTooltipBorderColour: #cc9900;
   
-  --detected: #C5705D;
-  --notDetected: #41B3A2;
-  --notTested: #cc9900;
-  --unknown: #cccccc;
+  --bothSexColour: #59a89c;
+  --femaleColour: #f0c571;
+  --maleColour: #082a54;
 
   --smBorderRadius: 5px;
   --borderRadius: 10px;

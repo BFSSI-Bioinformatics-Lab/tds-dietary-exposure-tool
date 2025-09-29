@@ -735,7 +735,7 @@ export const VisualDims = {
     footerWidth: 1200
   },
 
-  superScriptYOffset: -5,
+  superScriptYOffset: -8,
   smallScriptFontSize: 9
 }
 
