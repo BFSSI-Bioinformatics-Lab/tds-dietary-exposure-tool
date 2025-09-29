@@ -702,7 +702,7 @@ export const VisualDims = {
 
       horizontalAxisLabelYPos: 100,
       footerYPos: 140,
-      footerFontSize: 15,
+      footerFontSize: 18,
       footerLineSpacing: 5,
       sourceTextMarginTop: 20
   },
@@ -717,7 +717,7 @@ export const VisualDims = {
 
     horizontalAxisLabelYPos: 120,
     footerYPos: 140,
-    footerFontSize: 15,
+    footerFontSize: 18,
     footerLineSpacing: 5,
     sourceTextMarginTop: 20
   },
@@ -730,7 +730,7 @@ export const VisualDims = {
     margin: 1,
 
     footerYPos: 375,
-    footerFontSize: 15,
+    footerFontSize: 18,
     footerLineSpacing: 5,
     footerWidth: 1200
   },
