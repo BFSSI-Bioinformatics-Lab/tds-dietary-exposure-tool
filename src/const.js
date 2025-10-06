@@ -574,11 +574,13 @@ export class Translation {
   // So all the special characters got encoded to their corresponding HTML Entities (eg. &lt; , &gt; , &quot;)
   //
   // So we need to decode back the encoded string with HTML entities to turn back "Fruits &amp; Vegetables" to "Fruits & Vegetables"
-  static translate(key, args){
+  static translate(key, args, decode = true){
       const result = i18next.t(key, args);
 
       if (typeof result !== 'string') return result;
-      return he.decode(result);
+
+      if (decode) return he.decode(result);
+      return result;
   }
 
   // translateWebNotes(key): Translate the pop-up notes for the website
@@ -982,8 +984,8 @@ const LangEN = {
       [DataTableHeader.EXPOSURE_UNIT]: "Unit",
       [DataTableHeader.YEARS]: "Year(s)",
       [DataTableHeader.PERCENT_NOT_TESTED]: "% Foods Not Tested",
-      [DataTableHeader.PERCENT_UNDER_LOD]: "% Occurrence Values <LOD",
-      [DataTableHeader.TREATMENT]: "Treatment of <LOD",
+      [DataTableHeader.PERCENT_UNDER_LOD]: "% Occurrence Values &lt;LOD",
+      [DataTableHeader.TREATMENT]: "Treatment of &lt;LOD",
       [DataTableHeader.MODIFIED]: "User-modified Values",
       [DataTableHeader.FLAGGED]:
         "'E' Flag: Marginal - CV > 16.6% but CV < 33.3%",
@@ -1682,8 +1684,8 @@ const LangFR = {
       [DataTableHeader.EXPOSURE_UNIT]: "Unité",
       [DataTableHeader.YEARS]: "Année(s)",
       [DataTableHeader.PERCENT_NOT_TESTED]: "% aliments non analysés",
-      [DataTableHeader.PERCENT_UNDER_LOD]: "% valeurs d’occurrence <LD",
-      [DataTableHeader.TREATMENT]: "Traitement de <LD",
+      [DataTableHeader.PERCENT_UNDER_LOD]: "% valeurs d’occurrence &lt;LD",
+      [DataTableHeader.TREATMENT]: "Traitement de &lt;LD",
       [DataTableHeader.MODIFIED]: "Valeurs modifiées par l'utilisateur",
       [DataTableHeader.FLAGGED]:
         "Indicateur 'E' : Marginal - CV > 16,6 % mais CV < 33,3 %",
