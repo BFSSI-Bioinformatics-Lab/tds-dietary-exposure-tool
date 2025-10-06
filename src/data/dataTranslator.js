@@ -423,24 +423,68 @@ export function getBreakdownDistribution(breakDown) {
 }
 
 // getBreakdownWebStr(breakdown, includeTotal): Retrieves the string representation of some breakdown in some cell of a table
-export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null}) {
+export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null, totalFormatValFunc = null,
+                                    sort = -1, limit = 5, getBreakdownVal = null}) {
   if (formatValFunc == null) {
     formatValFunc = (key, val) => val;
   }
 
-  let result = DictTools.toWebStr(breakDown, formatValFunc);
+  if (totalFormatValFunc === null) {
+    totalFormatValFunc = formatValFunc;
+  } else if (totalFormatValFunc === undefined) {
+    totalFormatValFunc = (key, val) => val;
+  }
+
+  if (getBreakdownVal == null) {
+    getBreakdownVal = (dict, key) => dict[key];
+  }
+
+  let newBreakdown = undefined;
+  let breakDownKeys = null;
+
+  // sorting
+  if (sort != 0 || limit !== null) {
+    breakDownKeys = Object.keys(breakDown);
+
+    if (sort != 0) {
+      const compareFn = (sort >= 0) ? (keyA, keyB) => getBreakdownVal(breakDown, keyA) - getBreakdownVal(breakDown, keyB) : (keyA, keyB) => getBreakdownVal(breakDown, keyB) - getBreakdownVal(breakDown, keyA)
+      breakDownKeys.sort(compareFn);
+    }
+  }
+
+  const breakDownFormatted = breakDownKeys !== null;
+
+  // limit entries
+  if (breakDownFormatted && limit !== null) {
+    breakDownKeys = breakDownKeys.slice(0, limit);
+  }
+
+  // create the new processed breakdown
+  if (breakDownFormatted) {
+    newBreakdown = new Map();
+    for (const key of breakDownKeys) {
+      newBreakdown.set(key, breakDown[key]);
+    }
+  } else {
+    newBreakdown = new Map(Object.entries(breakDown));
+  }
+
+  let result = DictTools.mapToWebStr(newBreakdown, formatValFunc);
   if (!includeTotal) return result;
 
-  let totalValue = Object.values(breakDown).reduce((acc, currentVal) => acc + currentVal, 0);
-  totalValue = formatValFunc("total", totalValue);
+  let totalValue = 0;
+  for (const key in breakDown) {
+    totalValue += getBreakdownVal(breakDown, key);
+  }
 
+  totalValue = totalFormatValFunc("total", totalValue);
   const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: 100});
   return `<b>${totalLine}</b><br>${result}`;
 }
 
 // getBreakdownDistribWebStr(breakDown, getDistribution, includeTotal, formatValFunc): Retrieves the string representation of a breakdown and its distribution
 //  for some cell of a table
-export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null}) {
+export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5}) {
   if (getDistribution) {
     breakDown = getBreakdownDistribution(breakDown);
   }
@@ -450,13 +494,9 @@ export function getBreakdownDistribWebStr({breakDown, getDistribution = true, in
   }
 
   const distribFormatFunc = (key, currentData) => `${formatValFunc(key, currentData.value)} (${currentData.distribution})`;
+  const getBreakdownVal = (dict, key) => dict[key].value;
+  const totalFormatValFunc = (key, val) => formatValFunc(key, val);
 
-  let result = DictTools.toWebStr(breakDown, distribFormatFunc);
-  if (!includeTotal) return result;
-
-  let totalValue = Object.values(breakDown).reduce((acc, currentVal) => acc + currentVal.value, 0);
-  totalValue = formatValFunc("total", totalValue);
-
-  const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: 100});
-  return `<b>${totalLine}</b><br>${result}`;
+  return getBreakdownWebStr({breakDown: breakDown, includeTotal: includeTotal, formatValFunc: distribFormatFunc, 
+                             sort: sort, limit: limit, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc});
 }
