@@ -79,23 +79,27 @@ export class DictTools {
     return result;
   }
 
-  // toStr(dict, end): Converts a dictionary to a string
-  static toStr(dict, end = "\n") {
+  // toStr(dict, end, formatValFunc): Converts a dictionary to a string
+  static toStr({dict, end = "\n", formatValFunc = null}) {
     let result = [];
+    if (formatValFunc == null) {
+      formatValFunc = (key, val) => val;
+    }
+
     for (const key in dict) {
-      result.push(`${key}: ${dict[key]}`);
+      result.push(`${key}: ${formatValFunc(key, dict[key])}`);
     }
 
     return result.join(end);
   }
 
-  // toWebStr(dict): Converts a dictionary to a string to be displayed on a webpage
-  static toWebStr(dict) {
+  // toWebStr(dict, formatValFunc): Converts a dictionary to a string to be displayed on a webpage
+  static toWebStr(dict, formatValFunc = null) {
     const dictKeys = Object.keys(dict);
     const dictLen = dictKeys.length;
     
     if (dictLen == 0) return "";
-    else if (dictLen > 1) return DictTools.toStr(dict, "<br>");
+    else if (dictLen > 1) return DictTools.toStr({dict: dict, end: "<br>", formatValFunc: formatValFunc});
     return dict[dictKeys[0]];
   }
 
@@ -227,6 +231,30 @@ export class TableTools {
       }
 
       return result;
+  }
+
+    // _forGroup(ind, grouping, groupingOrder, func, keys, values): Internal function that iterates over a nested dictionary grouping
+  static _forGroup(ind, grouping, groupingOrder, func, keys, values) {
+      if (ind >= groupingOrder.length) {
+          func(keys, values);
+          return;
+      }
+
+      const groupName = groupingOrder[ind];
+      for (const groupKey in grouping) {
+          const groupVal = grouping[groupKey];
+          keys[groupName] = groupKey;
+          values[groupName] = groupVal;
+          this._forGroup(ind + 1, groupVal, groupingOrder, func, keys, values);
+      }
+  }
+
+  // forGroup(grouping, groupingOrder, func): Iterates over a nested dictionary grouping
+  //  (saves you time from writing up many nested for loops)
+  static forGroup(grouping, groupingOrder, func) {
+      const keys = {};
+      const values = {};
+      this._forGroup(0, grouping, groupingOrder, func, keys, values);
   }
 }
 

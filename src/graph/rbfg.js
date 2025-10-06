@@ -16,14 +16,15 @@ import {
   getAgeSexDisplay,
   getExposureUnit,
   getUserModifiedValueText,
-  SetTools
+  SetTools,
+  TableTools
 } from "../util/data.js";
 import {
   getCompositeInfo,
   getContaminantExposure,
   getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { breakDownFormatNumbers, getBreakdownDistribution, groupContaminantsByChecmical } from "../data/dataTranslator.js";
+import { breakDownFormatNumbers, getBreakdownDistribution, getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
 
 
 // getChemicalRbfg(tdsData, filters): Retrieves the data for results by age-sex group
@@ -33,25 +34,26 @@ function getChemicalRbfg(tdsData, filters) {
   filters.ageSexGroups.forEach((ageSexGroup) => (rbfgData[ageSexGroup] = {}));
 
   Object.keys(tdsData.consumption).forEach((foodGroup) => {
-    filters.ageSexGroups.forEach(
-      (ageSexGroup) =>
-        (rbfgData[ageSexGroup][foodGroup] = {
-          ageSexGroup,
-          consumptionsSuppressed: [],
-          consumptionsFlagged: [],
-          consumptionsSuppressedWithHighCv: [],
-          contaminantUnit:
-            Object.values(tdsData.contaminant).length != 0
-              ? Object.values(tdsData.contaminant)[0][0].units
-              : null, // All occurrences use the same value for a given chemical group
-          exposure: 0,
-          foodGroup,
-          percentUnderLod: 0,
-          numContaminantsTested: 0,
-          numCompositesTested: 0,
-          numContaminantsUnderLod: 0,
-        }),
-    );
+    filters.ageSexGroups.forEach((ageSexGroup) => {
+      rbfgData[ageSexGroup][foodGroup] = {
+        ageSexGroup,
+        consumptionsSuppressed: [],
+        consumptionsFlagged: [],
+        consumptionsSuppressedWithHighCv: [],
+        contaminantUnit:
+          Object.values(tdsData.contaminant).length != 0
+            ? Object.values(tdsData.contaminant)[0][0].units
+            : null, // All occurrences use the same value for a given chemical group
+        exposure: 0,
+        foodGroup,
+        percentUnderLod: 0,
+        numContaminantsTested: 0,
+        numCompositesTested: 0,
+        numContaminantsUnderLod: 0,
+
+        contaminantsTested: new Set()
+      }
+    });
 
     Object.keys(tdsData.consumption[foodGroup]).forEach((composite) => {
       const consumptions = tdsData.consumption[foodGroup][composite].filter(
@@ -62,16 +64,17 @@ function getChemicalRbfg(tdsData, filters) {
       consumptions.forEach((consumption) => {
         const consumptionMeanFlag = filters.usePerPersonPerDay ? consumption.meanFlagForPerPersonPerDay : consumption.meanFlagForPerKgBWPerDay;
         const compositeInfo = getCompositeInfo(consumption);
+        const rbfgDataRow = rbfgData[consumption.ageSexGroup][foodGroup];
 
         if (consumptionMeanFlag == MeanFlag.SUPPRESSED) {
-          rbfgData[consumption.ageSexGroup][foodGroup].consumptionsSuppressed.push(compositeInfo);
+          rbfgDataRow.consumptionsSuppressed.push(compositeInfo);
 
         } else if (consumptionMeanFlag == MeanFlag.FLAGGED) {
-          rbfgData[consumption.ageSexGroup][foodGroup].consumptionsFlagged.push(compositeInfo);
+          rbfgDataRow.consumptionsFlagged.push(compositeInfo);
 
         } else if (consumptionMeanFlag == MeanFlag.SUPPRESSED_HIGH_CV) {
-          rbfgData[consumption.ageSexGroup][foodGroup].consumptionsSuppressed.push(compositeInfo);
-          rbfgData[consumption.ageSexGroup][foodGroup].consumptionsSuppressedWithHighCv.push(compositeInfo);
+          rbfgDataRow.consumptionsSuppressed.push(compositeInfo);
+          rbfgDataRow.consumptionsSuppressedWithHighCv.push(compositeInfo);
         }
 
         let numContaminantsTested = 0;
@@ -85,6 +88,7 @@ function getChemicalRbfg(tdsData, filters) {
             if (contaminant.compositeInfo.includes(composite)) {
               if (filters.lod != LODs.Exclude || contaminant.occurrence != 0) {
                 numContaminantsTested++;
+                rbfgDataRow.contaminantsTested.add(contaminant.id);
               }
 
               sumContaminantsTested += getOccurrenceForContaminantEntry(contaminant, filters);
@@ -123,9 +127,9 @@ function getChemicalRbfg(tdsData, filters) {
           consumption.age,
         );
 
-        rbfgData[consumption.ageSexGroup][foodGroup].exposure += exposure;
-        rbfgData[consumption.ageSexGroup][foodGroup].numContaminantsTested += numContaminantsTested;
-        rbfgData[consumption.ageSexGroup][foodGroup].numCompositesTested += compositeTested;
+        rbfgDataRow.exposure += exposure;
+        rbfgDataRow.numContaminantsTested += numContaminantsTested;
+        rbfgDataRow.numCompositesTested += compositeTested;
       });
     });
   });
@@ -146,35 +150,44 @@ function getChemicalRbfg(tdsData, filters) {
 }
 
 function getRbfgAggregates(rbfgData, tdsData) {
+
+  // retrieve the sum of the exposures for each age/sex group
   const sumExposures = {};
+  TableTools.forGroup(rbfgData, ["chemical", "ageSexGroup"], (keys, values) => {
+    const ageSexGroup = keys.ageSexGroup;
 
-  // retrieve the sum of the exposures
-  for (const chemical in rbfgData) {
-    const chemicalRbfgData = rbfgData[chemical];
-    
-    for (const ageSexGroup in chemicalRbfgData) {
-      if (sumExposures[ageSexGroup] == undefined) sumExposures[ageSexGroup] = 0;
-      sumExposures[ageSexGroup] += Object.values(chemicalRbfgData[ageSexGroup]).reduce((acc, b) => acc + b.exposure, 0);
-    }
-  }
+    if (sumExposures[ageSexGroup] == undefined) sumExposures[ageSexGroup] = 0;
+    sumExposures[ageSexGroup] += Object.values(values.ageSexGroup).reduce((acc, b) => acc + b.exposure, 0);
+  });
 
-  for (const chemical in rbfgData) {
-    const chemicalRbfgData = rbfgData[chemical];
+  // get the total unique number of composites for a particular food group  
+  const composites = {};
+  TableTools.forGroup(tdsData.consumption, ["foodGroup", "composite"], (keys, values) => {
+    if (composites[keys.foodGroup] == undefined) composites[keys.foodGroup] = new Set();
+    composites[keys.foodGroup].add(keys.composite);
+  });
 
-    for (const ageSexGroup in chemicalRbfgData) {
-      const ageChemicalRbfgData = chemicalRbfgData[ageSexGroup];
+  // get the number of contaminants tested
+  const contaminantsTested = {};
+  TableTools.forGroup(rbfgData, ["chemical", "ageSexGroup", "foodGroup"], (keys, values) => {
+    const row = values.foodGroup;
 
-      for (const foodGroup in ageChemicalRbfgData) {
-        const row = ageChemicalRbfgData[foodGroup];
-        const sumExposure = sumExposures[ageSexGroup];
-        row.percentExposure = (row.exposure / sumExposure) * 100 || 0;
-        row.percentUnderLod = (row.numContaminantsUnderLod / row.numContaminantsTested) * 100 || 0;
+    if (contaminantsTested[keys.ageSexGroup] == undefined) contaminantsTested[keys.ageSexGroup] = {};
+    if (contaminantsTested[keys.ageSexGroup][keys.foodGroup] == undefined) contaminantsTested[keys.ageSexGroup][keys.foodGroup] = new Set();
 
-        const numComposites = Object.values(tdsData.consumption[row.foodGroup]).length;
-        row.percentNotTested = ((numComposites - row.numCompositesTested) / numComposites) * 100;
-      }
-    }
-  }
+    SetTools.union(contaminantsTested[keys.ageSexGroup][keys.foodGroup], row.contaminantsTested, false);
+  });
+
+  TableTools.forGroup(rbfgData, ["chemical", "ageSexGroup", "foodGroup"], (keys, values) => {
+    const row = values.foodGroup;
+    const sumExposure = sumExposures[keys.ageSexGroup];
+    const numComposites = composites[keys.foodGroup].size;
+    const numContaminantsTested = contaminantsTested[keys.ageSexGroup][keys.foodGroup].size;
+
+    row.percentExposure = (row.exposure / sumExposure) * 100 || 0;
+    row.percentUnderLod = (row.numContaminantsUnderLod / numContaminantsTested) * 100 || 0;
+    row.percentNotTested = ((numComposites - row.numCompositesTested) / numComposites) * 100;
+  });
 
   return rbfgData;
 }
@@ -260,12 +273,12 @@ export function formatRbfgToDataTable(rbfgData, filters) {
             [DataTableHeader.CHEMICAL]: filters.chemical,
             [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
             [DataTableHeader.FOOD_GROUP]: row.foodGroup,
-            [DataTableHeader.PERCENT_EXPOSURE]: {[chemical]: formatPercent(row.percentExposure)},
+            [DataTableHeader.PERCENT_EXPOSURE]: {[chemical]: row.percentExposure},
             [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
             [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
             [DataTableHeader.YEARS]: new Set(row.years),
-            [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: formatPercent(row.percentNotTested)},
-            [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: formatPercent(row.percentUnderLod)},
+            [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: row.percentNotTested},
+            [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: row.percentUnderLod},
             [DataTableHeader.TREATMENT]: filters.lod,
             [DataTableHeader.MODIFIED]: filters.override.list.filter((override) => override.foodGroup == row.foodGroup).map((override) => getUserModifiedValueText(override, row.contaminantUnit)).join("; "),
             [DataTableHeader.FLAGGED]: new Set(row.consumptionsFlagged),
@@ -276,12 +289,12 @@ export function formatRbfgToDataTable(rbfgData, filters) {
           return;
         }
 
-        dataTableRow[DataTableHeader.PERCENT_EXPOSURE][chemical] = formatPercent(row.percentExposure);
+        dataTableRow[DataTableHeader.PERCENT_EXPOSURE][chemical] = row.percentExposure;
         dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
         dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
         SetTools.union(dataTableRow[DataTableHeader.YEARS], new Set(row.years), false);
-        dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = formatPercent(row.percentNotTested);
-        dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = formatPercent(row.percentUnderLod);
+        dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = row.percentNotTested;
+        dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = row.percentUnderLod;
         SetTools.union(dataTableRow[DataTableHeader.FLAGGED], new Set(row.consumptionsFlagged), false);
         SetTools.union(dataTableRow[DataTableHeader.SUPPRESSED], new Set(row.consumptionsSuppressed), false);
         SetTools.union(dataTableRow[DataTableHeader.INCLUDED_SUPPRESSED], new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : []));
@@ -297,14 +310,18 @@ export function formatRbfgToDataTable(rbfgData, filters) {
   for (const row of result) {
     if (!isTotalRadionuclide) {
       row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
+      row[DataTableHeader.PERCENT_EXPOSURE] = DictTools.toWebStr(row[DataTableHeader.PERCENT_EXPOSURE]);
+      row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED]);
+      row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD]);
+
     } else {
-      row[DataTableHeader.EXPOSURE] = getBreakdownDistribution(row[DataTableHeader.EXPOSURE]);
+      row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], formatValFunc: (key, val) => Translation.translateScientificNum(val)});
+      row[DataTableHeader.PERCENT_EXPOSURE] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_EXPOSURE], formatValFunc: (key, val) => formatPercent(val)});
+      row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], formatValFunc: (key, val) => formatPercent(val)});
+      row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], formatValFunc: (key, val) => formatPercent(val)});
     }
 
-    row[DataTableHeader.PERCENT_EXPOSURE] = DictTools.toWebStr(row[DataTableHeader.PERCENT_EXPOSURE]);
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT]);
-    row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED]);
-    row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD]);
 
     row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS]).join(", ");
     row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");

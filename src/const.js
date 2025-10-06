@@ -651,7 +651,7 @@ export class Translation {
   //
   // Note:
   //  See https://www.i18next.com/translation-function/formatting for more formatting
-  static translateNum(numStr, decimalPlaces = 1) {
+  static translateNum(numStr, decimalPlaces = 2) {
       let num = Number(numStr);
       if (Number.isNaN(num)) return numStr;
 
@@ -994,6 +994,8 @@ const LangEN = {
     values: {
       occurrence: "Occurrence",
     },
+
+    breakDownTotal: "{{ totalVal }} ({{ totalPercent }}%) from:"
   },
 
   /**
@@ -1693,6 +1695,8 @@ const LangFR = {
     values: {
       occurrence: "Occurrence",
     },
+
+    breakDownTotal: "{{ totalVal }} ({{ totalPercent }}%) de:"
   },
 
   about: {

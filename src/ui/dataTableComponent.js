@@ -162,28 +162,6 @@ export async function displayDataTable(data, filters) {
       return {"title": headerTranslations[columnKey], "data": columnKey};
   });
 
-  // any display adjustments to the data
-  if (filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides")) {
-    for (const row of data) {
-      const exposure = row[DataTableHeader.EXPOSURE];
-      if (exposure == undefined) continue;
-
-      if (exposure.constructor != Object) {
-        row[DataTableHeader.EXPOSURE] = Translation.translateScientificNum(exposure);
-        continue;
-      }
-
-      const display = {};
-      for (const chemical in exposure) {
-        const chemicalExposure = exposure[chemical];
-        chemicalExposure["value"] = Translation.translateScientificNum(chemicalExposure["value"]);
-        display[chemical] = `${chemicalExposure["value"]} (${chemicalExposure["distribution"]})`;
-      }
-  
-      row[DataTableHeader.EXPOSURE] = DictTools.toStr(display, "<br>");
-    }
-  }
-
   updateTable(tableId, tableColInfo, data);
 
   // adjust the column widths
