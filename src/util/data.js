@@ -97,10 +97,45 @@ export class DictTools {
   static toWebStr(dict, formatValFunc = null) {
     const dictKeys = Object.keys(dict);
     const dictLen = dictKeys.length;
+
+    if (formatValFunc == null) {
+      formatValFunc = (key, val) => val;
+    }
     
     if (dictLen == 0) return "";
     else if (dictLen > 1) return DictTools.toStr({dict: dict, end: "<br>", formatValFunc: formatValFunc});
-    return dict[dictKeys[0]];
+
+    const key = dictKeys[0];
+    return `${formatValFunc(key, dict[key])}`;
+  }
+
+  // mapToStr(map, end, formatValFunc): Converts a map to a string
+  static mapToStr({map, end = "\n", formatValFunc = null}) {
+    let result = [];
+    if (formatValFunc == null) {
+      formatValFunc = (key, val) => val;
+    }
+
+    for (const [key, val] of map) {
+      result.push(`${key}: ${formatValFunc(key, val)}`);
+    }
+
+    return result.join(end);
+  }
+
+  // mapToWebStr(map, formatValFunc): Converts a map to a string to be displayed on a webpage
+  static mapToWebStr(map, formatValFunc = null) {
+    const mapLen = map.size;
+
+    if (formatValFunc == null) {
+      formatValFunc = (key, val) => val;
+    }
+
+    if (mapLen == 0) return "";
+    else if (mapLen > 1) return DictTools.mapToStr({map: map, end: "<br>", formatValFunc: formatValFunc});
+
+    const [key, val] = map.entries().next().value;
+    return `${formatValFunc(key, val)}`;
   }
 
   // merge(dicts, keys): Merges multiple dictionaries toghether
