@@ -1161,6 +1161,8 @@ export function getFilteredTdsData() {
   });
 
   const filteredContaminantData = {};
+  let contaminantId = -1;
+
   Object.keys(filteredTdsData.contaminant).forEach((year) => {
     filteredContaminantData[year] = [];
     filters.override.list = filters.override.list.map((override) => {
@@ -1175,6 +1177,9 @@ export function getFilteredTdsData() {
           modifiedRow.occurrence = override.occurrence;
         }
       });
+
+      ++contaminantId;
+      modifiedRow.id = contaminantId;
       filteredContaminantData[year].push(modifiedRow);
     });
 
@@ -1182,6 +1187,8 @@ export function getFilteredTdsData() {
       if (override.entryFound) return;
 
       for (const chemical of chemicals) {
+        ++contaminantId;
+
         filteredContaminantData[year].push({
           chemical: chemical,
           chemicalGroup: filters.chemicalGroup,
@@ -1190,6 +1197,7 @@ export function getFilteredTdsData() {
           units: chemicalUnits[chemical],
           occurrence: override.occurrence,
           year: year,
+          id: contaminantId
         });
       }
     });

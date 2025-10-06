@@ -21,9 +21,10 @@ import {
   getExposureUnit,
   getUserModifiedValueText,
   SetTools,
-  DictTools
+  DictTools,
+  TableTools
 } from "../util/data.js";
-import { breakDownFormatNumbers, getBreakdownDistribution, groupContaminantsByChecmical } from "../data/dataTranslator.js";
+import { breakDownFormatNumbers, getBreakdownDistribution, getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
 
 
 // getChemicalRbasg(tdsData, filters): Retrieves the data for results by age-sex group
@@ -38,7 +39,7 @@ function getChemicalRbasg(tdsData, filters) {
     // Entry is either age-group or year
     rbasgData[entry] = {};
     Object.keys(sexGroups).forEach((sex) => {
-      rbasgData[entry][sex] = {
+      const rbasgDataRow = rbasgData[entry][sex] = {
         exposure: 0,
         contaminantUnit: "",
         ageSexGroup: "",
@@ -50,7 +51,12 @@ function getChemicalRbasg(tdsData, filters) {
         numContaminantsTested: 0,
         numCompositesTested: 0,
         numContaminantsUnderLod: 0,
+
+        contaminantsTested: new Set()
       };
+
+      rbasgData[entry][sex] = rbasgDataRow;
+
       Object.keys(tdsData.consumption).forEach((foodGroup) => {
         Object.keys(tdsData.consumption[foodGroup]).forEach((composite) => {
           const consumptions = tdsData.consumption[foodGroup][composite].filter(
@@ -64,21 +70,19 @@ function getChemicalRbasg(tdsData, filters) {
           if (consumptions.length == 0) return;
 
           consumptions.forEach((consumption) => {
-            rbasgData[entry][sex].ageSexGroup = consumption.ageSexGroup;
+            rbasgDataRow.ageSexGroup = consumption.ageSexGroup;
 
             const consumptionMeanFlag = filters.usePerPersonPerDay
               ? consumption.meanFlagForPerPersonPerDay
               : consumption.meanFlagForPerKgBWPerDay;
             const compositeInfo = getCompositeInfo(consumption);
             if (consumptionMeanFlag == MeanFlag.SUPPRESSED) {
-              rbasgData[entry][sex].consumptionsSuppressed.push(compositeInfo);
+              rbasgDataRow.consumptionsSuppressed.push(compositeInfo);
             } else if (consumptionMeanFlag == MeanFlag.FLAGGED) {
-              rbasgData[entry][sex].consumptionsFlagged.push(compositeInfo);
+              rbasgDataRow.consumptionsFlagged.push(compositeInfo);
             } else if (consumptionMeanFlag == MeanFlag.SUPPRESSED_HIGH_CV) {
-              rbasgData[entry][sex].consumptionsSuppressed.push(compositeInfo);
-              rbasgData[entry][sex].consumptionsSuppressedWithHighCv.push(
-                compositeInfo,
-              );
+              rbasgDataRow.consumptionsSuppressed.push(compositeInfo);
+              rbasgDataRow.consumptionsSuppressedWithHighCv.push(compositeInfo);
             }
 
             let numContaminantsTested = 0;
@@ -92,7 +96,7 @@ function getChemicalRbasg(tdsData, filters) {
               tdsData.contaminant[year].forEach((contaminant) => {
                 if (!contaminant.compositeInfo.includes(composite)) return;
 
-                rbasgData[entry][sex].contaminantUnit = contaminant.units;
+                rbasgDataRow.contaminantUnit = contaminant.units;
                 if (filters.lod != LODs.Exclude || contaminant.occurrence != 0) {
                   numContaminantsTested++;
                 }
@@ -103,17 +107,18 @@ function getChemicalRbasg(tdsData, filters) {
                   entry,
                 );
 
-                rbasgData[entry][sex].numContaminantsTested++;
+                rbasgDataRow.numContaminantsTested++;
+                rbasgDataRow.contaminantsTested.add(contaminant.id);
 
                 if (contaminant.occurrence < contaminant.lod) {
-                  rbasgData[entry][sex].numContaminantsUnderLod++;
+                  rbasgDataRow.numContaminantsUnderLod++;
                 }
 
                 compositeFound = 1;
               });
             });
 
-            rbasgData[entry][sex].numCompositesTested += compositeFound;
+            rbasgDataRow.numCompositesTested += compositeFound;
 
             const meanOccurrence = sumContaminants / numContaminantsTested || 0;
 
@@ -141,31 +146,46 @@ function getChemicalRbasg(tdsData, filters) {
               consumption.age,
             );
 
-            rbasgData[entry][sex].exposure += exposure;
+            rbasgDataRow.exposure += exposure;
           });
         });
       });
-
-      const numComposites = Object.values(tdsData.consumption).reduce(
-        (acc, row) => acc + Object.values(row).length,
-        0,
-      );
-
-      rbasgData[entry][sex].percentUnderLod =
-        (rbasgData[entry][sex].numContaminantsUnderLod /
-          rbasgData[entry][sex].numContaminantsTested) *
-          100 || 0;
-
-      rbasgData[entry][sex].percentNotTested =
-        ((numComposites - rbasgData[entry][sex].numCompositesTested) /
-          numComposites) *
-        100;
     });
   });
 
   return rbasgData;
 }
 
+function getRbasgAggregates(rbasgData, tdsData) {
+
+  // get the total unique number of composites
+  const composites = new Set();
+  TableTools.forGroup(tdsData.consumption, ["foodGroup", "composite"], (keys, values) => {
+    if (composites.has(keys.composite)) return;
+    composites.add(keys.composite);
+  });
+
+  // get the number of contaminants tested
+  const contaminantsTested = {};
+  TableTools.forGroup(rbasgData, ["chemical", "entry", "sex"], (keys, values) => {
+    const row = values.sex;
+
+    if (contaminantsTested[keys.entry] == undefined) contaminantsTested[keys.entry] = {};
+    if (contaminantsTested[keys.entry][keys.sex] == undefined) contaminantsTested[keys.entry][keys.sex] = new Set();
+
+    SetTools.union(contaminantsTested[keys.entry][keys.sex], row.contaminantsTested, false);
+  });
+
+  const numComposites = composites.size;
+
+  TableTools.forGroup(rbasgData, ["chemical", "entry", "sex"], (keys, values) => {
+    const row = values.sex;
+    row.percentNotTested = ((numComposites - row.numCompositesTested) / numComposites) * 100;
+    row.percentUnderLod = ((row.numContaminantsUnderLod / contaminantsTested[keys.entry][keys.sex].size) * 100) || 0;
+  });
+
+  return rbasgData;
+}
 
 /**
  * Take in filtered TDS data and return data which has been strictly filtered and formatted
@@ -191,12 +211,14 @@ function getChemicalRbasg(tdsData, filters) {
  */
 export function getRbasg(tdsData, filters) {
   if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
-    return getChemicalRbasg(tdsData, filters);
+    let result = getChemicalRbasg(tdsData, filters);
+    result = getRbasgAggregates({[filters.chemical]: result}, tdsData);
+    return result[filters.chemical];
   }
 
   const allContaminants = tdsData.contaminant;
   const groupedContaminants = groupContaminantsByChecmical(tdsData.contaminant);
-  const resultByChemicals = {};
+  let resultByChemicals = {};
   const currentFilters = structuredClone(filters);
 
 
@@ -207,6 +229,7 @@ export function getRbasg(tdsData, filters) {
   }
 
   tdsData.contaminant = allContaminants;
+  resultByChemicals = getRbasgAggregates(resultByChemicals, tdsData);
   return resultByChemicals;
 }
 
@@ -242,8 +265,8 @@ export function formatRbsagToDataTable(rbasgData, filters) {
             [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
             [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
             [DataTableHeader.YEARS]: new Set(row.years),
-            [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: formatPercent(row.percentNotTested)},
-            [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: formatPercent(row.percentUnderLod)},
+            [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: row.percentNotTested},
+            [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: row.percentUnderLod},
             [DataTableHeader.TREATMENT]: filters.lod,
             [DataTableHeader.MODIFIED]: filters.override.list.map((override) => getUserModifiedValueText(override, row.contaminantUnit)).join("; "),
             [DataTableHeader.FLAGGED]: new Set(row.consumptionsFlagged),
@@ -256,8 +279,8 @@ export function formatRbsagToDataTable(rbasgData, filters) {
         dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
         dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
         SetTools.union(dataTableRow[DataTableHeader.YEARS], new Set(row.years), false);
-        dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = formatPercent(row.percentNotTested);
-        dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = formatPercent(row.percentUnderLod);
+        dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = row.percentNotTested;
+        dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = row.percentUnderLod;
         SetTools.union(dataTableRow[DataTableHeader.FLAGGED], new Set(row.consumptionsFlagged), false);
         SetTools.union(dataTableRow[DataTableHeader.SUPPRESSED], new Set(row.consumptionsSuppressed), false);
         SetTools.union(dataTableRow[DataTableHeader.INCLUDED_SUPPRESSED], new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : []));
@@ -269,13 +292,15 @@ export function formatRbsagToDataTable(rbasgData, filters) {
   for (const row of dataTableData) {
     if (!isTotalRadionuclide) {
       row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
+      row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED]);
+      row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD]);
     } else {
-      row[DataTableHeader.EXPOSURE] = getBreakdownDistribution(row[DataTableHeader.EXPOSURE]);
+      row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], formatValFunc: (key, val) => Translation.translateScientificNum(val)});
+      row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], formatValFunc: (key, val) => formatPercent(val)});
+      row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], formatValFunc: (key, val) => formatPercent(val)});
     }
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT]);
-    row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED]);
-    row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD]);
 
     row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS]).join(", ");
     row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");

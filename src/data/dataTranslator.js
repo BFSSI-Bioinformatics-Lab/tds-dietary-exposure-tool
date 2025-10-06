@@ -421,3 +421,42 @@ export function getBreakdownDistribution(breakDown) {
 
     return DictTools.merge([breakDown, distribution], {0: "value", 1: "distribution"});
 }
+
+// getBreakdownWebStr(breakdown, includeTotal): Retrieves the string representation of some breakdown in some cell of a table
+export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null}) {
+  if (formatValFunc == null) {
+    formatValFunc = (key, val) => val;
+  }
+
+  let result = DictTools.toWebStr(breakDown, formatValFunc);
+  if (!includeTotal) return result;
+
+  let totalValue = Object.values(breakDown).reduce((acc, currentVal) => acc + currentVal, 0);
+  totalValue = formatValFunc("total", totalValue);
+
+  const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: 100});
+  return `<b>${totalLine}</b><br>${result}`;
+}
+
+// getBreakdownDistribWebStr(breakDown, getDistribution, includeTotal, formatValFunc): Retrieves the string representation of a breakdown and its distribution
+//  for some cell of a table
+export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null}) {
+  if (getDistribution) {
+    breakDown = getBreakdownDistribution(breakDown);
+  }
+
+  if (formatValFunc == null) {
+    formatValFunc = (key, val) => val;
+  }
+
+  const distribFormatFunc = (key, currentData) => `${formatValFunc(key, currentData.value)} (${currentData.distribution})`;
+
+  let result = DictTools.toWebStr(breakDown, distribFormatFunc);
+  if (!includeTotal) return result;
+
+  let totalValue = Object.values(breakDown).reduce((acc, currentVal) => acc + currentVal.value, 0);
+  totalValue = formatValFunc("total", totalValue);
+
+  const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: 100});
+  return `<b>${totalLine}</b><br>${result}`;
+}
