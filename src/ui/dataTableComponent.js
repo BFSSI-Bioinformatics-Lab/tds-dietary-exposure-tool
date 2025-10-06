@@ -112,7 +112,7 @@ export function downloadDataTable(tdsData, graphType) {
 
   data.rows = data.rows.map((row) => {
     return Object.keys(row).reduce((acc, column) => {
-      acc[getTranslations().dataTable.headers[column]] = row[column];
+      acc[Translation.translate(`dataTable.headers.${column}`)] = row[column];
       return acc;
     }, {});
   });
@@ -156,10 +156,8 @@ export async function displayDataTable(data, filters) {
   }
 
   const columns = Object.keys(data[0]);
-
-  const headerTranslations = getTranslations().dataTable.headers;
   const tableColInfo = columns.map((columnKey) => {
-      return {"title": headerTranslations[columnKey], "data": columnKey};
+      return {"title": Translation.translate(`dataTable.headers.${columnKey}`, {}, false), "data": columnKey};
   });
 
   updateTable(tableId, tableColInfo, data);
