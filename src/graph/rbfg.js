@@ -24,7 +24,7 @@ import {
   getContaminantExposure,
   getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { breakDownFormatNumbers, getBreakdownDistribution, getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
+import { getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
 
 
 // getChemicalRbfg(tdsData, filters): Retrieves the data for results by age-sex group
@@ -134,22 +134,10 @@ function getChemicalRbfg(tdsData, filters) {
     });
   });
 
-  if (filters.filteredFoodGroups.size == 0) return rbfgData;
-  
-  for (const ageSexGroup in rbfgData) {
-    const foodGroupData = rbfgData[ageSexGroup];
-
-    for (const foodGroup in foodGroupData) {
-      if (!filters.filteredFoodGroups.has(foodGroup)) {
-        delete foodGroupData[foodGroup];
-      }
-    }
-  }
-
   return rbfgData;
 }
 
-function getRbfgAggregates(rbfgData, tdsData) {
+function getRbfgAggregates(rbfgData, tdsData, filters) {
 
   // retrieve the sum of the exposures for each age/sex group
   const sumExposures = {};
@@ -159,6 +147,15 @@ function getRbfgAggregates(rbfgData, tdsData) {
     if (sumExposures[ageSexGroup] == undefined) sumExposures[ageSexGroup] = 0;
     sumExposures[ageSexGroup] += Object.values(values.ageSexGroup).reduce((acc, b) => acc + b.exposure, 0);
   });
+
+  // filter the data for only the relevant food groups
+  if (filters.filteredFoodGroups.size > 0) {
+    TableTools.forGroup(rbfgData, ["chemical", "ageSexGroup", "foodGroup"], (keys, values) => {
+      if (!filters.filteredFoodGroups.has(keys.foodGroup)) {
+        delete rbfgData[keys.chemical][keys.ageSexGroup][keys.foodGroup];
+      }
+    });
+  }
 
   // get the total unique number of composites for a particular food group  
   const composites = {};
@@ -220,7 +217,7 @@ export function getRbfg(tdsData, filters) {
   let result = {};
   if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
     result = getChemicalRbfg(tdsData, filters);
-    result = getRbfgAggregates({[filters.chemical]: result}, tdsData);
+    result = getRbfgAggregates({[filters.chemical]: result}, tdsData, filters);
     return result[filters.chemical];
   }
 
@@ -235,7 +232,7 @@ export function getRbfg(tdsData, filters) {
   }
 
   tdsData.contaminant = allContaminants;
-  result = getRbfgAggregates(result, tdsData);
+  result = getRbfgAggregates(result, tdsData, filters);
   return result;
 }
 
