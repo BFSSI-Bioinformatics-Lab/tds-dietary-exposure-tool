@@ -1081,7 +1081,12 @@ const LangEN = {
     values: {
       allPeople: "All people",
       radionuclides: "Radionuclides",
-      totalRadionuclides: "Total Radionuclides",
+
+      total: {
+        radionuclides: "Total Radionuclides",
+        PFC: "Total Perfluorinated chemicals (PFCs)"
+      },
+
       PFAS: "Perfluorinated chemicals (PFCs)",
       PFASGroupings: {
         [PFASGroupings.TOTAL_PFAS]:
@@ -1771,7 +1776,12 @@ const LangFR = {
     values: {
       allPeople: "Toutes les personnes",
       radionuclides: "Radionucléides",
-      totalRadionuclides: "Radionucléides Totales",
+
+      total: {
+        radionuclides: "Radionucléides Totales",
+        PFC: "Produits chimiques perfluorés (PFC) Totales"
+      },
+
       PFAS: "Produits chimiques perfluorés (PFC) ",
       PFASGroupings: {
         [PFASGroupings.TOTAL_PFAS]:

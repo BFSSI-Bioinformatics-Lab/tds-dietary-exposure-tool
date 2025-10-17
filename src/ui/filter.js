@@ -620,13 +620,17 @@ function displayChemicals(flush = true) {
     let chemicals = Object.keys(
       tdsData.contaminant[el.filters.inputs.chemicalGroup.value],
     ).sort((a, b) => a.localeCompare(b));
+
+    const chemicalGroup = filters.chemicalGroup;
+    const cleanedChemicalGroup = chemicalGroup.trim();
   
-    if (filters.chemicalGroup == Translation.translate("tdsData.values.PFAS")) {
+    if (chemicalGroup == Translation.translate("tdsData.values.PFAS")) {
       const first = Object.values(Translation.translate("tdsData.values.PFASGroupings", {returnObjects: true}));
       chemicals = first.concat(chemicals.filter((chemical) => !first.includes(chemical)));
+      chemicals.unshift(Translation.translate("tdsData.values.total.PFC"));
 
-    } else if (filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides")) {
-      chemicals.unshift(Translation.translate("tdsData.values.totalRadionuclides"));
+    } else if (cleanedChemicalGroup == Translation.translate("tdsData.values.radionuclides")) {
+      chemicals.unshift(Translation.translate("tdsData.values.total.radionuclides"));
     }
   
     chemicals.forEach((chemical) => {
@@ -647,7 +651,7 @@ function displayYears() {
   dropdown.selectpicker('destroy');
 
   let years = [];
-  if (filters.chemical == Translation.translate("tdsData.values.totalRadionuclides")) {
+  if (Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical)) {
     years = new Set();
     const chemicalGroupData = tdsData.contaminant[filters.chemicalGroup];
 
@@ -1123,11 +1127,18 @@ export function getFilteredTdsData() {
   let chemicals = new Set([filters.chemical]);
   let chemicalUnits = {};
 
-  if (filters.chemical == Translation.translate("tdsData.values.totalRadionuclides")) {
+  if (Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical)) {
+    let chemicalFilter = undefined;
+    if (filters.chemical == Translation.translate("tdsData.values.total.PFC")) {
+      chemicalFilter = new Set(Object.values(Translation.translate("tdsData.values.PFASGroupings", {returnObjects: true})));
+    }
+
     const chemicalGroupData = tdsData.contaminant[filters.chemicalGroup];
     chemicals.clear();
 
     for (const chemical in chemicalGroupData) {
+      if (chemicalFilter !== undefined && !chemicalFilter.has(chemical)) continue;
+
       chemicals.add(chemical);
       const currentChemicalData = chemicalGroupData[chemical];
 

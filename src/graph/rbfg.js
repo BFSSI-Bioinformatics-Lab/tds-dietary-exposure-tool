@@ -51,7 +51,8 @@ function getChemicalRbfg(tdsData, filters) {
         numCompositesTested: 0,
         numContaminantsUnderLod: 0,
 
-        contaminantsTested: new Set()
+        contaminantsTested: new Set(),
+        compositesTested: new Set()
       }
     });
 
@@ -127,9 +128,13 @@ function getChemicalRbfg(tdsData, filters) {
           consumption.age,
         );
 
+        if (compositeTested) {
+          rbfgDataRow.numCompositesTested += compositeTested;
+          rbfgDataRow.compositesTested.add(composite);
+        }
+
         rbfgDataRow.exposure += exposure;
         rbfgDataRow.numContaminantsTested += numContaminantsTested;
-        rbfgDataRow.numCompositesTested += compositeTested;
       });
     });
   });
@@ -181,9 +186,11 @@ function getRbfgAggregates(rbfgData, tdsData, filters) {
     const numComposites = composites[keys.foodGroup].size;
     const numContaminantsTested = contaminantsTested[keys.ageSexGroup][keys.foodGroup].size;
 
+    row.composites = composites[keys.foodGroup];
     row.percentExposure = (row.exposure / sumExposure) * 100 || 0;
     row.percentUnderLod = (row.numContaminantsUnderLod / numContaminantsTested) * 100 || 0;
-    row.percentNotTested = ((numComposites - row.numCompositesTested) / numComposites) * 100;
+    row.percentNotTested = ((numComposites - row.compositesTested.size) / numComposites) * 100;
+    row.percentTested = row.compositesTested.size / numComposites *  100;
   });
 
   return rbfgData;
@@ -215,7 +222,7 @@ function getRbfgAggregates(rbfgData, tdsData, filters) {
  */
 export function getRbfg(tdsData, filters) {
   let result = {};
-  if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
+  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
     result = getChemicalRbfg(tdsData, filters);
     result = getRbfgAggregates({[filters.chemical]: result}, tdsData, filters);
     return result[filters.chemical];
@@ -244,12 +251,14 @@ export function getRbfg(tdsData, filters) {
  */
 export function formatRbfgToDataTable(rbfgData, filters) {
   const dataTableData = {};
-  const isRadionuclide = filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides");
-  const isTotalRadionuclide = filters.chemical == Translation.translate("tdsData.values.totalRadionuclides");
+  const isTotalChemical = Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical);
 
-  if (!isTotalRadionuclide) {
+  if (!isTotalChemical) {
     rbfgData = {[filters.chemical]: rbfgData};
   }
+
+  const totalCompositesTested = {};
+  const totalComposites = {};
 
   for (const chemical in rbfgData) {
     const chemicalRbfgData = rbfgData[chemical];
@@ -263,6 +272,12 @@ export function formatRbfgToDataTable(rbfgData, filters) {
           foodGroupRow = {};
           dataTableData[row.foodGroup] = foodGroupRow;
         }
+
+        if (totalCompositesTested[row.foodGroup] == undefined) totalCompositesTested[row.foodGroup] = new Set();
+        if (totalComposites[row.foodGroup] == undefined) totalComposites[row.foodGroup] = new Set();
+
+        SetTools.union(totalCompositesTested[row.foodGroup], row.compositesTested, false);
+        SetTools.union(totalComposites[row.foodGroup], row.composites, false);
 
         const dataTableRow = foodGroupRow[row.ageSexGroup];
         if (dataTableRow == undefined) {
@@ -280,12 +295,14 @@ export function formatRbfgToDataTable(rbfgData, filters) {
             [DataTableHeader.MODIFIED]: filters.override.list.filter((override) => override.foodGroup == row.foodGroup).map((override) => getUserModifiedValueText(override, row.contaminantUnit)).join("; "),
             [DataTableHeader.FLAGGED]: new Set(row.consumptionsFlagged),
             [DataTableHeader.SUPPRESSED]: new Set(row.consumptionsSuppressed),
-            [DataTableHeader.INCLUDED_SUPPRESSED]: new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : [])
+            [DataTableHeader.INCLUDED_SUPPRESSED]: new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : []),
+            foodGroup: row.foodGroup
           };
 
           return;
         }
 
+        dataTableRow.foodGroup = row.foodGroup;
         dataTableRow[DataTableHeader.PERCENT_EXPOSURE][chemical] = row.percentExposure;
         dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
         dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
@@ -305,7 +322,7 @@ export function formatRbfgToDataTable(rbfgData, filters) {
   }
 
   for (const row of result) {
-    if (!isTotalRadionuclide) {
+    if (!isTotalChemical) {
       row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
       row[DataTableHeader.PERCENT_EXPOSURE] = DictTools.toWebStr(row[DataTableHeader.PERCENT_EXPOSURE], (key, val) => formatPercent(val));
       row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED], (key, val) => formatPercent(val));
@@ -314,7 +331,7 @@ export function formatRbfgToDataTable(rbfgData, filters) {
     } else {
       row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], formatValFunc: (key, val) => Translation.translateScientificNum(val)});
       row[DataTableHeader.PERCENT_EXPOSURE] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_EXPOSURE], formatValFunc: (key, val) => formatPercent(val)});
-      row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], formatValFunc: (key, val) => formatPercent(val)});
+      row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], formatValFunc: (key, val) => formatPercent(val), getTotalVal: (breakDown) => (totalComposites[row.foodGroup].size - totalCompositesTested[row.foodGroup].size) / totalComposites[row.foodGroup].size * 100});
       row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], formatValFunc: (key, val) => formatPercent(val)});
     }
 
@@ -329,7 +346,7 @@ export function formatRbfgToDataTable(rbfgData, filters) {
   return result;
 }
 
-function getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup) {
+function getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup, contaminantUnit) {
   return foodGroup + `(${getAgeSexDisplay(ageSexGroup)})\n` +
          Translation.translate(`graphs.${GraphTypes.RBFG}.range.${filters.usePercent ? RbfgRangeFormat.PERCENT : RbfgRangeFormat.NUMBER}`) + ": " +
         (filters.usePercent ? formatPercent(exposure): formatNumber(exposure, filters) + " " + getExposureUnit(contaminantUnit, filters));
@@ -346,8 +363,8 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
     return {};
   }
 
-  const isTotalRadionuclide = filters.chemical == Translation.translate("tdsData.values.totalRadionuclides");
-  if (!isTotalRadionuclide) {
+  const isTotalChemical = Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical);
+  if (!isTotalChemical) {
     rbfgData = {[filters.chemical]: rbfgData};
   }
 
@@ -389,13 +406,13 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
             color: colorMapping[foodGroup].color,
             stack: foodGroup,
             value: exposure,
-            info: getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup)
+            info: getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup, contaminantUnit)
           }
           return;
         }
 
         graphDataEntry.value += exposure;
-        graphDataEntry.info = getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup);
+        graphDataEntry.info = getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup, contaminantUnit);
       });
     });
   }

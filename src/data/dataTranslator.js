@@ -424,7 +424,7 @@ export function getBreakdownDistribution(breakDown) {
 
 // getBreakdownWebStr(breakdown, includeTotal): Retrieves the string representation of some breakdown in some cell of a table
 export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null, totalFormatValFunc = null,
-                                    sort = -1, limit = 5, getBreakdownVal = null}) {
+                                    sort = -1, limit = 5, getBreakdownVal = null, getTotalVal = null}) {
   if (formatValFunc == null) {
     formatValFunc = (key, val) => val;
   }
@@ -473,8 +473,12 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
   if (!includeTotal) return result;
 
   let totalValue = 0;
-  for (const key in breakDown) {
-    totalValue += getBreakdownVal(breakDown, key);
+  if (getTotalVal !== null) {
+    totalValue = getTotalVal(breakDown);
+  } else {
+    for (const key in breakDown) {
+      totalValue += getBreakdownVal(breakDown, key);
+    }
   }
 
   totalValue = totalFormatValFunc("total", totalValue);
@@ -484,7 +488,7 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
 
 // getBreakdownDistribWebStr(breakDown, getDistribution, includeTotal, formatValFunc): Retrieves the string representation of a breakdown and its distribution
 //  for some cell of a table
-export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5}) {
+export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5, getTotalVal = null}) {
   if (getDistribution) {
     breakDown = getBreakdownDistribution(breakDown);
   }
@@ -498,5 +502,5 @@ export function getBreakdownDistribWebStr({breakDown, getDistribution = true, in
   const totalFormatValFunc = (key, val) => formatValFunc(key, val);
 
   return getBreakdownWebStr({breakDown: breakDown, includeTotal: includeTotal, formatValFunc: distribFormatFunc, 
-                             sort: sort, limit: limit, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc});
+                             sort: sort, limit: limit, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, getTotalVal: getTotalVal});
 }
