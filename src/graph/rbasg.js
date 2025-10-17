@@ -52,7 +52,8 @@ function getChemicalRbasg(tdsData, filters) {
         numCompositesTested: 0,
         numContaminantsUnderLod: 0,
 
-        contaminantsTested: new Set()
+        contaminantsTested: new Set(),
+        compositesTested: new Set()
       };
 
       rbasgData[entry][sex] = rbasgDataRow;
@@ -118,7 +119,10 @@ function getChemicalRbasg(tdsData, filters) {
               });
             });
 
-            rbasgDataRow.numCompositesTested += compositeFound;
+            if (compositeFound) {
+              rbasgDataRow.compositesTested.add(composite);
+              rbasgDataRow.numCompositesTested += compositeFound;
+            }
 
             const meanOccurrence = sumContaminants / numContaminantsTested || 0;
 
@@ -180,7 +184,11 @@ function getRbasgAggregates(rbasgData, tdsData) {
 
   TableTools.forGroup(rbasgData, ["chemical", "entry", "sex"], (keys, values) => {
     const row = values.sex;
-    row.percentNotTested = ((numComposites - row.numCompositesTested) / numComposites) * 100;
+    const numCompositesTested = row.compositesTested.size;
+
+    row.composites = composites;
+    row.percentNotTested = ((numComposites - numCompositesTested) / numComposites) * 100;
+    row.percentTested = numCompositesTested / numComposites *  100;
     row.percentUnderLod = ((row.numContaminantsUnderLod / contaminantsTested[keys.entry][keys.sex].size) * 100) || 0;
   });
 
@@ -210,7 +218,7 @@ function getRbasgAggregates(rbasgData, tdsData) {
  *  // Other age groups
  */
 export function getRbasg(tdsData, filters) {
-  if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
+  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
     let result = getChemicalRbasg(tdsData, filters);
     result = getRbasgAggregates({[filters.chemical]: result}, tdsData);
     return result[filters.chemical];
@@ -241,12 +249,14 @@ export function getRbasg(tdsData, filters) {
  */
 export function formatRbsagToDataTable(rbasgData, filters) {
   let dataTableData = {};
-  const isRadionuclide = filters.chemicalGroup.trim() == Translation.translate("tdsData.values.radionuclides");
-  const isTotalRadionuclide = filters.chemical == Translation.translate("tdsData.values.totalRadionuclides");
+  const isTotalChemical = Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical);
 
-  if (!isTotalRadionuclide) {
+  if (!isTotalChemical) {
     rbasgData = {[filters.chemical]: rbasgData}
   }
+
+  const totalCompositesTested = new Set();
+  const totalComposites = new Set();
 
   for (const chemical in rbasgData) {
     const chemicalRbasgData = rbasgData[chemical];
@@ -256,6 +266,9 @@ export function formatRbsagToDataTable(rbasgData, filters) {
         if (!row.ageSexGroup) {
           return;
         }
+
+        SetTools.union(totalCompositesTested, row.compositesTested, false);
+        SetTools.union(totalComposites, row.composites, false);
 
         const dataTableRow = dataTableData[row.ageSexGroup];
         if (dataTableRow == undefined) {
@@ -290,13 +303,13 @@ export function formatRbsagToDataTable(rbasgData, filters) {
 
   dataTableData = Object.values(dataTableData);
   for (const row of dataTableData) {
-    if (!isTotalRadionuclide) {
+    if (!isTotalChemical) {
       row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
       row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED], (key, val) => formatPercent(val));
       row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD], (key, val) => formatPercent(val));
     } else {
       row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], formatValFunc: (key, val) => Translation.translateScientificNum(val)});
-      row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], formatValFunc: (key, val) => formatPercent(val)});
+      row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], formatValFunc: (key, val) => formatPercent(val), getTotalVal: (breakDown) => (totalComposites.size - totalCompositesTested.size) / totalComposites.size * 100});
       row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], formatValFunc: (key, val) => formatPercent(val)});
     }
 
@@ -329,7 +342,7 @@ function getRbasgGraphInfo(filters, exposure, entry, sexDisplay, exposureUnit) {
 export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
   if ($.isEmptyObject(rbasgData)) return {};
 
-  if (filters.chemical != Translation.translate("tdsData.values.totalRadionuclides")) {
+  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
     rbasgData = {[filters.chemical]: rbasgData}
   }
 
