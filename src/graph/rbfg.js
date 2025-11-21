@@ -335,7 +335,7 @@ export function formatRbfgToDataTable(rbfgData, filters) {
       row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], formatValFunc: (key, val) => formatPercent(val)});
     }
 
-    row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT]);
+    row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);
 
     row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS]).join(", ");
     row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");

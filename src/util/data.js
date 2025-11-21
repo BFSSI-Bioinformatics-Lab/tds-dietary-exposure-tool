@@ -93,8 +93,7 @@ export class DictTools {
     return result.join(end);
   }
 
-  // toWebStr(dict, formatValFunc): Converts a dictionary to a string to be displayed on a webpage
-  static toWebStr(dict, formatValFunc = null) {
+  static _toWebStr(dict, formatValFunc = null) {
     const dictKeys = Object.keys(dict);
     const dictLen = dictKeys.length;
 
@@ -107,6 +106,32 @@ export class DictTools {
 
     const key = dictKeys[0];
     return `${formatValFunc(key, dict[key])}`;
+  }
+
+  // toWebStr(dict, formatValFunc, checkSame): Converts a dictionary to a string to be displayed on a webpage
+  static toWebStr(dict, formatValFunc = null, checkSame = false) {
+    if (!checkSame) {
+      return DictTools._toWebStr(dict, formatValFunc);
+    }
+
+    let sameVal = true;
+    let val = undefined;
+
+    for (const key in dict) {
+      if (val == undefined) val = dict[key];
+
+      if (dict[key] != val) {
+        sameVal = false;
+        break;
+      }
+    }
+
+    if (sameVal && !$.isEmptyObject(dict)) {
+      const [key, val] = Object.entries(dict)[0];
+      return (formatValFunc == null) ? val : formatValFunc(key, val);
+    }
+
+    return DictTools._toWebStr(dict, formatValFunc);
   }
 
   // mapToStr(map, end, formatValFunc): Converts a map to a string
