@@ -765,6 +765,7 @@ const LangEN = {
   "selectAll": "Select All",
   "deselectAll": "Deselect All",
   "noneSelected": "Nothing Selected",
+  "total": "Total",
 
   themes: {
     [ThemeNames.Light]: "Light",
@@ -997,7 +998,7 @@ const LangEN = {
       occurrence: "Occurrence",
     },
 
-    breakDownTotal: "{{ totalVal }} ({{ totalPercent }}%) from:"
+    breakDownTotal: "{{ totalVal }} {{ totalPercent }} from:"
   },
 
   /**
@@ -1481,6 +1482,7 @@ const LangFR = {
   "selectAll": "Tout Sélectionner",
   "deselectAll": "Tout Désélectionner",
   "noneSelected": "Aucun Sélectionné",
+  "total": "Totale",
 
   errorMsgs: {
     notANumber: "Veuillez entrer un nombre",
@@ -1703,7 +1705,7 @@ const LangFR = {
       occurrence: "Occurrence",
     },
 
-    breakDownTotal: "{{ totalVal }} ({{ totalPercent }}%) de:"
+    breakDownTotal: "{{ totalVal }} {{ totalPercent }} de:"
   },
 
   about: {

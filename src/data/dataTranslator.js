@@ -424,7 +424,8 @@ export function getBreakdownDistribution(breakDown) {
 
 // getBreakdownWebStr(breakdown, includeTotal): Retrieves the string representation of some breakdown in some cell of a table
 export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null, totalFormatValFunc = null,
-                                    sort = -1, limit = 5, getBreakdownVal = null, getTotalVal = null}) {
+                                    sort = -1, limit = 5, getBreakdownVal = null, getTotalVal = null,
+                                    totalFormatPercentFunc = null}) {
   if (formatValFunc == null) {
     formatValFunc = (key, val) => val;
   }
@@ -433,6 +434,10 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
     totalFormatValFunc = formatValFunc;
   } else if (totalFormatValFunc === undefined) {
     totalFormatValFunc = (key, val) => val;
+  }
+
+  if (totalFormatPercentFunc === null) {
+    totalFormatPercentFunc = (val) => `(${val}%)`;
   }
 
   if (getBreakdownVal == null) {
@@ -482,13 +487,14 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
   }
 
   totalValue = totalFormatValFunc("total", totalValue);
-  const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: 100});
+  const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: totalFormatPercentFunc(100)});
   return `<b>${totalLine}</b><br>${result}`;
 }
 
 // getBreakdownDistribWebStr(breakDown, getDistribution, includeTotal, formatValFunc): Retrieves the string representation of a breakdown and its distribution
 //  for some cell of a table
-export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5, getTotalVal = null}) {
+export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5, 
+                                           getTotalVal = null, totalFormatValFunc = null, totalFormatPercentFunc = null}) {
   if (getDistribution) {
     breakDown = getBreakdownDistribution(breakDown);
   }
@@ -499,8 +505,12 @@ export function getBreakdownDistribWebStr({breakDown, getDistribution = true, in
 
   const distribFormatFunc = (key, currentData) => `${formatValFunc(key, currentData.value)} (${currentData.distribution})`;
   const getBreakdownVal = (dict, key) => dict[key].value;
-  const totalFormatValFunc = (key, val) => formatValFunc(key, val);
+
+  if (totalFormatValFunc == null) {
+    totalFormatValFunc = (key, val) => formatValFunc(key, val);
+  }
 
   return getBreakdownWebStr({breakDown: breakDown, includeTotal: includeTotal, formatValFunc: distribFormatFunc, 
-                             sort: sort, limit: limit, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, getTotalVal: getTotalVal});
+                             sort: sort, limit: limit, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, 
+                             getTotalVal: getTotalVal, totalFormatValFunc: totalFormatValFunc, totalFormatPercentFunc: totalFormatPercentFunc});
 }
