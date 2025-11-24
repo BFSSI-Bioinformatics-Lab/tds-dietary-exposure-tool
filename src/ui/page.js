@@ -6,7 +6,6 @@ import {
   getTranslations
 } from "../const.js";
 import {
-  displayAboutTable,
   displayDataTable,
   downloadDataTable,
   downloadTDSData,
@@ -135,10 +134,8 @@ export async function initializePageText() {
 
   el.header.title.innerHTML = translations.header.title;
   el.header.subtitle.innerHTML = translations.header.subtitle;
-  el.header.information.moreInfo.button.innerHTML =
-    translations.header.information.moreInfoButton;
-  el.header.information.moreInfo.content.innerHTML =
-    translations.header.information.moreInfoContent.join("<br/>");
+  el.header.information.moreInfo.about.innerHTML = Translation.translate("about.content");
+  el.header.information.moreInfo.dataSources.innerHTML = Translation.translate("header.information.moreInfoContent");
 
   el.header.information.addData.dropdownHeaderText.innerHTML = Translation.translate("header.information.addDataHeaderText");
   el.header.information.addData.content.innerHTML = Translation.translate("header.information.addDataContent", {returnObjects: true}).join("<br/>");
@@ -223,5 +220,4 @@ export async function initializePageText() {
     Translation.translate("dataTable.buttons.downloadTemplate");
 
   el.about.title.innerHTML = translations.about.title;
-  displayAboutTable();
 }

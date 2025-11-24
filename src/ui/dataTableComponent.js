@@ -183,26 +183,3 @@ export async function displayDataTable(data, filters) {
       .style("min-width", columnWidth);
   }
 }
-
-/*
- * Display table providing additional information about the tool
- */
-export async function displayAboutTable() {
-  const tableId = "#about-table";
-  const tableColInfo = [
-    {title: "header", data: "header"},
-    {title: "value", data: "value"}
-  ]
-
-  const data = getTranslations().about.table;
-  const dataTableTranslations = Translation.translate("dataTableTemplate", { returnObjects: true });
-
-  const dataTableKwargs = {
-    language: dataTableTranslations,
-    columns: tableColInfo,
-    info: false,
-    paging: false
-  }
-
-  updateTable(tableId, tableColInfo, data, dataTableKwargs);
-}

@@ -55,17 +55,9 @@ export const el = {
   header: {
     title: document.getElementById("title"),
     information: {
-      howToUse: {
-        button: document.getElementById("how-to-use-button"),
-        content: document.getElementById("how-to-use-content"),
-        arrowDown: document.getElementById("how-to-use-arrow-down"),
-        arrowRight: document.getElementById("how-to-use-arrow-right"),
-      },
       moreInfo: {
-        button: document.getElementById("more-info-button"),
-        content: document.getElementById("more-info-content"),
-        arrowDown: document.getElementById("more-info-arrow-down"),
-        arrowRight: document.getElementById("more-info-arrow-right"),
+        about: document.getElementById("about-content"),
+        dataSources: document.getElementById("more-info-content")
       },
       addData: {
         dropdownHeaderText: document.getElementById("addDataDropdownHeaderText"),
