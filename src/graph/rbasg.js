@@ -270,7 +270,7 @@ export function formatRbsagToDataTable(rbasgData, filters) {
         SetTools.union(totalCompositesTested, row.compositesTested, false);
         SetTools.union(totalComposites, row.composites, false);
 
-        const dataTableRow = dataTableData[row.ageSexGroup];
+        let dataTableRow = dataTableData[row.ageSexGroup];
         if (dataTableRow == undefined) {
           dataTableData[row.ageSexGroup] = {
             [DataTableHeader.CHEMICAL]: filters.chemical,
@@ -286,6 +286,13 @@ export function formatRbsagToDataTable(rbasgData, filters) {
             [DataTableHeader.SUPPRESSED]: new Set(row.consumptionsSuppressed),
             [DataTableHeader.INCLUDED_SUPPRESSED]: new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : [])
           }
+
+          dataTableRow = dataTableData[row.ageSexGroup];
+
+          if (!dataTableRow[DataTableHeader.MODIFIED]) {
+            dataTableRow[DataTableHeader.MODIFIED] = Translation.translate("not applicable");
+          }
+
           return;
         }
 
