@@ -52,7 +52,9 @@ function getChemicalRbfg(tdsData, filters) {
         numContaminantsUnderLod: 0,
 
         contaminantsTested: new Set(),
-        compositesTested: new Set()
+        compositesTested: new Set(),
+
+        years: new Set()
       }
     });
 
@@ -98,6 +100,8 @@ function getChemicalRbfg(tdsData, filters) {
               if (contaminant.occurrence < contaminant.lod) {
                 rbfgData[consumption.ageSexGroup][foodGroup].numContaminantsUnderLod++;
               }
+
+              rbfgDataRow.years.add(year);
             }
           });
         });
@@ -359,7 +363,10 @@ export function formatRbfgToDataTable(rbfgData, filters) {
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);
 
-    row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS]).join(", ");
+    row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS])
+    row[DataTableHeader.YEARS].sort();
+    row[DataTableHeader.YEARS] = row[DataTableHeader.YEARS].join(", ");
+
     row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");
     row[DataTableHeader.SUPPRESSED] = Array.from(row[DataTableHeader.SUPPRESSED]).join("; ");
     row[DataTableHeader.INCLUDED_SUPPRESSED] = Array.from(row[DataTableHeader.INCLUDED_SUPPRESSED]).join("; ");
