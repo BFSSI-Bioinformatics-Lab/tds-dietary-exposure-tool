@@ -160,7 +160,7 @@ export class DictTools {
     else if (mapLen > 1) return DictTools.mapToStr({map: map, end: "<br>", formatValFunc: formatValFunc});
 
     const [key, val] = map.entries().next().value;
-    return `${formatValFunc(key, val)}`;
+    return `${key}: ${formatValFunc(key, val)}`;
   }
 
   // merge(dicts, keys): Merges multiple dictionaries toghether
