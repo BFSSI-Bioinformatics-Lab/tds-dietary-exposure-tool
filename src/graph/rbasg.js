@@ -310,16 +310,19 @@ export function formatRbsagToDataTable(rbasgData, filters) {
     } else {
       row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], 
                                                                  formatValFunc: (key, val) => Translation.translateScientificNum(val),
-                                                                 totalFormatPercentFunc: (val) => Translation.translate("total")});
+                                                                 totalFormatPercentFunc: (val) => Translation.translate("total"),
+                                                                 filter: (key, val) => val.value != 0});
 
       row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], 
                                                                     formatValFunc: (key, val) => formatPercent(val), 
                                                                     getTotalVal: (breakDown) => (totalComposites.size - totalCompositesTested.size) / totalComposites.size * 100,
-                                                                    totalFormatPercentFunc: (val) => Translation.translate("total")});
+                                                                    totalFormatPercentFunc: (val) => Translation.translate("total"),
+                                                                    filter: (key, val) => val != 0});
 
       row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], 
                                                                    formatValFunc: (key, val) => formatPercent(val),
-                                                                   totalFormatPercentFunc: (val) => Translation.translate("total")});
+                                                                   totalFormatPercentFunc: (val) => Translation.translate("total"),
+                                                                   filter: (key, val) => val != 0});
     }
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);

@@ -424,7 +424,7 @@ export function getBreakdownDistribution(breakDown) {
 
 // getBreakdownWebStr(breakdown, includeTotal): Retrieves the string representation of some breakdown in some cell of a table
 export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null, totalFormatValFunc = null,
-                                    sort = -1, limit = 5, getBreakdownVal = null, getTotalVal = null,
+                                    sort = -1, limit = 5, filter = null, getBreakdownVal = null, getTotalVal = null,
                                     totalFormatPercentFunc = null}) {
   if (formatValFunc == null) {
     formatValFunc = (key, val) => val;
@@ -442,6 +442,10 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
 
   if (getBreakdownVal == null) {
     getBreakdownVal = (dict, key) => dict[key];
+  }
+
+  if (filter == null) {
+    filter = (key, val) => true;
   }
 
   let newBreakdown = undefined;
@@ -468,10 +472,13 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
   if (breakDownFormatted) {
     newBreakdown = new Map();
     for (const key of breakDownKeys) {
-      newBreakdown.set(key, breakDown[key]);
+      const breakDownVal = breakDown[key];
+      if (!filter(key, breakDownVal)) continue;
+
+      newBreakdown.set(key, breakDownVal);
     }
   } else {
-    newBreakdown = new Map(Object.entries(breakDown));
+    newBreakdown = new Map(Object.entries(breakDown).filter((key, val) => filter(key, val)));
   }
 
   let result = DictTools.mapToWebStr(newBreakdown, formatValFunc);
@@ -487,14 +494,14 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
   }
 
   totalValue = totalFormatValFunc("total", totalValue);
-  const totalLine = Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: totalFormatPercentFunc(100)});
+  const totalLine = (newBreakdown.size > 0) ?  Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: totalFormatPercentFunc(100)}) : `${totalValue}`;
   return `<b>${totalLine}</b><br>${result}`;
 }
 
 // getBreakdownDistribWebStr(breakDown, getDistribution, includeTotal, formatValFunc): Retrieves the string representation of a breakdown and its distribution
 //  for some cell of a table
 export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5, 
-                                           getTotalVal = null, totalFormatValFunc = null, totalFormatPercentFunc = null}) {
+                                           filter = null, getTotalVal = null, totalFormatValFunc = null, totalFormatPercentFunc = null}) {
   if (getDistribution) {
     breakDown = getBreakdownDistribution(breakDown);
   }
@@ -511,6 +518,6 @@ export function getBreakdownDistribWebStr({breakDown, getDistribution = true, in
   }
 
   return getBreakdownWebStr({breakDown: breakDown, includeTotal: includeTotal, formatValFunc: distribFormatFunc, 
-                             sort: sort, limit: limit, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, 
+                             sort: sort, limit: limit, filter: filter, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, 
                              getTotalVal: getTotalVal, totalFormatValFunc: totalFormatValFunc, totalFormatPercentFunc: totalFormatPercentFunc});
 }
