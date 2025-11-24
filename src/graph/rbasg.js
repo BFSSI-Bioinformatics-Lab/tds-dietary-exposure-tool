@@ -334,7 +334,10 @@ export function formatRbsagToDataTable(rbasgData, filters) {
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);
 
-    row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS]).join(", ");
+    row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS])
+    row[DataTableHeader.YEARS].sort();
+    row[DataTableHeader.YEARS] = row[DataTableHeader.YEARS].join(", ");
+
     row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");
     row[DataTableHeader.SUPPRESSED] = Array.from(row[DataTableHeader.SUPPRESSED]).join("; ");
     row[DataTableHeader.INCLUDED_SUPPRESSED] = Array.from(row[DataTableHeader.INCLUDED_SUPPRESSED]).join("; ");
