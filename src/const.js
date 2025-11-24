@@ -766,6 +766,7 @@ const LangEN = {
   "deselectAll": "Deselect All",
   "noneSelected": "Nothing Selected",
   "total": "Total",
+  "not applicable": "Not Applicable",
 
   themes: {
     [ThemeNames.Light]: "Light",
@@ -1483,6 +1484,7 @@ const LangFR = {
   "deselectAll": "Tout Désélectionner",
   "noneSelected": "Aucun Sélectionné",
   "total": "Totale",
+  "not applicable": "Sans Objet",
 
   errorMsgs: {
     notANumber: "Veuillez entrer un nombre",

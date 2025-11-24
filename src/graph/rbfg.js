@@ -279,7 +279,7 @@ export function formatRbfgToDataTable(rbfgData, filters) {
         SetTools.union(totalCompositesTested[row.foodGroup], row.compositesTested, false);
         SetTools.union(totalComposites[row.foodGroup], row.composites, false);
 
-        const dataTableRow = foodGroupRow[row.ageSexGroup];
+        let dataTableRow = foodGroupRow[row.ageSexGroup];
         if (dataTableRow == undefined) {
           foodGroupRow[row.ageSexGroup] = {
             [DataTableHeader.CHEMICAL]: filters.chemical,
@@ -298,6 +298,12 @@ export function formatRbfgToDataTable(rbfgData, filters) {
             [DataTableHeader.INCLUDED_SUPPRESSED]: new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : []),
             foodGroup: row.foodGroup
           };
+
+          dataTableRow = foodGroupRow[row.ageSexGroup];
+
+          if (!dataTableRow[DataTableHeader.MODIFIED]) {
+            dataTableRow[DataTableHeader.MODIFIED] = Translation.translate("not applicable");
+          }
 
           return;
         }
