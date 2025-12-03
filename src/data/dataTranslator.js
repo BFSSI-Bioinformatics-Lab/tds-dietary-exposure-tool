@@ -448,37 +448,39 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
     filter = (key, val) => true;
   }
 
-  let newBreakdown = undefined;
   let breakDownKeys = null;
 
   // sorting
   if (sort != 0 || limit !== null) {
-    breakDownKeys = Object.keys(breakDown);
+    if (Array.isArray(sort)) {
+      breakDownKeys = [];
 
-    if (sort != 0) {
-      const compareFn = (sort >= 0) ? (keyA, keyB) => getBreakdownVal(breakDown, keyA) - getBreakdownVal(breakDown, keyB) : (keyA, keyB) => getBreakdownVal(breakDown, keyB) - getBreakdownVal(breakDown, keyA)
-      breakDownKeys.sort(compareFn);
+      for (const key of sort) {
+        if (key in breakDown) {
+          breakDownKeys.push(key);
+        }
+      }
+    } else {
+      breakDownKeys = Object.keys(breakDown);
+
+      if (sort != 0) {
+        const compareFn = (sort >= 0) ? (keyA, keyB) => getBreakdownVal(breakDown, keyA) - getBreakdownVal(breakDown, keyB) : (keyA, keyB) => getBreakdownVal(breakDown, keyB) - getBreakdownVal(breakDown, keyA)
+        breakDownKeys.sort(compareFn);
+      }
     }
-  }
-
-  const breakDownFormatted = breakDownKeys !== null;
-
-  // limit entries
-  if (breakDownFormatted && limit !== null) {
-    breakDownKeys = breakDownKeys.slice(0, limit);
   }
 
   // create the new processed breakdown
-  if (breakDownFormatted) {
-    newBreakdown = new Map();
-    for (const key of breakDownKeys) {
-      const breakDownVal = breakDown[key];
-      if (!filter(key, breakDownVal)) continue;
+  const newBreakdown = new Map();
+  let count = 0;
 
-      newBreakdown.set(key, breakDownVal);
-    }
-  } else {
-    newBreakdown = new Map(Object.entries(breakDown).filter((key, val) => filter(key, val)));
+  for (const key of breakDownKeys) {
+    const breakDownVal = breakDown[key];
+    if (!filter(key, breakDownVal)) continue;
+    if (limit != null && count > limit) break;
+
+    newBreakdown.set(key, breakDownVal);
+    count += 1;
   }
 
   let result = DictTools.mapToWebStr(newBreakdown, formatValFunc);
