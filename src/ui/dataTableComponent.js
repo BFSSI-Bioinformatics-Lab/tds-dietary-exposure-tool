@@ -9,7 +9,6 @@ import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
 import { el} from "./const.js";
 import { getActiveFilters } from "./filter.js";
-import { DictTools, TableTools } from "../util/data.js";
 
 /**
  * Download raw filtered TDS data

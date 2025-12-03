@@ -25,7 +25,7 @@ import {
   formatNumber,
   formatPercent
 } from "../util/data.js";
-import { getActiveFilters } from "../ui/filter.js";
+import { getActiveFilters, getFilteredChemData } from "../ui/filter.js";
 
 /**
  * An object containing TDS data in a structured format with the following properties:
@@ -345,6 +345,14 @@ export async function getRawFilteredContaminantData() {
     csvFilename: ""
   };
 
+  let chemicals = new Set();
+  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
+    chemicals.add(filters.chemical);
+  } else {
+    let [chemicalData, rawChemicals, chemicalUnits] = getFilteredChemData();
+    chemicals = rawChemicals;
+  }
+
   for (const file of getContaminantFiles()) {
     let rows = (await readCSV(file)).rows;
     const chemicalGroup =
@@ -354,9 +362,7 @@ export async function getRawFilteredContaminantData() {
     }
 
     const pfasGrouping = Object.keys(PFASGroupings).find(
-      (grouping) =>
-        getTranslations().tdsData.values.PFASGroupings[grouping] ==
-        filters.chemical,
+      (grouping) => chemicals.has(getTranslations().tdsData.values.PFASGroupings[grouping])
     );
 
     rows
@@ -372,8 +378,7 @@ export async function getRawFilteredContaminantData() {
           );
         } else {
           return (
-            row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]] ==
-              filters.chemical &&
+            chemicals.has(row[getTranslations().tdsData.headers[DataColumn.CHEMICAL]]) &&
             filters.years.includes(getYearForContaminantEntry(row))
           );
         }
