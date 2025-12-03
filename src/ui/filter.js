@@ -1083,45 +1083,8 @@ export function drawToolTips(toolTipId, elementsWithInfoIcons, toolTipTextFunc =
     // ----------------------------------------------
 }
 
-/**
- * A function that retrieves the current user-selected filters, and filters the contaminant data from the global
- * TDS data for the currently-selected chemical group, chemical, and years. This function is called before passing
- * data off to calculation/graph functions. See the global TDS data object for description of the returned fields.
- *
- * Returns:
- * - An object containing filtered TDS data in a structured format with the following properties:
- *   - contaminant
- *     - chemicalGroup
- *     - chemical
- *     - year:
- *       - chemicalGroup
- *       - chemical
- *       - year
- *       - compositeInfo:
- *       - occurrence
- *       - units
- *       - lod
- *   - consumption
- *     - foodGroup
- *       - composite
- *         - age
- *         - ageSexGroup
- *         - composite
- *         - compositeDesc
- *         - foodGroup
- *         - meanFlag
- *         - meanGramsPerKgBWPerDay
- *         - meanGramsPerPersonPerDay
- *         - sex
- *       // ... (more composites)
- *     // ... (more food groups)
- */
-export function getFilteredTdsData() {
+export function getFilteredChemData() {
   const filters = getActiveFilters();
-  let filteredTdsData = {
-    ...tdsData,
-    contaminant: {},
-  };
 
   let chemicalData = {};
   let chemicals = new Set([filters.chemical]);
@@ -1164,6 +1127,51 @@ export function getFilteredTdsData() {
   if (chemicalData == undefined) {
     chemicalData = {}
   }
+
+  return [chemicalData, chemicals, chemicalUnits];
+}
+
+/**
+ * A function that retrieves the current user-selected filters, and filters the contaminant data from the global
+ * TDS data for the currently-selected chemical group, chemical, and years. This function is called before passing
+ * data off to calculation/graph functions. See the global TDS data object for description of the returned fields.
+ *
+ * Returns:
+ * - An object containing filtered TDS data in a structured format with the following properties:
+ *   - contaminant
+ *     - chemicalGroup
+ *     - chemical
+ *     - year:
+ *       - chemicalGroup
+ *       - chemical
+ *       - year
+ *       - compositeInfo:
+ *       - occurrence
+ *       - units
+ *       - lod
+ *   - consumption
+ *     - foodGroup
+ *       - composite
+ *         - age
+ *         - ageSexGroup
+ *         - composite
+ *         - compositeDesc
+ *         - foodGroup
+ *         - meanFlag
+ *         - meanGramsPerKgBWPerDay
+ *         - meanGramsPerPersonPerDay
+ *         - sex
+ *       // ... (more composites)
+ *     // ... (more food groups)
+ */
+export function getFilteredTdsData() {
+  const filters = getActiveFilters();
+  let filteredTdsData = {
+    ...tdsData,
+    contaminant: {},
+  };
+
+  let [chemicalData, chemicals, chemicalUnits] = getFilteredChemData();
 
   Object.keys(chemicalData).forEach((year) => {
     if (filters.years.includes(year)) {
