@@ -315,21 +315,27 @@ export function formatRbsagToDataTable(rbasgData, filters) {
       row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED], (key, val) => formatPercent(val));
       row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD], (key, val) => formatPercent(val));
     } else {
+      const exposureChemicals = Object.keys(row[DataTableHeader.EXPOSURE]);
+      exposureChemicals.sort((chemA, chemB) => row[DataTableHeader.EXPOSURE][chemB] - row[DataTableHeader.EXPOSURE][chemA]);
+
       row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], 
                                                                  formatValFunc: (key, val) => Translation.translateScientificNum(val),
                                                                  totalFormatPercentFunc: (val) => Translation.translate("total"),
-                                                                 filter: (key, val) => val.value != 0});
+                                                                 filter: (key, val) => val.value != 0,
+                                                                 sort: exposureChemicals});
 
       row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], 
                                                                     formatValFunc: (key, val) => formatPercent(val), 
                                                                     getTotalVal: (breakDown) => (totalComposites.size - totalCompositesTested.size) / totalComposites.size * 100,
                                                                     totalFormatPercentFunc: (val) => Translation.translate("total"),
-                                                                    filter: (key, val) => val != 0});
+                                                                    filter: (key, val) => val != 0,
+                                                                    sort: exposureChemicals});
 
       row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], 
                                                                    formatValFunc: (key, val) => formatPercent(val),
                                                                    totalFormatPercentFunc: (val) => Translation.translate("total"),
-                                                                   filter: (key, val) => val != 0});
+                                                                   filter: (key, val) => val != 0,
+                                                                   sort: exposureChemicals});
     }
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);
