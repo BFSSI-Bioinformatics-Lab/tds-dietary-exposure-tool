@@ -16,6 +16,7 @@ import {
   getAgeSexDisplay,
   getExposureUnit,
   getUserModifiedValueText,
+  isTotalChemical,
   SetTools,
   TableTools
 } from "../util/data.js";
@@ -226,7 +227,7 @@ function getRbfgAggregates(rbfgData, tdsData, filters) {
  */
 export function getRbfg(tdsData, filters) {
   let result = {};
-  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
+  if (!(isTotalChemical(filters.chemical))) {
     result = getChemicalRbfg(tdsData, filters);
     result = getRbfgAggregates({[filters.chemical]: result}, tdsData, filters);
     return result[filters.chemical];
@@ -255,9 +256,9 @@ export function getRbfg(tdsData, filters) {
  */
 export function formatRbfgToDataTable(rbfgData, filters) {
   const dataTableData = {};
-  const isTotalChemical = Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical);
+  const chemIsTotal = isTotalChemical(filters.chemical);
 
-  if (!isTotalChemical) {
+  if (!chemIsTotal) {
     rbfgData = {[filters.chemical]: rbfgData};
   }
 
@@ -332,15 +333,17 @@ export function formatRbfgToDataTable(rbfgData, filters) {
   }
 
   for (const row of result) {
-    if (!isTotalChemical) {
+    if (!chemIsTotal) {
       row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
       row[DataTableHeader.PERCENT_EXPOSURE] = DictTools.toWebStr(row[DataTableHeader.PERCENT_EXPOSURE], (key, val) => formatPercent(val));
       row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED], (key, val) => formatPercent(val));
       row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD], (key, val) => formatPercent(val));
 
     } else {
-      const exposureChemicals = Object.keys(row[DataTableHeader.EXPOSURE]);
+      const maxNumOfChemicals = 5;
+      let exposureChemicals = Object.keys(row[DataTableHeader.EXPOSURE]);
       exposureChemicals.sort((chemA, chemB) => row[DataTableHeader.EXPOSURE][chemB] - row[DataTableHeader.EXPOSURE][chemA]);
+      exposureChemicals = exposureChemicals.slice(0, maxNumOfChemicals);
 
       row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], 
                                                                  formatValFunc: (key, val) => Translation.translateScientificNum(val),
@@ -399,8 +402,8 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
     return {};
   }
 
-  const isTotalChemical = Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical);
-  if (!isTotalChemical) {
+  const chemIsTotal = isTotalChemical(filters.chemical);
+  if (!chemIsTotal) {
     rbfgData = {[filters.chemical]: rbfgData};
   }
 

@@ -22,7 +22,8 @@ import {
   getAgeSex,
   getSexDisplays as getSexDisplays,
   DictTools,
-  SetTools
+  SetTools,
+  isTotalChemical
 } from "../util/data.js";
 import { getCompositeInfo } from "../util/graph.js";
 import { NumberTool } from "../util/data.js";
@@ -1090,10 +1091,19 @@ export function getFilteredChemData() {
   let chemicals = new Set([filters.chemical]);
   let chemicalUnits = {};
 
-  if (Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical)) {
+  if (isTotalChemical(filters.chemical)) {
     let chemicalFilter = undefined;
+
     if (filters.chemical == Translation.translate("tdsData.values.total.PFC")) {
       chemicalFilter = new Set(Object.values(Translation.translate("tdsData.values.PFASGroupings", {returnObjects: true})));
+
+    } else if (filters.chemical != Translation.translate("tdsData.values.total.radionuclides")) {
+      const pfasGroupings = DictTools.invert(Translation.translate("tdsData.values.PFASGroupings", {returnObjects: true}));
+      const pfasGrouping = pfasGroupings[filters.chemical];
+
+      if (pfasGrouping !== undefined) {
+        chemicalFilter = new Set(Object.values(Translation.translate(`tdsData.values.PFASMapping.${pfasGrouping}`, {returnObjects: true})));
+      }
     }
 
     const chemicalGroupData = tdsData.contaminant[filters.chemicalGroup];

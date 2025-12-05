@@ -16,15 +16,15 @@ import {
 import {
   formatNumber,
   formatPercent,
-  getAgeAndSex,
   getAgeSexDisplay,
   getExposureUnit,
   getUserModifiedValueText,
   SetTools,
   DictTools,
-  TableTools
+  TableTools,
+  isTotalChemical
 } from "../util/data.js";
-import { breakDownFormatNumbers, getBreakdownDistribution, getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
+import { getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
 
 
 // getChemicalRbasg(tdsData, filters): Retrieves the data for results by age-sex group
@@ -218,7 +218,7 @@ function getRbasgAggregates(rbasgData, tdsData) {
  *  // Other age groups
  */
 export function getRbasg(tdsData, filters) {
-  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
+  if (!(isTotalChemical(filters.chemical))) {
     let result = getChemicalRbasg(tdsData, filters);
     result = getRbasgAggregates({[filters.chemical]: result}, tdsData);
     return result[filters.chemical];
@@ -249,9 +249,9 @@ export function getRbasg(tdsData, filters) {
  */
 export function formatRbsagToDataTable(rbasgData, filters) {
   let dataTableData = {};
-  const isTotalChemical = Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical);
+  const chemIsTotal = isTotalChemical(filters.chemical);
 
-  if (!isTotalChemical) {
+  if (!chemIsTotal) {
     rbasgData = {[filters.chemical]: rbasgData}
   }
 
@@ -310,13 +310,15 @@ export function formatRbsagToDataTable(rbasgData, filters) {
 
   dataTableData = Object.values(dataTableData);
   for (const row of dataTableData) {
-    if (!isTotalChemical) {
+    if (!chemIsTotal) {
       row[DataTableHeader.EXPOSURE] = formatNumber(row[DataTableHeader.EXPOSURE][filters.chemical], filters);
       row[DataTableHeader.PERCENT_NOT_TESTED] = DictTools.toWebStr(row[DataTableHeader.PERCENT_NOT_TESTED], (key, val) => formatPercent(val));
       row[DataTableHeader.PERCENT_UNDER_LOD] = DictTools.toWebStr(row[DataTableHeader.PERCENT_UNDER_LOD], (key, val) => formatPercent(val));
     } else {
-      const exposureChemicals = Object.keys(row[DataTableHeader.EXPOSURE]);
+      const maxNumOfChemicals = 5;
+      let exposureChemicals = Object.keys(row[DataTableHeader.EXPOSURE]);
       exposureChemicals.sort((chemA, chemB) => row[DataTableHeader.EXPOSURE][chemB] - row[DataTableHeader.EXPOSURE][chemA]);
+      exposureChemicals = exposureChemicals.slice(0, maxNumOfChemicals);
 
       row[DataTableHeader.EXPOSURE] = getBreakdownDistribWebStr({breakDown: row[DataTableHeader.EXPOSURE], 
                                                                  formatValFunc: (key, val) => Translation.translateScientificNum(val),
@@ -370,7 +372,7 @@ function getRbasgGraphInfo(filters, exposure, entry, sexDisplay, exposureUnit) {
 export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
   if ($.isEmptyObject(rbasgData)) return {};
 
-  if (!(Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).includes(filters.chemical))) {
+  if (!(isTotalChemical(filters.chemical))) {
     rbasgData = {[filters.chemical]: rbasgData}
   }
 
