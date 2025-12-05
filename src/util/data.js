@@ -65,6 +65,16 @@ export class NumberTool {
 // DictTool: Tools for handling dictionaries
 export class DictTools {
 
+  // invert(dict): Swaps the keys and values of a dictionary
+  static invert(dict) {
+    const result = {};
+    for (const key in dict) {
+      result[dict[key]] = key;
+    }
+
+    return result;
+  }
+
   // getMapSorted(dict, compareFn): Retrieves a corresponding map
   //  to the sorted dictionarys
   static getMapSorted(dict, compareFn) {
@@ -619,4 +629,10 @@ export function getMeanFlagForConsumptionEntry(meanFlag, meanConsumption) {
  */
 export function getCompositeForConsumptionEntry(row) {
   return row[getTranslations().tdsData.headers[DataColumn.COMPOSITE_CODE]];
+}
+
+
+export function isTotalChemical(chemical) {
+  return Object.values(Translation.translate("tdsData.values.total", {returnObjects: true})).concat(
+         Object.values(Translation.translate("tdsData.values.PFASGroupings", {returnObjects: true}))).includes(chemical);
 }
