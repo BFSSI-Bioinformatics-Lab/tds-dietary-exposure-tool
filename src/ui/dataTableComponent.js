@@ -7,6 +7,7 @@ import {
 import { formatRbsagToDataTable, getRbasg } from "../graph/rbasg.js";
 import { formatRbfToDataTable, getRbf } from "../graph/rbf.js";
 import { formatRbfgToDataTable, getRbfg } from "../graph/rbfg.js";
+import { TableTools } from "../util/data.js";
 import { el} from "./const.js";
 import { getActiveFilters } from "./filter.js";
 

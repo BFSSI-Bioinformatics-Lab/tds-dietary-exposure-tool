@@ -60,7 +60,6 @@ export const el = {
         dataSources: document.getElementById("more-info-content")
       },
       addData: {
-        dropdownHeaderText: document.getElementById("addDataDropdownHeaderText"),
         content: document.getElementById("addDataContent")
       }
     },

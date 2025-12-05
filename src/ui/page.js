@@ -137,7 +137,6 @@ export async function initializePageText() {
   el.header.information.moreInfo.about.innerHTML = Translation.translate("about.content");
   el.header.information.moreInfo.dataSources.innerHTML = Translation.translate("header.information.moreInfoContent");
 
-  el.header.information.addData.dropdownHeaderText.innerHTML = Translation.translate("header.information.addDataHeaderText");
   el.header.information.addData.content.innerHTML = Translation.translate("header.information.addDataContent", {returnObjects: true}).join("<br/>");
 
   el.filters.titles.graphSelectTitle.innerHTML = translations.filters.titles.selectGraphType;
