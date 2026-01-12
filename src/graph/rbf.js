@@ -133,7 +133,7 @@ export function getRbf(tdsData, filters) {
  * Returns:
  * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
-export function formatRbfToDataTable(rbfData, filters) {
+export function formatRbfToDataTable(rbfData, filters, forDownload = false) {
   const dataTableData = Object.values(rbfData).map((row) => {
     const compositeInfo = getCompositeInfo(row);
 

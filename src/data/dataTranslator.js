@@ -430,7 +430,7 @@ export function getBreakdownDistribution(breakDown) {
 // getBreakdownWebStr(breakdown, includeTotal): Retrieves the string representation of some breakdown in some cell of a table
 export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFunc = null, totalFormatValFunc = null,
                                     sort = -1, limit = 5, filter = null, getBreakdownVal = null, getTotalVal = null,
-                                    totalFormatPercentFunc = null}) {
+                                    totalFormatPercentFunc = null, forDownload = false}) {
   if (formatValFunc == null) {
     formatValFunc = (key, val) => val;
   }
@@ -488,7 +488,9 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
     count += 1;
   }
 
-  let result = DictTools.mapToWebStr(newBreakdown, formatValFunc);
+  const newLineChar = (forDownload) ? "\n" : "<br>"
+
+  let result = DictTools.mapToWebStr({map: newBreakdown, formatValFunc: formatValFunc, end: newLineChar});
   if (!includeTotal) return result;
 
   let totalValue = 0;
@@ -502,13 +504,19 @@ export function getBreakdownWebStr({breakDown, includeTotal = true, formatValFun
 
   totalValue = totalFormatValFunc("total", totalValue);
   const totalLine = (newBreakdown.size > 0) ?  Translation.translate("dataTable.breakDownTotal", {totalVal: totalValue, totalPercent: totalFormatPercentFunc(100)}) : `${totalValue}`;
-  return `<b>${totalLine}</b><br>${result}`;
+
+  if (!forDownload) {
+    return `<b>${totalLine}</b><br>${result}`;
+  }
+
+  return `${totalLine}\n${result}`;
 }
 
 // getBreakdownDistribWebStr(breakDown, getDistribution, includeTotal, formatValFunc): Retrieves the string representation of a breakdown and its distribution
 //  for some cell of a table
 export function getBreakdownDistribWebStr({breakDown, getDistribution = true, includeTotal = true, formatValFunc = null, sort = -1, limit = 5, 
-                                           filter = null, getTotalVal = null, totalFormatValFunc = null, totalFormatPercentFunc = null}) {
+                                           filter = null, getTotalVal = null, totalFormatValFunc = null, totalFormatPercentFunc = null,
+                                           forDownload = false}) {
   if (getDistribution) {
     breakDown = getBreakdownDistribution(breakDown);
   }
@@ -526,5 +534,5 @@ export function getBreakdownDistribWebStr({breakDown, getDistribution = true, in
 
   return getBreakdownWebStr({breakDown: breakDown, includeTotal: includeTotal, formatValFunc: distribFormatFunc, 
                              sort: sort, limit: limit, filter: filter, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, 
-                             getTotalVal: getTotalVal, totalFormatValFunc: totalFormatValFunc, totalFormatPercentFunc: totalFormatPercentFunc});
+                             getTotalVal: getTotalVal, totalFormatValFunc: totalFormatValFunc, totalFormatPercentFunc: totalFormatPercentFunc, forDownload: forDownload});
 }

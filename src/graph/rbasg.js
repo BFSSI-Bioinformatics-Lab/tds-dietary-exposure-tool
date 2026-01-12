@@ -247,7 +247,7 @@ export function getRbasg(tdsData, filters) {
  * Returns:
  * - An array of objects adhering to the contract specified in the displayDataTable function of dataTableComponent.js
  */
-export function formatRbsagToDataTable(rbasgData, filters) {
+export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) {
   let dataTableData = {};
   const chemIsTotal = isTotalChemical(filters.chemical);
 
@@ -324,20 +324,20 @@ export function formatRbsagToDataTable(rbasgData, filters) {
                                                                  formatValFunc: (key, val) => Translation.translateScientificNum(val),
                                                                  totalFormatPercentFunc: (val) => Translation.translate("total"),
                                                                  filter: (key, val) => val.value != 0,
-                                                                 sort: exposureChemicals});
+                                                                 sort: exposureChemicals, forDownload: forDownload});
 
       row[DataTableHeader.PERCENT_NOT_TESTED] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_NOT_TESTED], 
                                                                     formatValFunc: (key, val) => formatPercent(val), 
                                                                     getTotalVal: (breakDown) => (totalComposites.size - totalCompositesTested.size) / totalComposites.size * 100,
                                                                     totalFormatPercentFunc: (val) => Translation.translate("total"),
                                                                     filter: (key, val) => val != 0,
-                                                                    sort: exposureChemicals});
+                                                                    sort: exposureChemicals, forDownload: forDownload});
 
       row[DataTableHeader.PERCENT_UNDER_LOD] = getBreakdownWebStr({breakDown: row[DataTableHeader.PERCENT_UNDER_LOD], 
                                                                    formatValFunc: (key, val) => formatPercent(val),
                                                                    totalFormatPercentFunc: (val) => Translation.translate("total"),
                                                                    filter: (key, val) => val != 0,
-                                                                   sort: exposureChemicals});
+                                                                   sort: exposureChemicals, forDownload: forDownload});
     }
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);
