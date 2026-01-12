@@ -103,7 +103,7 @@ export class DictTools {
     return result.join(end);
   }
 
-  static _toWebStr(dict, formatValFunc = null) {
+  static _toWebStr(dict, formatValFunc = null, end = "<br>") {
     const dictKeys = Object.keys(dict);
     const dictLen = dictKeys.length;
 
@@ -112,7 +112,7 @@ export class DictTools {
     }
     
     if (dictLen == 0) return "";
-    else if (dictLen > 1) return DictTools.toStr({dict: dict, end: "<br>", formatValFunc: formatValFunc});
+    else if (dictLen > 1) return DictTools.toStr({dict: dict, end: end, formatValFunc: formatValFunc});
 
     const key = dictKeys[0];
     return `${formatValFunc(key, dict[key])}`;
@@ -159,7 +159,7 @@ export class DictTools {
   }
 
   // mapToWebStr(map, formatValFunc): Converts a map to a string to be displayed on a webpage
-  static mapToWebStr(map, formatValFunc = null) {
+  static mapToWebStr({map, formatValFunc = null, end = "<br>"}) {
     const mapLen = map.size;
 
     if (formatValFunc == null) {
@@ -167,7 +167,7 @@ export class DictTools {
     }
 
     if (mapLen == 0) return "";
-    else if (mapLen > 1) return DictTools.mapToStr({map: map, end: "<br>", formatValFunc: formatValFunc});
+    else if (mapLen > 1) return DictTools.mapToStr({map: map, end: end, formatValFunc: formatValFunc});
 
     const [key, val] = map.entries().next().value;
     return `${key}: ${formatValFunc(key, val)}`;

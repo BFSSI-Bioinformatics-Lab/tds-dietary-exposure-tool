@@ -106,7 +106,7 @@ export function downloadDataTable(tdsData, graphType) {
   const specificData = getDataFn(tdsData, filters);
   const data = {
     filename: getTranslations().dataTable.exportNames.calculations,
-    rows: getDataTableDataFn(specificData, filters),
+    rows: getDataTableDataFn(specificData, filters, true),
     csvFilename: ""
   };
 
