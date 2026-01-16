@@ -459,7 +459,7 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
         }
 
         graphDataEntry.value += exposure;
-        graphDataEntry.info = getRbfgGraphInfo(filters, exposure, ageSexGroup, foodGroup, contaminantUnit);
+        graphDataEntry.info = getRbfgGraphInfo(filters, graphDataEntry.value, ageSexGroup, foodGroup, contaminantUnit);
       });
     });
   }
