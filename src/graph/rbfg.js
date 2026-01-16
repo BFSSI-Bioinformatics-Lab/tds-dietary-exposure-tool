@@ -264,6 +264,7 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
 
   const totalCompositesTested = {};
   const totalComposites = {};
+  const allYears = new Set();
 
   for (const chemical in rbfgData) {
     const chemicalRbfgData = rbfgData[chemical];
@@ -284,6 +285,9 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
         SetTools.union(totalCompositesTested[row.foodGroup], row.compositesTested, false);
         SetTools.union(totalComposites[row.foodGroup], row.composites, false);
 
+        const currentYears = new Set(row.years);
+        SetTools.union(allYears, currentYears);
+
         let dataTableRow = foodGroupRow[row.ageSexGroup];
         if (dataTableRow == undefined) {
           foodGroupRow[row.ageSexGroup] = {
@@ -293,7 +297,7 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
             [DataTableHeader.PERCENT_EXPOSURE]: {[chemical]: row.percentExposure},
             [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
             [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
-            [DataTableHeader.YEARS]: new Set(row.years),
+            [DataTableHeader.YEARS]: currentYears,
             [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: row.percentNotTested},
             [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: row.percentUnderLod},
             [DataTableHeader.TREATMENT]: filters.lod,
@@ -317,7 +321,7 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
         dataTableRow[DataTableHeader.PERCENT_EXPOSURE][chemical] = row.percentExposure;
         dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
         dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
-        SetTools.union(dataTableRow[DataTableHeader.YEARS], new Set(row.years), false);
+        SetTools.union(dataTableRow[DataTableHeader.YEARS], currentYears, false);
         dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = row.percentNotTested;
         dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = row.percentUnderLod;
         SetTools.union(dataTableRow[DataTableHeader.FLAGGED], new Set(row.consumptionsFlagged), false);
@@ -372,6 +376,10 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
     }
 
     row[DataTableHeader.EXPOSURE_UNIT] = DictTools.toWebStr(row[DataTableHeader.EXPOSURE_UNIT], null, true);
+
+    if (row[DataTableHeader.YEARS].size == 0) {
+      row[DataTableHeader.YEARS] = allYears;
+    }
 
     row[DataTableHeader.YEARS] = Array.from(row[DataTableHeader.YEARS])
     row[DataTableHeader.YEARS].sort();
