@@ -257,6 +257,7 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
 
   const totalCompositesTested = new Set();
   const totalComposites = new Set();
+  const allYears = new Set();
 
   for (const chemical in rbasgData) {
     const chemicalRbasgData = rbasgData[chemical];
@@ -270,6 +271,9 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
         SetTools.union(totalCompositesTested, row.compositesTested, false);
         SetTools.union(totalComposites, row.composites, false);
 
+        const currentYears = new Set(row.years);
+        SetTools.union(allYears, currentYears);
+
         let dataTableRow = dataTableData[row.ageSexGroup];
         if (dataTableRow == undefined) {
           dataTableData[row.ageSexGroup] = {
@@ -277,7 +281,7 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
             [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
             [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
             [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
-            [DataTableHeader.YEARS]: new Set(row.years),
+            [DataTableHeader.YEARS]: currentYears,
             [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: row.percentNotTested},
             [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: row.percentUnderLod},
             [DataTableHeader.TREATMENT]: filters.lod,
@@ -298,7 +302,7 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
 
         dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
         dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
-        SetTools.union(dataTableRow[DataTableHeader.YEARS], new Set(row.years), false);
+        SetTools.union(dataTableRow[DataTableHeader.YEARS], currentYears, false);
         dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = row.percentNotTested;
         dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = row.percentUnderLod;
         SetTools.union(dataTableRow[DataTableHeader.FLAGGED], new Set(row.consumptionsFlagged), false);
