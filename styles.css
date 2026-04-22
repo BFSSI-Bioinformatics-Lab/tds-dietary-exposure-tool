@@ -13,6 +13,7 @@
   --surface: #ffffff;
   --secondarySurface: #fbfcf8;
   --error: #ff0000;
+  --errorDisabled: #f28585;
   --onBackground: #000000;
   --onSurface: #000000;
   --onSecondarySurface: #000000;
@@ -546,7 +547,7 @@ Legend
   --bs-btn-active-bg: var(--primaryHover);
   --bs-btn-active-border-color: var(--primaryBorderColour);
   --bs-btn-disabled-color: var(--onPrimary);
-  --bs-btn-disabled-bg: var(--error);
+  --bs-btn-disabled-bg: var(--errorDisabled);
   --bs-btn-disabled-border-color: var(--primaryBorderColour);
   transition: var(--defaultTransition);
 }

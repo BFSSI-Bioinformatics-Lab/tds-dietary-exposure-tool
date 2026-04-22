@@ -868,7 +868,7 @@ const LangEN = {
     sandbox: {
       openButton: "Modify Graph/Values",
       closeButton: "Close",
-      resetButton: "Reset",
+      resetButton: "Reset Modify Values",
       title: "Modify Graph/Values",
       subtitle:
         "Any new values that are added will apply to all three graphs.",
@@ -1567,7 +1567,7 @@ const LangFR = {
     sandbox: {
       openButton: "Modifier le graphique/les valeurs",
       closeButton: "Fermer",
-      resetButton: "Réinitialiser",
+      resetButton: "Réinitialiser Valeurs Modifiées",
       title: "Modifier le graphique/les valeurs",
       subtitle:
         "Toute nouvelle valeur ajoutée s'appliquera aux trois graphiques.",
