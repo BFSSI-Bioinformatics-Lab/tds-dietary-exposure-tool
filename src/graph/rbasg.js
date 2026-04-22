@@ -350,8 +350,17 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
     row[DataTableHeader.YEARS].sort();
     row[DataTableHeader.YEARS] = row[DataTableHeader.YEARS].join(", ");
 
-    row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");
-    row[DataTableHeader.SUPPRESSED] = Array.from(row[DataTableHeader.SUPPRESSED]).join("; ");
+    row[DataTableHeader.FLAGGED_COUNT] = row[DataTableHeader.FLAGGED].size;
+    row[DataTableHeader.SUPPRESSED_COUNT] = row[DataTableHeader.SUPPRESSED].size;
+
+    if (forDownload) {
+      row[DataTableHeader.FLAGGED] = Array.from(row[DataTableHeader.FLAGGED]).join("; ");
+      row[DataTableHeader.SUPPRESSED] = Array.from(row[DataTableHeader.SUPPRESSED]).join("; ");
+    } else {
+      delete row[DataTableHeader.FLAGGED]; 
+      delete row[DataTableHeader.SUPPRESSED];
+    }
+
     row[DataTableHeader.INCLUDED_SUPPRESSED] = Array.from(row[DataTableHeader.INCLUDED_SUPPRESSED]).join("; ");
   }
 

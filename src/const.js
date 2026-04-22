@@ -166,6 +166,8 @@ export const DataTableHeader = {
   FLAGGED: "FLAGGED",
   SUPPRESSED: "SUPPRESSED",
   INCLUDED_SUPPRESSED: "INCLUDED_SUPPRESSED",
+  FLAGGED_COUNT: "FLAGGED_COUNT",
+  SUPPRESSED_COUNT: "SUPPRESSED_COUNT"
 };
 
 export const SortByDir = {
@@ -995,6 +997,8 @@ const LangEN = {
       [DataTableHeader.SUPPRESSED]: "'F' Flag: data suppressed",
       [DataTableHeader.INCLUDED_SUPPRESSED]:
         "Included values with 'F' Flag CV > 33.3 %",
+      [DataTableHeader.FLAGGED_COUNT]: "Number of 'E' Flag: Marginal - CV > 16.6% but CV < 33.3%",
+      [DataTableHeader.SUPPRESSED_COUNT]: "Number of 'F' Flag: data suppressed"
     },
     values: {
       occurrence: "Occurrence",
@@ -1687,6 +1691,8 @@ const LangFR = {
         "Indicateur 'F' : Inacceptable, données supprimées",
       [DataTableHeader.INCLUDED_SUPPRESSED]:
         "Valeurs incluses avec CV indicateur 'F' > 33,3%",
+      [DataTableHeader.FLAGGED_COUNT]: "Nombre de l'Indicateur 'E' : Marginal - CV > 16,6 % mais CV < 33,3 %",
+      [DataTableHeader.SUPPRESSED_COUNT]: "Nombre de l'Indicateur 'F' : Inacceptable, données supprimées"
     },
     values: {
       occurrence: "Occurrence",
