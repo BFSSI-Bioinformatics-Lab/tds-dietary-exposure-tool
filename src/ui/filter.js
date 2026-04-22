@@ -355,6 +355,13 @@ export function rbfgLegendOnClick(foodGroup) {
   displayGraph(getFilteredTdsData());
 }
 
+// isSandboxReset(): Determines whether the sandbox has reset to its default state
+function isSandboxReset() {
+  return !el.filters.sandbox.overridesList.hasChildNodes() && 
+          el.filters.inputs.referenceLine.value == "" &&
+          el.filters.sandbox.showSuppressedButton.innerHTML == Translation.translate("filters.sandbox.showSuppressed"); 
+}
+
 /**
  * Initialize all the event listeners related to the filters.
  */
@@ -368,6 +375,7 @@ function addEventListenersToFilters() {
     clearError(el.filters.inputs.referenceLine);
     clearError(el.filters.inputs.overrideValue);
     displayGraph(getFilteredTdsData());
+    el.filters.sandbox.resetButton.disabled = true;
   });
 
   el.filters.inputs.chemicalGroup.addEventListener("change", () => {
@@ -407,11 +415,11 @@ function addEventListenersToFilters() {
 
   el.filters.inputs.referenceLine.addEventListener('input', (event) => {
     const errorMsgs = displayError(el.filters.inputs.referenceLine, "ReferenceLine"); 
+    if (errorMsgs.length > 0 || !selectionsCompleted()) return;
 
-    if (errorMsgs.length == 0 && selectionsCompleted()) {
-      showFilters();
-      displayGraph(getFilteredTdsData());
-    }
+    el.filters.sandbox.resetButton.disabled = false;
+    showFilters();
+    displayGraph(getFilteredTdsData());
   });
 
   el.filters.inputs.overrideValue.addEventListener("input", (event) => {
@@ -441,12 +449,18 @@ function addEventListenersToFilters() {
       removeButton.classList.add(classes.SANDBOX_BUTTON);
       removeButton.innerHTML =
         getTranslations().filters.sandbox.removeOverrideButton;
+
       removeButton.addEventListener("click", () => {
         el.filters.sandbox.overridesList.removeChild(itemContainer);
         Array.from(el.filters.inputs.overrideFood.options).find(
           (option) =>
             JSON.parse(option.value || null)?.composite == override.composite,
         ).disabled = false;
+
+        if (isSandboxReset()) {
+          el.filters.sandbox.resetButton.disabled = true;
+        }
+
         displayGraph(getFilteredTdsData());
       });
 
@@ -454,6 +468,7 @@ function addEventListenersToFilters() {
       itemContainer.appendChild(removeButton);
       el.filters.sandbox.overridesList.appendChild(itemContainer);
       el.filters.inputs.overrideValue.value = null;
+      el.filters.sandbox.resetButton.disabled = false;
     }
 
     displayGraph(getFilteredTdsData());
@@ -470,11 +485,16 @@ function addEventListenersToFilters() {
       ) {
         el.filters.sandbox.showSuppressedButton.innerHTML =
           getTranslations().filters.sandbox.dontShowSuppressed;
+        el.filters.sandbox.resetButton.disabled = false;
+
         displayGraph(getFilteredTdsData());
       }
     } else {
-      el.filters.sandbox.showSuppressedButton.innerHTML =
-        getTranslations().filters.sandbox.showSuppressed;
+      el.filters.sandbox.showSuppressedButton.innerHTML = getTranslations().filters.sandbox.showSuppressed;
+      if (isSandboxReset()) {
+        el.filters.sandbox.resetButton.disabled = true;
+      }
+
       displayGraph(getFilteredTdsData());
     }
   });
@@ -1016,6 +1036,7 @@ export function updateSandbox(filteredTdsData, filters) {
  */
 export function clearSandbox() {
   el.filters.inputs.referenceLine.value = "";
+  el.filters.sandbox.showSuppressedButton.innerHTML = Translation.translate("filters.sandbox.showSuppressed"); 
   displayOverrideFoodFilter();
 }
 
