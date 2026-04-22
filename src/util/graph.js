@@ -71,10 +71,21 @@ export function getCompositeInfo(row) {
  * Returns:
  * - A mapping from key to color and label.
  */
-export function generateColorMapping(mapping) {
-  const colorFunction = d3.scaleOrdinal(
-    d3.quantize(d3.interpolateRainbow, Object.keys(mapping).length + 1),
-  );
+export function generateColorMapping(mapping, colorFunction) {
+  if (colorFunction === undefined) {
+    const defaultColorFunction = d3.scaleOrdinal(
+      d3.quantize(d3.interpolateRainbow, Object.keys(mapping).length + 1),
+    );
+
+    colorFunction = (key) => {
+      const result = defaultColorFunction(key);
+      if (result == "rgb(143, 244, 87)") {
+        return "rgb(27, 79, 39)";
+      }
+
+      return result;
+    } 
+  }
 
   mapping = Object.keys(mapping).reduce((acc, key) => {
     acc[key] = { ...mapping[key], color: colorFunction(key) };
