@@ -419,8 +419,6 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
     return {};
   }
 
-  console.log("COLOUR MAPPING: ", colorMapping);
-
   const chemIsTotal = isTotalChemical(filters.chemical);
   if (!chemIsTotal) {
     rbfgData = {[filters.chemical]: rbfgData};
