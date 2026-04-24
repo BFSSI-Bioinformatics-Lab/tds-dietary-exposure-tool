@@ -96,9 +96,9 @@ export const el = {
       ),
       lod: document.getElementById("filter-lod-title"),
       lodSubtitle: document.getElementById("filter-lod-subtitle"),
-      consumptionUnits: document.getElementById(
-        "filter-consumption-units-title",
-      ),
+      consumptionUnits: document.getElementById("filter-consumption-units-title"),
+      consumptionSubUnits: document.getElementById("filter-consumption-sub-units-title"),
+
       rbasgAgeGroup: document.getElementById(
         "filter-rbasg-age-group-filter-title",
       ),
@@ -143,6 +143,7 @@ export const el = {
       consumptionUnits: document.getElementById(
         "filter-consumption-units-select",
       ),
+      consumptionSubUnits: document.getElementById("filter-consumption-sub-units-select"),
       referenceLine: document.getElementById("filter-reference-line-select"),
       overrideFood: document.getElementById("filter-override-food-select"),
       overrideValue: document.getElementById("filter-override-value-select"),

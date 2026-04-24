@@ -122,6 +122,13 @@ export const ConsumptionUnits = {
   KGBW: "KGBW",
 };
 
+export const ConsumptionSubUnits = {
+  MICRO: "u",
+  PICO: "p",
+  NANO: "n",
+  MILLI: "m"
+};
+
 export const RbasgDomainFormat = {
   AGESEX: "AGESEX",
   YEAR: "YEAR",
@@ -826,7 +833,8 @@ const LangEN = {
       multiSelAllSubtitle: "Select all with Ctrl-a",
       lod: "Treatment of Values &ltLOD",
       lodSubtitle: "LOD Range: ",
-      units: "Units",
+      units: "Basis",
+      subUnits: "Unit",
       ageGroup: "Age Groups",
       age: "Age",
       sex: "Sex",
@@ -850,8 +858,14 @@ const LangEN = {
       [LODs.Exclude]: "Exclude",
     },
     consumptionUnits: {
-      [ConsumptionUnits.PERSON]: "ng/day",
-      [ConsumptionUnits.KGBW]: "ng/kg bw per day",
+      [ConsumptionUnits.PERSON]: "day",
+      [ConsumptionUnits.KGBW]: "kg bw per day",
+    },
+    consumptionSubUnits: {
+      [ConsumptionSubUnits.MILLI]: "mg",
+      [ConsumptionSubUnits.MICRO]: "μg",
+      [ConsumptionSubUnits.NANO]: "ng",
+      [ConsumptionSubUnits.PICO]: "pg",
     },
     rbasgDomainFormat: {
       [RbasgDomainFormat.AGESEX]: "Age Group",
@@ -1525,7 +1539,8 @@ const LangFR = {
       multiSelAllSubtitle: "Tout sélectionner avec Ctrl-a",
       lod: "Traitement des valeurs <LD",
       lodSubtitle: "Fourchette LD: ",
-      units: "Unités",
+      units: "Base",
+      subUnits: "Unités",
       ageGroup: "Groupes d'âge",
       age: "Âge",
       sex: "Sexe",
@@ -1549,8 +1564,14 @@ const LangFR = {
       [LODs.Exclude]: "Exclure",
     },
     consumptionUnits: {
-      [ConsumptionUnits.PERSON]: "ng/jour",
-      [ConsumptionUnits.KGBW]: "ng/kg pc par jour",
+      [ConsumptionUnits.PERSON]: "jour",
+      [ConsumptionUnits.KGBW]: "kg pc par jour",
+    },
+    consumptionSubUnits: {
+      [ConsumptionSubUnits.MILLI]: "mg",
+      [ConsumptionSubUnits.MICRO]: "μg",
+      [ConsumptionSubUnits.NANO]: "ng",
+      [ConsumptionSubUnits.PICO]: "pg",
     },
     rbasgDomainFormat: {
       [RbasgDomainFormat.AGESEX]: "Groupe d'âge",

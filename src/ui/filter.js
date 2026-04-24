@@ -1,5 +1,5 @@
 import { classes, el } from "./const.js";
-import { ageGroupOrder, getTranslations, sexGroupOrder, sexGroups, Translation } from "../const.js";
+import { ageGroupOrder, ConsumptionSubUnits, getTranslations, sexGroupOrder, sexGroups, Translation } from "../const.js";
 import { displayGraph } from "./graphComponent.js";
 import {
   ConsumptionUnits,
@@ -154,6 +154,9 @@ export function getActiveFilters() {
   ageGroups = Array.from(ageGroups);
   sexGroups = Array.from(sexGroups);
 
+  const selectedConsumptionSubUnitNode = d3.select(el.filters.inputs.consumptionSubUnits).select("option:checked");
+  const consumptionSubUnitText = (selectedConsumptionSubUnitNode.empty()) ? "" : selectedConsumptionSubUnitNode.text();
+
   return {
     chemicalGroup: el.filters.inputs.chemicalGroup.value,
     chemical: el.filters.inputs.chemical.value,
@@ -185,6 +188,8 @@ export function getActiveFilters() {
     usePerPersonPerDay:
       el.filters.inputs.consumptionUnits.value ==
       getTranslations().filters.consumptionUnits[ConsumptionUnits.PERSON],
+    unitPrefix: el.filters.inputs.consumptionSubUnits.value,
+    unitPrefixVal: consumptionSubUnitText,
     sortByFood:
       el.graphs[GraphTypes.RBF].filters.sortBy.value ==
       getTranslations().filters.rbfSortByFormat[RbfSortByFormat.FOOD],
@@ -397,6 +402,7 @@ function addEventListenersToFilters() {
     el.filters.inputs.chemical,
     el.filters.inputs.lod,
     el.filters.inputs.consumptionUnits,
+    el.filters.inputs.consumptionSubUnits,
     el.graphs[GraphTypes.RBASG].filters.domain,
     ...Object.values(el.graphs[GraphTypes.RBF].filters),
     el.graphs[GraphTypes.RBFG].filters.range,
@@ -511,7 +517,8 @@ export function displayFilterText() {
   displayChemicals();
   displayLods();
   displayNonChemFilters();
-  displayConsumptionUnits();
+  displayConsumptionBaseUnits();
+  displayConsumptionSubUnits();
   displayRbasgDomainFilter();
   displayRbfSortByFilter();
   displayRbfgRangeFilter();
@@ -714,7 +721,7 @@ function displayLods() {
   });
 }
 
-function displayConsumptionUnits() {
+function displayConsumptionBaseUnits() {
   el.filters.inputs.consumptionUnits.innerHTML = "";
   Object.keys(ConsumptionUnits).forEach((key) => {
     const unit = getTranslations().filters.consumptionUnits[key];
@@ -722,6 +729,17 @@ function displayConsumptionUnits() {
     oe.value = unit;
     oe.text = unit;
     el.filters.inputs.consumptionUnits.appendChild(oe);
+  });
+}
+
+function displayConsumptionSubUnits() {
+  el.filters.inputs.consumptionSubUnits.innerHTML = "";
+  Object.values(ConsumptionSubUnits).forEach((key) => {
+    const unit = getTranslations().filters.consumptionSubUnits[key];
+    const oe = document.createElement("option");
+    oe.value = key;
+    oe.text = unit;
+    el.filters.inputs.consumptionSubUnits.appendChild(oe);
   });
 }
 

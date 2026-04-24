@@ -8,7 +8,8 @@ import {
   getConsumptionFiles,
   PFASGroupings,
   getTranslations,
-  Translation
+  Translation,
+  ConsumptionSubUnits
 } from "../const.js";
 import { readCSV } from "./dataLoader.js";
 import { formatDownloadName } from "./dataDownloader.js";
@@ -535,4 +536,17 @@ export function getBreakdownDistribWebStr({breakDown, getDistribution = true, in
   return getBreakdownWebStr({breakDown: breakDown, includeTotal: includeTotal, formatValFunc: distribFormatFunc, 
                              sort: sort, limit: limit, filter: filter, getBreakdownVal: getBreakdownVal, totalFormatValFunc: totalFormatValFunc, 
                              getTotalVal: getTotalVal, totalFormatValFunc: totalFormatValFunc, totalFormatPercentFunc: totalFormatPercentFunc, forDownload: forDownload});
+}
+
+// convertConsumptionUnits(consumption, unit): Converts the consumption based on the required unit prefix
+export function convertConsumptionUnits(consumption, unit) {
+  if (unit == ConsumptionSubUnits.MICRO) {
+    consumption /= 1000;
+  } else if (unit ==  ConsumptionSubUnits.PICO) {
+    consumption *= 1000;
+  } else if (unit == ConsumptionSubUnits.MILLI) {
+    consumption /= 1000000;
+  }
+
+  return consumption;
 }

@@ -25,7 +25,7 @@ import {
   getContaminantExposure,
   getOccurrenceForContaminantEntry,
 } from "../util/graph.js";
-import { getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
+import { getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical, convertConsumptionUnits } from "../data/dataTranslator.js";
 
 
 // getChemicalRbfg(tdsData, filters): Retrieves the data for results by age-sex group
@@ -295,8 +295,8 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
             [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
             [DataTableHeader.FOOD_GROUP]: row.foodGroup,
             [DataTableHeader.PERCENT_EXPOSURE]: {[chemical]: row.percentExposure},
-            [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
-            [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
+            [DataTableHeader.EXPOSURE]: {[chemical]: convertConsumptionUnits(row.exposure, filters.unitPrefix)},
+            [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(filters.unitPrefixVal, filters)},
             [DataTableHeader.YEARS]: currentYears,
             [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: row.percentNotTested},
             [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: row.percentUnderLod},
@@ -305,7 +305,7 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
             [DataTableHeader.FLAGGED]: new Set(row.consumptionsFlagged),
             [DataTableHeader.SUPPRESSED]: new Set(row.consumptionsSuppressed),
             [DataTableHeader.INCLUDED_SUPPRESSED]: new Set(filters.useSuppressedHighCvValues ? row.consumptionsSuppressedWithHighCv : []),
-            foodGroup: row.foodGroup
+            [DataTableHeader.FOOD_GROUP]: row.foodGroup
           };
 
           dataTableRow = foodGroupRow[row.ageSexGroup];
@@ -317,10 +317,10 @@ export function formatRbfgToDataTable(rbfgData, filters, forDownload = false) {
           return;
         }
 
-        dataTableRow.foodGroup = row.foodGroup;
+        dataTableRow[DataTableHeader.FOOD_GROUP] = row[DataTableHeader.FOOD_GROUP];
         dataTableRow[DataTableHeader.PERCENT_EXPOSURE][chemical] = row.percentExposure;
-        dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
-        dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
+        dataTableRow[DataTableHeader.EXPOSURE][chemical] = convertConsumptionUnits(row.exposure, filters.unitPrefix);
+        dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(filters.unitPrefixVal, filters);
         SetTools.union(dataTableRow[DataTableHeader.YEARS], currentYears, false);
         dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = row.percentNotTested;
         dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = row.percentUnderLod;
@@ -431,7 +431,7 @@ export function formatRbfgToStackedBar(rbfgData, filters, colorMapping) {
       getTranslations().graphs[GraphTypes.RBFG].range[
         filters.usePercent ? RbfgRangeFormat.PERCENT : RbfgRangeFormat.NUMBER
       ]
-    } (${getExposureUnit(contaminantUnit, filters)})`,
+    } (${getExposureUnit(filters.unitPrefixVal, filters)})`,
     titleX: getTranslations().graphs[GraphTypes.RBFG].domain,
   };
 
