@@ -162,6 +162,7 @@ export async function initializePageText() {
     translations.filters.titles.lodSubtitle;
   el.filters.titles.consumptionUnits.innerHTML =
     translations.filters.titles.units;
+  el.filters.titles.consumptionSubUnits.innerHTML = Translation.translate("filters.titles.subUnits");
   el.filters.titles.rbasgAgeGroup.innerHTML =
     translations.filters.titles.ageGroup;
   el.filters.titles.rbasgSexGroup.innerHTML = Translation.translate("filters.titles.sex");

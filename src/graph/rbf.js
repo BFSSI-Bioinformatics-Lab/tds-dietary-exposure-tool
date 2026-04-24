@@ -12,6 +12,7 @@ import {
   getExposureUnit,
   getUserModifiedValueText,
 } from "../util/data.js";
+import { convertConsumptionUnits } from "../data/dataTranslator.js";
 
 /**
  * Take in TDS data and return data which has been strictly filtered and formatted
@@ -144,11 +145,8 @@ export function formatRbfToDataTable(rbfData, filters, forDownload = false) {
       [DataTableHeader.COMPOSITE_NAME]: row.compositeDesc,
       [DataTableHeader.COMPOSITE_CODE]: row.composite,
       [DataTableHeader.PERCENT_EXPOSURE]: formatPercent(row.percentExposure),
-      [DataTableHeader.EXPOSURE]: formatNumber(row.exposure, filters),
-      [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(
-        row.contaminantUnit,
-        filters,
-      ),
+      [DataTableHeader.EXPOSURE]: formatNumber(convertConsumptionUnits(row.exposure, filters.unitPrefix), filters),
+      [DataTableHeader.EXPOSURE_UNIT]: getExposureUnit(filters.unitPrefixVal, filters),
       [DataTableHeader.YEARS]: filters.years.join(", "),
       [DataTableHeader.PERCENT_UNDER_LOD]: formatPercent(row.percentUnderLod),
       [DataTableHeader.TREATMENT]: filters.lod,
@@ -201,9 +199,9 @@ export function formatRbfToSunburst(rbfData, filters, colorMapping) {
         ")\n" +
         getTranslations().graphs.info.exposure +
         ": " +
-        formatNumber(row.exposure, filters) +
+        formatNumber(convertConsumptionUnits(row.exposure, filters.unitPrefix), filters) +
         " " +
-        getExposureUnit(row.contaminantUnit, filters) +
+        getExposureUnit(filters.unitPrefixVal, filters) +
         "\n" +
         getTranslations().graphs.info.percentExposure +
         ": " +

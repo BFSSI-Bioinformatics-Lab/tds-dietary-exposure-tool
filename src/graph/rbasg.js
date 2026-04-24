@@ -24,7 +24,7 @@ import {
   TableTools,
   isTotalChemical
 } from "../util/data.js";
-import { getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
+import { convertConsumptionUnits, getBreakdownDistribWebStr, getBreakdownWebStr, groupContaminantsByChecmical } from "../data/dataTranslator.js";
 
 
 // getChemicalRbasg(tdsData, filters): Retrieves the data for results by age-sex group
@@ -279,8 +279,8 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
           dataTableData[row.ageSexGroup] = {
             [DataTableHeader.CHEMICAL]: filters.chemical,
             [DataTableHeader.AGE_SEX_GROUP]: getAgeSexDisplay(row.ageSexGroup),
-            [DataTableHeader.EXPOSURE]: {[chemical]: row.exposure},
-            [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(row.contaminantUnit, filters)},
+            [DataTableHeader.EXPOSURE]: {[chemical]: convertConsumptionUnits(row.exposure, filters.unitPrefix)},
+            [DataTableHeader.EXPOSURE_UNIT]: {[chemical]: getExposureUnit(filters.unitPrefixVal, filters)},
             [DataTableHeader.YEARS]: currentYears,
             [DataTableHeader.PERCENT_NOT_TESTED]: {[chemical]: row.percentNotTested},
             [DataTableHeader.PERCENT_UNDER_LOD]: {[chemical]: row.percentUnderLod},
@@ -300,8 +300,8 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
           return;
         }
 
-        dataTableRow[DataTableHeader.EXPOSURE][chemical] = row.exposure;
-        dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(row.contaminantUnit, filters);
+        dataTableRow[DataTableHeader.EXPOSURE][chemical] = convertConsumptionUnits(row.exposure, filters.unitPrefix);
+        dataTableRow[DataTableHeader.EXPOSURE_UNIT][chemical] = getExposureUnit(filters.unitPrefixVal, filters);
         SetTools.union(dataTableRow[DataTableHeader.YEARS], currentYears, false);
         dataTableRow[DataTableHeader.PERCENT_NOT_TESTED][chemical] = row.percentNotTested;
         dataTableRow[DataTableHeader.PERCENT_UNDER_LOD][chemical] = row.percentUnderLod;
@@ -370,7 +370,7 @@ export function formatRbsagToDataTable(rbasgData, filters, forDownload = false) 
 
 function getRbasgGraphInfo(filters, exposure, entry, sexDisplay, exposureUnit) {
   return  Translation.translate("graphs.info.exposure") + ": " +
-          formatNumber(exposure, filters) + " " +
+          formatNumber(convertConsumptionUnits(exposure, filters.unitPrefix), filters) + " " +
           exposureUnit + "\n" +
           Translation.translate(filters.showByAgeSexGroup ? "graphs.info.ageSexGroup" : "graphs.info.year") + ": " +
           (filters.showByAgeSexGroup ? entry + " " + sexDisplay : entry);
@@ -390,7 +390,7 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
   }
 
   const contaminantUnit = Object.values(Object.values(Object.values(rbasgData)[0])[0])[0].contaminantUnit;
-  const exposureUnit = getExposureUnit(contaminantUnit, filters);
+  const exposureUnit = getExposureUnit(filters.unitPrefixVal, filters);
 
   const groupedBarData = {
     children: [],
@@ -422,14 +422,14 @@ export function formatRbasgToGroupedBar(rbasgData, filters, colorMapping) {
           graphData[graphDataId] = {
             entry: entry,
             group: sexDisplay,
-            value: row.exposure,
+            value: convertConsumptionUnits(row.exposure, filters.unitPrefix),
             color: colorMapping[sex].color,
             info: getRbasgGraphInfo(filters, row.exposure, entry, sexDisplay, exposureUnit)
           }
           return;
         }
 
-        graphDataEntry.value += row.exposure;
+        graphDataEntry.value += convertConsumptionUnits(row.exposure, filters.unitPrefix);
         graphDataEntry.info = getRbasgGraphInfo(filters, graphDataEntry.value, entry, sexDisplay, exposureUnit);
       });
     });
